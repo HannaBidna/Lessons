@@ -6,18 +6,20 @@
   <title>Nadia School — Історії</title>
   <style>
     :root {
-      --bg-main: #131419;
-      --bg-card: #1c1d24;
-      --bg-card-hover: #252630;
-      --border-color: #2e303d;
-      --accent: #00d2ff;
-      --accent-glow: rgba(0, 210, 255, 0.25);
-      --text-main: #f0f2f5;
-      --text-sub: #9ba1b0;
+      --accent: #ffd166;
+      --card-bg: rgba(61, 27, 17, 0.75);
+      --card-hover: rgba(82, 36, 23, 0.9);
+      --border-color: rgba(255, 255, 255, 0.18);
+      --text-main: #fff5eb;
+      --text-sub: #dfc2b6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-color: var(--bg-main);
+      background-color: #a4533a;
+      background-image: url('bg_stories.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
@@ -26,61 +28,85 @@
       align-items: center;
       justify-content: center;
       padding: 40px 20px;
+      position: relative;
     }
-    .container { width: 100%; max-width: 600px; }
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: rgba(50, 18, 10, 0.35);
+      z-index: 0;
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 580px;
+    }
     .back-link {
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      color: var(--accent);
+      color: #fff;
       text-decoration: none;
       font-size: 14px;
       font-weight: 500;
       margin-bottom: 25px;
-      transition: opacity 0.2s;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 6px 14px;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
     }
-    .back-link:hover { opacity: 0.8; }
+    .back-link:hover {
+      background: rgba(0, 0, 0, 0.45);
+      color: var(--accent);
+    }
     .page-title {
-      font-size: 26px;
+      font-size: 28px;
       font-weight: 700;
-      margin-bottom: 8px;
-      color: #fff;
+      margin-bottom: 6px;
+      text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     }
     .page-desc {
       color: var(--text-sub);
       font-size: 14px;
-      margin-bottom: 30px;
+      margin-bottom: 28px;
     }
     .list { display: flex; flex-direction: column; gap: 14px; }
     .card {
-      background: var(--bg-card);
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px 20px;
+      border-radius: 16px;
+      padding: 18px 22px;
       text-decoration: none;
       color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.25s ease;
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
     }
     .card:hover {
-      background: var(--bg-card-hover);
+      background: var(--card-hover);
       border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--accent-glow);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 35px rgba(255, 209, 102, 0.2);
     }
     .card-left { display: flex; align-items: center; gap: 16px; }
     .card-icon {
       font-size: 24px;
-      background: rgba(0, 210, 255, 0.08);
-      border: 1px solid rgba(0, 210, 255, 0.2);
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.15);
       width: 48px;
       height: 48px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
+      border-radius: 12px;
       flex-shrink: 0;
     }
     .card-title { font-size: 16px; font-weight: 600; color: #fff; margin-bottom: 3px; }
@@ -89,26 +115,23 @@
   </style>
 </head>
 <body>
-
   <div class="container">
-    <a href="index.html" class="back-link">&larr; Назад на головну</a>
+    <a href="index.html" class="back-link">&larr; На головну</a>
     <h1 class="page-title">📖 Історії та сторібуки</h1>
-    <p class="page-desc">Оберіть книгу для перегляду:</p>
+    <p class="page-desc">Наукові відкриття у форматі захоплюючих історій:</p>
 
     <div class="list">
-      <!-- Посилання на сторібук (папка archimed) -->
       <a href="archimed/" class="card">
         <div class="card-left">
           <div class="card-icon">👑</div>
           <div>
             <div class="card-title">Архімед і корона</div>
-            <div class="card-desc">Ілюстрована історія закону гідростатики</div>
+            <div class="card-desc">Ілюстрована історія про закон гідростатики</div>
           </div>
         </div>
         <div class="card-arrow">&rarr;</div>
       </a>
     </div>
   </div>
-
 </body>
 </html>
