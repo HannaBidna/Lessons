@@ -2,14 +2,67 @@
 <html lang="uk">
 <head>
   <meta charset="UTF-8">
-  <title>Мої Проєкти</title>
+  <title>Мої уроки та симуляції</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #181920;
+      color: #e4e6eb;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+    h1 { color: #00d2ff; margin-bottom: 30px; }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      width: 100%;
+      max-width: 450px;
+    }
+    .card {
+      background: #242526;
+      padding: 16px 20px;
+      border-radius: 10px;
+      text-decoration: none;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 500;
+      border: 1px solid #3a3b3c;
+      transition: all 0.2s ease;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .card:hover {
+      background: #3a3b3c;
+      border-color: #00d2ff;
+      transform: translateY(-2px);
+    }
+    .card span {
+      color: #00d2ff;
+      font-size: 20px;
+    }
+  </style>
 </head>
 <body>
-  <h1>Список моїх робіт</h1>
-  <ul>
-    <li><a href="./archimed/">Історія про Архімеда</a></li>
-    <li><a href="./simulatios/1/">Фізична симуляція</a></li>
-    <li><a href="./simulatios/2/">Дифузія</a></li>
-  </ul>
+
+  <h1>Навчальні матеріали та симуляції</h1>
+
+  <div class="menu">
+    <!-- Посилання на симуляцію дифузії -->
+    <a class="card" href="simulatios/2/">
+      🧪 Симуляція: Дифузія часток
+      <span>&rarr;</span>
+    </a>
+
+    <!-- Посилання на сторібук про Архімеда (якщо там є index.html) -->
+    <a class="card" href="archimed/">
+      👑 Історія: Архімед і корона
+      <span>&rarr;</span>
+    </a>
+  </div>
+
 </body>
 </html>
