@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nadia School — Відео</title>
+  <style>
+    :root {
+      --bg-main: #131419;
+      --bg-card: #1c1d24;
+      --border-color: #2e303d;
+      --accent: #00d2ff;
+      --text-main: #f0f2f5;
+      --text-sub: #9ba1b0;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .container { width: 100%; max-width: 600px; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 25px;
+      transition: opacity 0.2s;
+    }
+    .back-link:hover { opacity: 0.8; }
+    .page-title {
+      font-size: 26px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #fff;
+    }
+    .page-desc {
+      color: var(--text-sub);
+      font-size: 14px;
+      margin-bottom: 30px;
+    }
+    .empty-box {
+      background: var(--bg-card);
+      border: 1px dashed var(--border-color);
+      border-radius: 16px;
+      padding: 50px 20px;
+      text-align: center;
+    }
+    .empty-icon { font-size: 40px; margin-bottom: 12px; }
+    .empty-text { font-size: 15px; color: var(--text-sub); }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <a href="index.html" class="back-link">&larr; Назад на головну</a>
+    <h1 class="page-title">🎬 Відеоуроки</h1>
+    <p class="page-desc">Колекція навчальних відеоматеріалів:</p>
+
+    <div class="empty-box">
+      <div class="empty-icon">⏳</div>
+      <div class="empty-text">Розділ наповнюється. Незабаром тут з'являться перші відеоуроки!</div>
+    </div>
+  </div>
+
+</body>
+</html>
