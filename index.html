@@ -3,24 +3,20 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nadia School — Навчальні матеріали</title>
+  <title>Nadia School — Головна</title>
   <style>
     :root {
-      --bg-main: #181920;
-      --bg-card: #242526;
-      --bg-card-hover: #2d2f31;
-      --border-color: #3a3b3c;
+      --bg-main: #131419;
+      --bg-card: #1c1d24;
+      --bg-card-hover: #252630;
+      --border-color: #2e303d;
       --accent: #00d2ff;
-      --accent-glow: rgba(0, 210, 255, 0.2);
+      --accent-glow: rgba(0, 210, 255, 0.25);
       --text-main: #f0f2f5;
-      --text-sub: #b0b3b8;
+      --text-sub: #9ba1b0;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       background-color: var(--bg-main);
@@ -30,21 +26,21 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 50px 20px;
+      justify-content: center;
+      padding: 40px 20px;
     }
 
     .container {
       width: 100%;
-      max-width: 720px;
+      max-width: 600px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    /* Шапка з логотипом */
     .brand-header {
       text-align: center;
-      margin-bottom: 45px;
+      margin-bottom: 40px;
     }
 
     .logo-img {
@@ -58,85 +54,59 @@
     .brand-subtitle {
       font-size: 15px;
       color: var(--text-sub);
-      letter-spacing: 0.5px;
     }
 
-    /* Розділи */
-    .section-block {
+    .menu-grid {
       width: 100%;
-      margin-bottom: 35px;
-    }
-
-    .section-title {
-      font-size: 14px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1.5px;
-      color: var(--accent);
-      margin-bottom: 15px;
-      padding-left: 5px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .cards-list {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 16px;
     }
 
-    /* Картка */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 12px;
-      padding: 16px 20px;
+      border-radius: 16px;
+      padding: 20px 24px;
       text-decoration: none;
       color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.25s ease;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     }
 
     .card:hover {
       background: var(--bg-card-hover);
       border-color: var(--accent);
-      transform: translateY(-2px);
-      box-shadow: 0 6px 20px var(--accent-glow);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px var(--accent-glow);
     }
 
     .card-left {
       display: flex;
       align-items: center;
-      gap: 16px;
+      gap: 18px;
     }
 
     .card-icon {
-      font-size: 24px;
-      background: rgba(0, 210, 255, 0.1);
+      font-size: 26px;
+      background: rgba(0, 210, 255, 0.08);
       border: 1px solid rgba(0, 210, 255, 0.2);
-      width: 44px;
-      height: 44px;
+      width: 52px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: center;
-      border-radius: 10px;
-      flex-shrink: 0;
-    }
-
-    .card-info {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
+      border-radius: 12px;
     }
 
     .card-title {
-      font-size: 16px;
+      font-size: 18px;
       font-weight: 600;
       color: #fff;
+      margin-bottom: 4px;
     }
 
     .card-desc {
@@ -146,106 +116,71 @@
 
     .card-arrow {
       color: var(--accent);
-      font-size: 20px;
-      font-weight: 600;
+      font-size: 22px;
+      font-weight: bold;
       transition: transform 0.2s ease;
-      margin-left: 10px;
     }
 
     .card:hover .card-arrow {
-      transform: translateX(4px);
-    }
-
-    /* Блок-заглушка для порожнього розділу */
-    .empty-card {
-      background: rgba(36, 37, 38, 0.5);
-      border: 1px dashed var(--border-color);
-      border-radius: 12px;
-      padding: 24px;
-      text-align: center;
-      color: var(--text-sub);
-      font-size: 14px;
+      transform: translateX(5px);
     }
 
     footer {
-      margin-top: 30px;
+      margin-top: 45px;
       font-size: 13px;
       color: #606770;
-      text-align: center;
     }
   </style>
 </head>
 <body>
 
   <div class="container">
-    
-    <!-- Логотип та заголовок -->
     <header class="brand-header">
       <img src="nadia_school_white_logo.png" alt="Nadia School" class="logo-img">
-      <p class="brand-subtitle">Інтерактивні симуляції та навчальні матеріали</p>
+      <p class="brand-subtitle">Інтерактивні симуляції та навчальні історії</p>
     </header>
 
-    <!-- 1. Розділ: Історії -->
-    <div class="section-block">
-      <div class="section-title">📖 Історії</div>
-      <div class="cards-list">
-        <a href="archimed/" class="card">
-          <div class="card-left">
-            <div class="card-icon">👑</div>
-            <div class="card-info">
-              <span class="card-title">Архімед і корона</span>
-              <span class="card-desc">Ілюстрована історія про відкриття закону гідростатики</span>
-            </div>
+    <main class="menu-grid">
+      
+      <!-- 1. Розділ Симуляції -->
+      <a href="simulations.html" class="card">
+        <div class="card-left">
+          <div class="card-icon">🧪</div>
+          <div>
+            <div class="card-title">Симуляції</div>
+            <div class="card-desc">Інтерактивні фізичні моделі та досліди</div>
           </div>
-          <div class="card-arrow">&rarr;</div>
-        </a>
-      </div>
-    </div>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </a>
 
-    <!-- 2. Розділ: Симуляції -->
-    <div class="section-block">
-      <div class="section-title">🧪 Симуляції</div>
-      <div class="cards-list">
-        
-        <!-- Сила пружності -->
-        <a href="simulatios/1/" class="card">
-          <div class="card-left">
-            <div class="card-icon">🪢</div>
-            <div class="card-info">
-              <span class="card-title">Сила пружності</span>
-              <span class="card-desc">Інтерактивна модель закону Гука та деформації</span>
-            </div>
+      <!-- 2. Розділ Історії -->
+      <a href="stories.html" class="card">
+        <div class="card-left">
+          <div class="card-icon">📖</div>
+          <div>
+            <div class="card-title">Історії</div>
+            <div class="card-desc">Ілюстровані наукові сторібуки та комікси</div>
           </div>
-          <div class="card-arrow">&rarr;</div>
-        </a>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </a>
 
-        <!-- Дифузія -->
-        <a href="simulatios/2/" class="card">
-          <div class="card-left">
-            <div class="card-icon">⚛️</div>
-            <div class="card-info">
-              <span class="card-title">Дифузія часток</span>
-              <span class="card-desc">Модель теплового руху часток із записом у GIF</span>
-            </div>
+      <!-- 3. Розділ Відео -->
+      <a href="videos.html" class="card">
+        <div class="card-left">
+          <div class="card-icon">🎬</div>
+          <div>
+            <div class="card-title">Відео</div>
+            <div class="card-desc">Відеопояснення та навчальні ролики</div>
           </div>
-          <div class="card-arrow">&rarr;</div>
-        </a>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </a>
 
-      </div>
-    </div>
+    </main>
 
-    <!-- 3. Розділ: Відео -->
-    <div class="section-block">
-      <div class="section-title">🎬 Відео</div>
-      <div class="empty-card">
-        Незабаром тут з'являться нові навчальні відеоуроки
-      </div>
-    </div>
-
-    <footer>
-      &copy; Nadia School. Всі права захищено.
-    </footer>
-
+    <footer>&copy; Nadia School. Всі права захищено.</footer>
   </div>
 
 </body>
