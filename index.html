@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nadia School — Інтерактивні уроки та симуляції</title>
+  <title>Nadia School — Навчальні матеріали</title>
   <style>
     :root {
       --bg-main: #181920;
@@ -11,7 +11,7 @@
       --bg-card-hover: #2d2f31;
       --border-color: #3a3b3c;
       --accent: #00d2ff;
-      --accent-glow: rgba(0, 210, 255, 0.25);
+      --accent-glow: rgba(0, 210, 255, 0.2);
       --text-main: #f0f2f5;
       --text-sub: #b0b3b8;
     }
@@ -25,71 +25,87 @@
     body {
       background-color: var(--bg-main);
       color: var(--text-main);
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      padding: 40px 20px;
+      padding: 50px 20px;
     }
 
     .container {
       width: 100%;
-      max-width: 640px;
+      max-width: 720px;
       display: flex;
       flex-direction: column;
       align-items: center;
     }
 
-    /* Логотип */
+    /* Шапка з логотипом */
     .brand-header {
       text-align: center;
-      margin-bottom: 40px;
+      margin-bottom: 45px;
     }
 
     .logo-img {
-      max-width: 240px;
+      max-width: 250px;
       width: 100%;
       height: auto;
       margin-bottom: 12px;
-      filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.6));
+      filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.7));
     }
 
     .brand-subtitle {
       font-size: 15px;
       color: var(--text-sub);
       letter-spacing: 0.5px;
-      font-weight: 400;
     }
 
-    /* Список матеріалів */
-    .content-grid {
+    /* Розділи */
+    .section-block {
       width: 100%;
+      margin-bottom: 35px;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      margin-bottom: 15px;
+      padding-left: 5px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .cards-list {
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 12px;
     }
 
+    /* Картка */
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      border-radius: 14px;
-      padding: 18px 22px;
+      border-radius: 12px;
+      padding: 16px 20px;
       text-decoration: none;
       color: var(--text-main);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
     }
 
     .card:hover {
       background: var(--bg-card-hover);
       border-color: var(--accent);
-      transform: translateY(-3px);
-      box-shadow: 0 8px 24px var(--accent-glow);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px var(--accent-glow);
     }
 
     .card-left {
@@ -99,15 +115,16 @@
     }
 
     .card-icon {
-      font-size: 28px;
+      font-size: 24px;
       background: rgba(0, 210, 255, 0.1);
       border: 1px solid rgba(0, 210, 255, 0.2);
-      width: 48px;
-      height: 48px;
+      width: 44px;
+      height: 44px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 10px;
+      flex-shrink: 0;
     }
 
     .card-info {
@@ -117,7 +134,7 @@
     }
 
     .card-title {
-      font-size: 17px;
+      font-size: 16px;
       font-weight: 600;
       color: #fff;
     }
@@ -129,18 +146,29 @@
 
     .card-arrow {
       color: var(--accent);
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 600;
       transition: transform 0.2s ease;
+      margin-left: 10px;
     }
 
     .card:hover .card-arrow {
       transform: translateX(4px);
     }
 
-    /* Футер */
+    /* Блок-заглушка для порожнього розділу */
+    .empty-card {
+      background: rgba(36, 37, 38, 0.5);
+      border: 1px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 24px;
+      text-align: center;
+      color: var(--text-sub);
+      font-size: 14px;
+    }
+
     footer {
-      margin-top: 50px;
+      margin-top: 30px;
       font-size: 13px;
       color: #606770;
       text-align: center;
@@ -150,44 +178,74 @@
 <body>
 
   <div class="container">
-    <!-- Шапка з логотипом -->
+    
+    <!-- Логотип та заголовок -->
     <header class="brand-header">
       <img src="nadia_school_white_logo.png" alt="Nadia School" class="logo-img">
-      <p class="brand-subtitle">Інтерактивні симуляції та навчальні історії</p>
+      <p class="brand-subtitle">Інтерактивні симуляції та навчальні матеріали</p>
     </header>
 
-    <!-- Список карток -->
-    <main class="content-grid">
-      
-      <!-- Симуляція Дифузії -->
-      <a href="simulatios/2/" class="card">
-        <div class="card-left">
-          <div class="card-icon">🧪</div>
-          <div class="card-info">
-            <span class="card-title">Дифузія часток</span>
-            <span class="card-desc">Інтерактивна симуляція з контролем температури</span>
+    <!-- 1. Розділ: Історії -->
+    <div class="section-block">
+      <div class="section-title">📖 Історії</div>
+      <div class="cards-list">
+        <a href="archimed/" class="card">
+          <div class="card-left">
+            <div class="card-icon">👑</div>
+            <div class="card-info">
+              <span class="card-title">Архімед і корона</span>
+              <span class="card-desc">Ілюстрована історія про відкриття закону гідростатики</span>
+            </div>
           </div>
-        </div>
-        <div class="card-arrow">&rarr;</div>
-      </a>
+          <div class="card-arrow">&rarr;</div>
+        </a>
+      </div>
+    </div>
 
-      <!-- Історія про Архімеда -->
-      <a href="archimed/" class="card">
-        <div class="card-left">
-          <div class="card-icon">👑</div>
-          <div class="card-info">
-            <span class="card-title">Архімед і корона</span>
-            <span class="card-desc">Ілюстрована історія закону гідростатики</span>
+    <!-- 2. Розділ: Симуляції -->
+    <div class="section-block">
+      <div class="section-title">🧪 Симуляції</div>
+      <div class="cards-list">
+        
+        <!-- Сила пружності -->
+        <a href="simulatios/1/" class="card">
+          <div class="card-left">
+            <div class="card-icon">🪢</div>
+            <div class="card-info">
+              <span class="card-title">Сила пружності</span>
+              <span class="card-desc">Інтерактивна модель закону Гука та деформації</span>
+            </div>
           </div>
-        </div>
-        <div class="card-arrow">&rarr;</div>
-      </a>
+          <div class="card-arrow">&rarr;</div>
+        </a>
 
-    </main>
+        <!-- Дифузія -->
+        <a href="simulatios/2/" class="card">
+          <div class="card-left">
+            <div class="card-icon">⚛️</div>
+            <div class="card-info">
+              <span class="card-title">Дифузія часток</span>
+              <span class="card-desc">Модель теплового руху часток із записом у GIF</span>
+            </div>
+          </div>
+          <div class="card-arrow">&rarr;</div>
+        </a>
+
+      </div>
+    </div>
+
+    <!-- 3. Розділ: Відео -->
+    <div class="section-block">
+      <div class="section-title">🎬 Відео</div>
+      <div class="empty-card">
+        Незабаром тут з'являться нові навчальні відеоуроки
+      </div>
+    </div>
 
     <footer>
       &copy; Nadia School. Всі права захищено.
     </footer>
+
   </div>
 
 </body>
