@@ -6,37 +6,8 @@
   <title>Nadia School — Відео</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
-   
+
     body {
-       /* Головний заголовок сторінки (Рівень 1) */
-  h1, .page-title {
-  font-size: 32px;      /* Найбільший розмір */
-  font-weight: 800;
-  margin-bottom: 12px;
-  color: #ffffff;
-  }
-
-  /* Заголовок розділу / підзаголовок (Рівень 2) */
-  h2, .section-title {
-    font-size: 22px;      /* Середній розмір */
-    font-weight: 700;
-    margin-top: 20px;
-    margin-bottom: 8px;
-    color: #ffd166;       /* Або колір вашого акценту */
-  }
-
-  /* Заголовок всередині картки / відео (Рівень 3) */
-  h3, .video-title, .card-title {
-    font-size: 16px;      /* Компактний розмір */
-    font-weight: 600;
-    color: #ffffff;
-  }
-
-  /* Звичайний підпис / опис */
-  p, .video-text, .card-desc {
-    font-size: 14px;
-    color: #b5c2b0;
-  }
       margin: 0;
       min-height: 100vh;
       display: flex;
@@ -46,10 +17,41 @@
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #ffffff;
       background-color: #1a1e18;
-      /* Глибоке затемнення фону для високої читабельності */
       background: linear-gradient(rgba(18, 20, 16, 0.85), rgba(18, 20, 16, 0.9)), 
                   url('./bg_videos.jpg') no-repeat center center / cover;
       background-attachment: fixed;
+    }
+
+    /* Рівень 1: Головний заголовок сторінки */
+    h1, .page-title {
+      font-size: 32px;
+      font-weight: 800;
+      margin-bottom: 8px;
+      color: #ffffff;
+      letter-spacing: -0.5px;
+    }
+
+    /* Рівень 2: Підзаголовок / опис розділу */
+    h2, .section-title {
+      font-size: 18px;
+      font-weight: 500;
+      margin-bottom: 30px;
+      color: #c0cbbd;
+    }
+
+    /* Рівень 3: Заголовок відео / досліду */
+    h3, .video-title {
+      font-size: 17px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 6px;
+    }
+
+    /* Опис під відео */
+    p, .video-text {
+      font-size: 13px;
+      color: #b5c2b0;
+      line-height: 1.5;
     }
 
     .container {
@@ -77,12 +79,6 @@
     .back-link:hover {
       background: rgba(255, 255, 255, 0.2);
       transform: translateX(-3px);
-    }
-
-    .page-desc {
-      color: #c0cbbd;
-      font-size: 15px;
-      margin-bottom: 30px;
     }
 
     .video-feed {
@@ -123,21 +119,14 @@
     .video-info {
       padding: 18px 22px;
     }
-
-    .video-text {
-      font-size: 13px;
-      color: #b5c2b0;
-      line-height: 1.5;
-    }
   </style>
 </head>
 <body>
 
   <div class="container">
     <a href="index.html" class="back-link">&larr; На головну</a>
-    <h1 class="page-title">🎬 Відео </h1>
-    <h2 class="page-title">Практичні експерименти та явища дифузії в дії:</h2>
-   
+    <h1 class="page-title">🎬 Відео</h1>
+    <h2 class="section-title">Практичні експерименти та явища дифузії в дії:</h2>
 
     <div class="video-feed">
 
@@ -150,8 +139,8 @@
           </video>
         </div>
         <div class="video-info">
-          <div class="video-title">🧪 Дослід 1: Дифузія барвника в рідині </div>
-          <div class="video-text">Спостереження за рухом та поширенням пігменту в рідині.</div>
+          <h3 class="video-title">🧪 Дослід 1: Дифузія барвника в рідині</h3>
+          <p class="video-text">Спостереження за рухом та поширенням пігменту в рідині.</p>
         </div>
       </div>
 
@@ -164,8 +153,8 @@
           </video>
         </div>
         <div class="video-info">
-          <div class="video-title">🧪 Дослід 2: Змішування густих речовин</div>
-          <div class="video-text">Взаємне проникнення частинок на межі контакту двох середовищ.</div>
+          <h3 class="video-title">🧪 Дослід 2: Змішування густих речовин</h3>
+          <p class="video-text">Взаємне проникнення частинок на межі контакту двох середовищ.</p>
         </div>
       </div>
 
@@ -178,8 +167,8 @@
           </video>
         </div>
         <div class="video-info">
-          <div class="video-title">🧪 Дослід 3: Швидкість дифузії</div>
-          <div class="video-text">Динаміка процесу розповсюдження фарби у снігу </div>
+          <h3 class="video-title">🧪 Дослід 3: Швидкість дифузії</h3>
+          <p class="video-text">Динаміка процесу розповсюдження фарби у снігу.</p>
         </div>
       </div>
 
