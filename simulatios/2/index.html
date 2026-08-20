@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Анімація дифузії</title>
+  <style>
+    body { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; margin: 0; background: #1e1e2f; font-family: sans-serif; color: white; }
+    canvas { border: 2px solid #555; border-radius: 8px; background: #111; }
+    button { margin-top: 15px; padding: 10px 20px; font-size: 16px; border: none; border-radius: 5px; background: #00d2ff; cursor: pointer; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Симуляція дифузії часток</h2>
+  <canvas id="box" width="600" height="300"></canvas>
+  <button onclick="startDiffusion()">Прибрати перегородку</button>
+
+  <script>
+    const canvas = document.getElementById('box');
+    const ctx = canvas.getContext('2d');
+    let divider = true;
+    const particles = [];
+
+    // Створення 250 часток у лівій половині
+    for (let i = 0; i < 250; i++) {
+      particles.push({
+        x: Math.random() * 260 + 20,
+        y: Math.random() * 260 + 20,
+        vx: (Math.random() - 0.5) * 4,
+        vy: (Math.random() - 0.5) * 4,
+        radius: 4,
+        color: '#00e5ff'
+      });
+    }
+
+    function startDiffusion() {
+      divider = false;
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Малюємо перегородку (поки вона є)
+      if (divider) {
+        ctx.fillStyle = '#ff4757';
+        ctx.fillRect(298, 0, 4, canvas.height);
+      }
+
+      // Оновлення та відмальовка часток
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+
+        // Зіткнення зі стінками
+        if (p.y - p.radius < 0 || p.y + p.radius > canvas.height) p.vy *= -1;
+        if (p.x - p.radius < 0 || p.x + p.radius > canvas.width) p.vx *= -1;
+
+        // Зіткнення з перегородкою
+        if (divider && p.x + p.radius > 298) {
+          p.x = 298 - p.radius;
+          p.vx *= -1;
+        }
+
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fillStyle = p.color;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = p.color;
+        ctx.fill();
+      });
+
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
