@@ -3,225 +3,312 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Додавання та віднімання на числовій осі</title>
+    <title>Числова вісь: Додавання та віднімання</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', 'Segoe UI', sans-serif;
         }
 
         body {
-            background-color: #EFEEEC;
-            color: #2D3748;
+            background: radial-gradient(circle at center, #0e1c36 0%, #060b14 100%);
+            color: #F8FAFC;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 24px;
+            padding: 20px;
         }
 
-        .container {
-            background: #FFFFFF;
+        .simulation-card {
+            background: #0a1324;
             width: 100%;
-            max-width: 950px;
-            padding: 36px 30px;
+            max-width: 960px;
+            padding: 28px 32px;
             border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            border: 1.5px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(14, 165, 233, 0.15);
         }
 
         h1 {
             text-align: center;
-            font-size: 26px;
-            margin-bottom: 24px;
-            color: #1A202C;
+            font-size: 28px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
         }
 
-        /* Вираз над віссю */
+        /* Табло з формулою */
         .math-display {
             text-align: center;
-            font-size: 40px;
-            font-weight: bold;
-            margin-bottom: 28px;
-            padding: 16px;
-            background: #F8F9FA;
-            border-radius: 12px;
+            font-size: 52px;
+            font-weight: 900;
+            margin-bottom: 22px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 16px;
+            user-select: none;
         }
 
-        .num-start { color: #3B82F6; }
-        .num-change { color: #8B5CF6; }
-        .num-positive { color: #10B981; }
-        .num-negative { color: #EF4444; }
-        .num-zero { color: #6B7280; }
+        .symbol { color: #FFFFFF; }
+        
+        .num-start {
+            color: #60A5FA;
+            text-shadow: 0 0 16px rgba(96, 165, 250, 0.8), 0 0 30px rgba(59, 130, 246, 0.5);
+        }
+
+        .num-change {
+            color: #C084FC;
+            text-shadow: 0 0 16px rgba(192, 132, 252, 0.8), 0 0 30px rgba(168, 85, 247, 0.5);
+        }
+
+        .num-pos {
+            color: #4ADE80;
+            text-shadow: 0 0 16px rgba(74, 222, 128, 0.8), 0 0 30px rgba(34, 197, 94, 0.5);
+        }
+
+        .num-neg {
+            color: #F87171;
+            text-shadow: 0 0 16px rgba(248, 113, 113, 0.8), 0 0 30px rgba(239, 68, 68, 0.5);
+        }
+
+        .num-zero {
+            color: #38BDF8;
+            text-shadow: 0 0 16px rgba(56, 189, 248, 0.8);
+        }
 
         /* Полотно осі */
-        .canvas-container {
-            width: 100%;
+        .canvas-wrapper {
             position: relative;
-            cursor: pointer;
-            user-select: none;
+            background: #030712;
             border-radius: 12px;
-            background: #FAFAFA;
-            border: 1px solid #E5E7EB;
-            margin-bottom: 28px;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+            cursor: pointer;
+            overflow: hidden;
+            margin-bottom: 24px;
         }
 
         canvas {
             display: block;
             width: 100%;
+            height: auto;
         }
 
-        /* Панель керування */
-        .controls {
+        /* Блок налаштувань та елементів керування */
+        .controls-grid {
+            display: grid;
+            grid-template-columns: 220px 1fr 140px;
+            align-items: center;
+            gap: 16px 20px;
+        }
+
+        .control-label {
+            font-size: 19px;
+            font-weight: 700;
+            color: #F1F5F9;
+        }
+
+        /* Поле стартового числа */
+        .input-box-wrapper {
             display: flex;
             flex-direction: column;
-            gap: 24px;
-        }
-
-        .input-row {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px;
+            width: 100%;
         }
 
-        .start-group {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        .start-group input {
-            width: 80px;
-            padding: 10px 12px;
-            font-size: 20px;
+        .custom-input {
+            width: 100%;
+            background: #08152e;
+            color: #FFFFFF;
+            font-size: 22px;
             font-weight: bold;
             text-align: center;
-            border: 2px solid #CBD5E1;
+            border: 1.5px solid #2563EB;
             border-radius: 8px;
+            padding: 8px 12px;
             outline: none;
-            background: #FFF;
-            transition: border-color 0.2s;
-        }
-
-        .start-group input:focus {
-            border-color: #3B82F6;
-        }
-
-        .btn-reset {
-            background-color: #E2E8F0;
-            color: #334155;
-            border: none;
-            padding: 12px 24px;
-            font-size: 16px;
-            font-weight: bold;
-            border-radius: 8px;
-            cursor: pointer;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
             transition: all 0.2s;
         }
 
-        .btn-reset:hover {
-            background-color: #CBD5E1;
-            color: #0F172A;
+        .custom-input:focus {
+            border-color: #38BDF8;
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.4);
         }
 
-        .slider-group {
+        /* Кнопка скидання (глянцевий стиль) */
+        .btn-reset {
+            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 60%, #CBD5E1 100%);
+            color: #0F172A;
+            border: none;
+            padding: 10px 20px;
+            font-size: 20px;
+            font-weight: 800;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: transform 0.1s, filter 0.2s;
+            height: 48px;
+        }
+
+        .btn-reset:hover {
+            filter: brightness(1.08);
+        }
+
+        .btn-reset:active {
+            transform: scale(0.97);
+        }
+
+        /* Повзунок */
+        .slider-container {
+            grid-column: 2 / 3;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 4px;
         }
 
-        .slider-label {
+        .range-track-wrapper {
+            position: relative;
             display: flex;
-            justify-content: space-between;
-            font-size: 16px;
-            font-weight: bold;
-            color: #4B5563;
+            align-items: center;
         }
 
-        input[type=range] {
+        input[type="range"] {
+            -webkit-appearance: none;
             width: 100%;
             height: 10px;
+            background: #111e3b;
             border-radius: 5px;
-            background: #E2E8F0;
             outline: none;
-            accent-color: #8B5CF6;
-            cursor: pointer;
+            border: 1px solid #3b82f6;
+            box-shadow: 0 0 8px rgba(168, 85, 247, 0.3);
         }
 
-        .hint {
-            text-align: center;
+        /* Стилізація бігунка */
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFFFFF 30%, #C084FC 80%);
+            cursor: pointer;
+            box-shadow: 0 0 12px #C084FC, 0 0 20px #A855F7;
+            border: 2px solid #FFFFFF;
+            transition: transform 0.15s ease;
+        }
+
+        input[type="range"]::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+
+        input[type="range"]::-moz-range-thumb {
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFFFFF 30%, #C084FC 80%);
+            cursor: pointer;
+            box-shadow: 0 0 12px #C084FC;
+            border: 2px solid #FFFFFF;
+        }
+
+        /* Підписи міток під полями вводу */
+        .sub-labels {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
             font-size: 14px;
+            font-weight: 700;
             color: #94A3B8;
-            margin-top: 16px;
+            margin-top: 4px;
+        }
+
+        .slider-val-indicator {
+            color: #C084FC;
+            font-size: 16px;
+            font-weight: 800;
+            text-shadow: 0 0 8px rgba(192, 132, 252, 0.6);
+        }
+
+        @media (max-width: 720px) {
+            .controls-grid {
+                grid-template-columns: 1fr;
+            }
+            .slider-container {
+                grid-column: 1 / -1;
+            }
+            .math-display {
+                font-size: 36px;
+            }
         }
     </style>
 </head>
 <body>
 
-<div class="container">
+<div class="simulation-card">
     <h1>Числова вісь: Додавання та віднімання</h1>
 
     <div class="math-display" id="mathDisplay">
         <span class="num-start">0</span>
-        <span>+</span>
-        <span class="num-change">0</span>
-        <span>=</span>
-        <span class="num-zero">0</span>
+        <span class="symbol">+</span>
+        <span class="num-change">15</span>
+        <span class="symbol">=</span>
+        <span class="num-pos">15</span>
     </div>
 
-    <div class="canvas-container" id="canvasContainer" title="Клікніть, щоб змінити початкову точку">
-        <canvas id="axisCanvas" width="900" height="240"></canvas>
+    <div class="canvas-wrapper" id="canvasWrapper" title="Клікніть, щоб перемістити початкову точку">
+        <canvas id="simCanvas" width="900" height="190"></canvas>
     </div>
 
-    <div class="controls">
-        <div class="input-row">
-            <div class="start-group">
-                <label for="startInput">Початкове число:</label>
-                <input type="number" id="startInput" min="-20" max="20" value="0">
+    <div class="controls-grid">
+        <div class="control-label">Початкове число:</div>
+        <div class="input-box-wrapper">
+            <input type="number" id="startInput" class="custom-input" min="-20" max="20" value="0">
+            <div class="sub-labels">
+                <span>-20</span>
+                <span>20</span>
             </div>
-            <button class="btn-reset" id="resetBtn">Скинути</button>
         </div>
+        <button class="btn-reset" id="resetBtn">Скинути</button>
 
-        <div class="slider-group">
-            <div class="slider-label">
-                <span>Дія: додати / відняти</span>
-                <span id="sliderValueText">0</span>
+        <div class="control-label">Дія: додати / відняти</div>
+        <div class="slider-container">
+            <div class="range-track-wrapper">
+                <input type="range" id="changeSlider" min="-20" max="20" value="15">
             </div>
-            <input type="range" id="changeSlider" min="-20" max="20" value="0">
+            <div class="sub-labels">
+                <span>-20</span>
+                <span class="slider-val-indicator" id="sliderValIndicator">+15</span>
+                <span>20</span>
+            </div>
         </div>
     </div>
-
-    <p class="hint">Порада: клікайте по осі або використовуйте повзунок для додавання (вправо) чи віднімання (вліво).</p>
 </div>
 
 <script>
-    const canvas = document.getElementById('axisCanvas');
+    const canvas = document.getElementById('simCanvas');
     const ctx = canvas.getContext('2d');
+
     const startInput = document.getElementById('startInput');
     const changeSlider = document.getElementById('changeSlider');
-    const sliderValueText = document.getElementById('sliderValueText');
+    const sliderValIndicator = document.getElementById('sliderValIndicator');
     const mathDisplay = document.getElementById('mathDisplay');
     const resetBtn = document.getElementById('resetBtn');
 
     const MIN_VAL = -20;
     const MAX_VAL = 20;
     const TOTAL_UNITS = MAX_VAL - MIN_VAL;
-    const PADDING_X = 45;
-    const AXIS_Y = 175;
+    const PADDING_X = 50;
+    const AXIS_Y = 105;
 
     let startVal = 0;
-    let changeVal = 0;
+    let changeVal = 15;
 
     function getX(val) {
         const width = canvas.width - (PADDING_X * 2);
@@ -235,15 +322,9 @@
         return Math.max(MIN_VAL, Math.min(MAX_VAL, val));
     }
 
-    function getResultColorClass(val) {
-        if (val > 0) return 'num-positive';
-        if (val < 0) return 'num-negative';
-        return 'num-zero';
-    }
-
     function updateEquation() {
         const result = startVal + changeVal;
-        sliderValueText.textContent = changeVal > 0 ? `+${changeVal}` : `${changeVal}`;
+        sliderValIndicator.textContent = changeVal > 0 ? `+${changeVal}` : `${changeVal}`;
 
         let op = '+';
         let displayChange = changeVal;
@@ -253,95 +334,103 @@
             displayChange = Math.abs(changeVal);
         }
 
-        const resClass = getResultColorClass(result);
-        const startClass = 'num-start';
-        const changeClass = 'num-change';
+        let resClass = 'num-zero';
+        if (result > 0) resClass = 'num-pos';
+        else if (result < 0) resClass = 'num-neg';
 
         mathDisplay.innerHTML = `
-            <span class="${startClass}">${startVal}</span>
-            <span>${op}</span>
-            <span class="${changeClass}">${displayChange}</span>
-            <span>=</span>
+            <span class="num-start">${startVal}</span>
+            <span class="symbol">${op}</span>
+            <span class="num-change">${displayChange}</span>
+            <span class="symbol">=</span>
             <span class="${resClass}">${result}</span>
         `;
     }
 
-    function drawArrow(ctx, fromX, fromY, toX, toY, cpX, cpY, color) {
-        ctx.save();
-        ctx.strokeStyle = color;
-        ctx.fillStyle = color;
-        ctx.lineWidth = 3.5;
-        ctx.setLineDash([6, 4]);
-
-        ctx.beginPath();
-        ctx.moveTo(fromX, fromY);
-        ctx.quadraticCurveTo(cpX, cpY, toX, toY);
-        ctx.stroke();
-
-        ctx.setLineDash([]);
-
-        // Розрахунок кута стрілки на кінці дуги
-        const t = 1.0;
-        const dx = 2 * (1 - t) * (cpX - fromX) + 2 * t * (toX - cpX);
-        const dy = 2 * (1 - t) * (cpY - fromY) + 2 * t * (toY - cpY);
-        const angle = Math.atan2(dy, dx);
+    function drawArrowHead(ctx, x, y, angle, color) {
         const headLen = 14;
-
+        ctx.save();
+        ctx.fillStyle = color;
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 10;
         ctx.beginPath();
-        ctx.moveTo(toX, toY);
-        ctx.lineTo(toX - headLen * Math.cos(angle - Math.PI / 6), toY - headLen * Math.sin(angle - Math.PI / 6));
-        ctx.lineTo(toX - headLen * Math.cos(angle + Math.PI / 6), toY - headLen * Math.sin(angle + Math.PI / 6));
+        ctx.moveTo(x, y);
+        ctx.lineTo(x - headLen * Math.cos(angle - Math.PI / 6), y - headLen * Math.sin(angle - Math.PI / 6));
+        ctx.lineTo(x - headLen * Math.cos(angle + Math.PI / 6), y - headLen * Math.sin(angle + Math.PI / 6));
         ctx.closePath();
         ctx.fill();
-
         ctx.restore();
     }
 
     function draw() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // 1. Горизонтальна числова вісь
+        // 1. Координатна сітка (Grid)
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.12)';
+        ctx.lineWidth = 1;
+
+        // Горизонтальні лінії сітки
+        for (let y = 25; y < canvas.height - 40; y += 40) {
+            ctx.beginPath();
+            ctx.moveTo(PADDING_X - 25, y);
+            ctx.lineTo(canvas.width - PADDING_X + 25, y);
+            ctx.stroke();
+        }
+
+        // Вертикальні лінії сітки (кожні 5 одиниць)
+        for (let i = MIN_VAL; i <= MAX_VAL; i += 5) {
+            const x = getX(i);
+            ctx.beginPath();
+            ctx.moveTo(x, 15);
+            ctx.lineTo(x, canvas.height - 40);
+            ctx.stroke();
+        }
+
+        // Вертикальна вісь Y через нуль з підсвіткою
+        const zeroX = getX(0);
+        ctx.save();
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.6)';
+        ctx.shadowColor = '#38BDF8';
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(zeroX, 15);
+        ctx.lineTo(zeroX, canvas.height - 40);
+        ctx.stroke();
+        ctx.restore();
+
+        // 2. Головна числова вісь
+        ctx.save();
+        ctx.strokeStyle = '#38BDF8';
+        ctx.shadowColor = 'rgba(56, 189, 248, 0.5)';
+        ctx.shadowBlur = 6;
+        ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.moveTo(PADDING_X - 20, AXIS_Y);
         ctx.lineTo(canvas.width - PADDING_X + 20, AXIS_Y);
-        ctx.strokeStyle = '#64748B';
-        ctx.lineWidth = 3;
         ctx.stroke();
+        ctx.restore();
 
-        // Стрілки на кінцях осі
-        const drawAxisArrow = (x, dir) => {
-            ctx.beginPath();
-            ctx.moveTo(x, AXIS_Y);
-            ctx.lineTo(x - dir * 10, AXIS_Y - 6);
-            ctx.lineTo(x - dir * 10, AXIS_Y + 6);
-            ctx.fillStyle = '#64748B';
-            ctx.fill();
-        };
-        drawAxisArrow(canvas.width - PADDING_X + 25, 1);
-        drawAxisArrow(PADDING_X - 25, -1);
-
-        // 2. Поділки та підписи
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'top';
-
+        // 3. Поділки та цифри
         for (let i = MIN_VAL; i <= MAX_VAL; i++) {
             const x = getX(i);
             const isMajor = i % 5 === 0;
-            const isZero = i === 0;
-            const tickHeight = isZero ? 16 : (isMajor ? 12 : 6);
+            const tickH = isMajor ? 12 : 6;
 
             ctx.beginPath();
-            ctx.moveTo(x, AXIS_Y - tickHeight);
-            ctx.lineTo(x, AXIS_Y + tickHeight);
-            ctx.strokeStyle = isZero ? '#0F172A' : (isMajor ? '#334155' : '#94A3B8');
-            ctx.lineWidth = isZero ? 3 : (isMajor ? 2 : 1);
+            ctx.moveTo(x, AXIS_Y - tickH);
+            ctx.lineTo(x, AXIS_Y + tickH);
+            ctx.strokeStyle = isMajor ? '#38BDF8' : 'rgba(56, 189, 248, 0.45)';
+            ctx.lineWidth = isMajor ? 2 : 1;
             ctx.stroke();
 
-            // Текстові мітки
-            if (isMajor || TOTAL_UNITS <= 20) {
-                ctx.font = isZero ? 'bold 15px Arial' : (isMajor ? 'bold 13px Arial' : '11px Arial');
-                ctx.fillStyle = isZero ? '#0F172A' : (i > 0 ? '#10B981' : (i < 0 ? '#EF4444' : '#64748B'));
-                ctx.fillText(i, x, AXIS_Y + 20);
+            // Великі жирні підписи кожні 5 одиниць
+            if (isMajor) {
+                ctx.font = 'bold 28px Arial';
+                ctx.fillStyle = '#FFFFFF';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+                ctx.fillText(i, x, AXIS_Y + 22);
             }
         }
 
@@ -349,61 +438,87 @@
         const targetVal = startVal + changeVal;
         const targetX = getX(targetVal);
 
-        // 3. Дуга переміщення
+        // 4. Світіння та дуга переміщення
         if (changeVal !== 0) {
-            const arcHeight = Math.min(100, Math.max(40, Math.abs(changeVal) * 5));
+            const arcH = Math.min(80, Math.max(35, Math.abs(changeVal) * 3.5));
             const midX = (startX + targetX) / 2;
-            const cpY = AXIS_Y - arcHeight - 20;
-            const arrowColor = changeVal > 0 ? '#8B5CF6' : '#F59E0B';
+            const cpY = AXIS_Y - arcH - 15;
+            const arcColor = '#C084FC';
 
-            drawArrow(ctx, startX, AXIS_Y - 14, targetX, AXIS_Y - 14, midX, cpY, arrowColor);
+            ctx.save();
+            ctx.strokeStyle = arcColor;
+            ctx.shadowColor = '#C084FC';
+            ctx.shadowBlur = 14;
+            ctx.lineWidth = 4;
 
-            // Підпис величини руху над дугою
-            ctx.font = 'bold 16px Arial';
-            ctx.fillStyle = arrowColor;
-            ctx.textAlign = 'center';
-            ctx.fillText(changeVal > 0 ? `+${changeVal}` : `${changeVal}`, midX, cpY + 5);
+            ctx.beginPath();
+            ctx.moveTo(startX, AXIS_Y);
+            ctx.quadraticCurveTo(midX, cpY, targetX, AXIS_Y);
+            ctx.stroke();
+            ctx.restore();
+
+            // Напрямок стрілки
+            const dx = targetX - midX;
+            const dy = AXIS_Y - cpY;
+            const angle = Math.atan2(dy, dx);
+            drawArrowHead(ctx, targetX, AXIS_Y, angle, arcColor);
         }
 
-        // 4. Маркер стартової точки
+        // 5. Стартова точка (неонова синя)
+        ctx.save();
+        ctx.shadowColor = '#60A5FA';
+        ctx.shadowBlur = 14;
+        ctx.fillStyle = '#60A5FA';
         ctx.beginPath();
         ctx.arc(startX, AXIS_Y, 8, 0, Math.PI * 2);
-        ctx.fillStyle = '#3B82F6';
         ctx.fill();
-        ctx.strokeStyle = '#FFFFFF';
-        ctx.lineWidth = 2.5;
-        ctx.stroke();
 
-        // 5. Маркер результату (якщо є зміна)
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(startX, AXIS_Y, 4, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // 6. Точка результату (неонова зелена/червона/блакитна)
         if (changeVal !== 0) {
-            const resColor = targetVal > 0 ? '#10B981' : (targetVal < 0 ? '#EF4444' : '#6B7280');
+            let resColor = '#38BDF8';
+            if (targetVal > 0) resColor = '#4ADE80';
+            else if (targetVal < 0) resColor = '#F87171';
+
+            ctx.save();
+            ctx.shadowColor = resColor;
+            ctx.shadowBlur = 18;
+            ctx.fillStyle = resColor;
             ctx.beginPath();
             ctx.arc(targetX, AXIS_Y, 9, 0, Math.PI * 2);
-            ctx.fillStyle = resColor;
             ctx.fill();
-            ctx.strokeStyle = '#FFFFFF';
-            ctx.lineWidth = 2.5;
-            ctx.stroke();
+
+            ctx.fillStyle = '#FFFFFF';
+            ctx.beginPath();
+            ctx.arc(targetX, AXIS_Y, 4, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
         }
 
         updateEquation();
     }
 
-    // Обробники подій
+    function syncLimits() {
+        changeSlider.min = MIN_VAL - startVal;
+        changeSlider.max = MAX_VAL - startVal;
+
+        if (changeVal < changeSlider.min) changeVal = parseInt(changeSlider.min);
+        if (changeVal > changeSlider.max) changeVal = parseInt(changeSlider.max);
+        changeSlider.value = changeVal;
+    }
+
+    // Слухачі подій
     startInput.addEventListener('input', (e) => {
         let val = parseInt(e.target.value, 10);
         if (isNaN(val)) val = 0;
         val = Math.max(MIN_VAL, Math.min(MAX_VAL, val));
         startVal = val;
-        
-        // Обмеження діапазону повзунка, щоб результат не виходив за [-20, 20]
-        changeSlider.min = MIN_VAL - startVal;
-        changeSlider.max = MAX_VAL - startVal;
-        
-        if (changeVal < changeSlider.min) changeVal = parseInt(changeSlider.min);
-        if (changeVal > changeSlider.max) changeVal = parseInt(changeSlider.max);
-        changeSlider.value = changeVal;
-
+        syncLimits();
         draw();
     });
 
@@ -416,17 +531,10 @@
         const rect = canvas.getBoundingClientRect();
         const scaleX = canvas.width / rect.width;
         const clickX = (e.clientX - rect.left) * scaleX;
-        
+
         startVal = getValueFromX(clickX);
         startInput.value = startVal;
-        
-        changeSlider.min = MIN_VAL - startVal;
-        changeSlider.max = MAX_VAL - startVal;
-        
-        if (changeVal < changeSlider.min) changeVal = parseInt(changeSlider.min);
-        if (changeVal > changeSlider.max) changeVal = parseInt(changeSlider.max);
-        changeSlider.value = changeVal;
-
+        syncLimits();
         draw();
     });
 
@@ -434,13 +542,12 @@
         startVal = 0;
         changeVal = 0;
         startInput.value = 0;
-        changeSlider.min = -20;
-        changeSlider.max = 20;
-        changeSlider.value = 0;
+        syncLimits();
         draw();
     });
 
-    // Перший запуск
+    // Початковий рендер
+    syncLimits();
     draw();
 </script>
 
