@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Квадратична функція: y = ax² + bx + c</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0e1c36 0%, #060b14 100%);
+            color: #F8FAFC;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .simulation-card {
+            background: #0a1324;
+            width: 100%;
+            max-width: 980px;
+            padding: 28px 32px;
+            border-radius: 20px;
+            border: 1.5px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(14, 165, 233, 0.15);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 26px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            margin-bottom: 16px;
+            text-shadow: 0 2px 10px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Табло рівняння */
+        .math-display {
+            text-align: center;
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            user-select: none;
+            flex-wrap: wrap;
+        }
+
+        .symbol { color: #FFFFFF; }
+        .var-y { color: #38BDF8; }
+        .coef-a { color: #F43F5E; text-shadow: 0 0 16px rgba(244, 63, 94, 0.8); }
+        .coef-b { color: #C084FC; text-shadow: 0 0 16px rgba(192, 132, 252, 0.8); }
+        .coef-c { color: #FACC15; text-shadow: 0 0 16px rgba(250, 204, 21, 0.8); }
+        .power { font-size: 26px; vertical-align: super; }
+
+        /* Попередження при a = 0 */
+        .linear-warning {
+            min-height: 24px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: bold;
+            color: #F87171;
+            margin-bottom: 12px;
+            text-shadow: 0 0 8px rgba(248, 113, 113, 0.6);
+        }
+
+        /* Полотно графіку */
+        .canvas-wrapper {
+            position: relative;
+            background: #030712;
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.35);
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
+
+        /* Елементи керування */
+        .controls-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .slider-row {
+            display: grid;
+            grid-template-columns: 30px 1fr 60px;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .slider-row label {
+            font-size: 22px;
+            font-weight: 900;
+            text-align: center;
+        }
+
+        .label-a { color: #F43F5E; }
+        .label-b { color: #C084FC; }
+        .label-c { color: #FACC15; }
+
+        .slider-val-box {
+            font-size: 18px;
+            font-weight: 800;
+            text-align: right;
+            color: #F8FAFC;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 10px;
+            background: #111e3b;
+            border-radius: 5px;
+            outline: none;
+            border: 1px solid #1E293B;
+            box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Кастомні бігунки */
+        input#sliderA::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFF 30%, #F43F5E 80%);
+            cursor: pointer;
+            box-shadow: 0 0 12px #F43F5E;
+            border: 2px solid #FFF;
+        }
+
+        input#sliderB::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFF 30%, #C084FC 80%);
+            cursor: pointer;
+            box-shadow: 0 0 12px #C084FC;
+            border: 2px solid #FFF;
+        }
+
+        input#sliderC::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFF 30%, #FACC15 80%);
+            cursor: pointer;
+            box-shadow: 0 0 12px #FACC15;
+            border: 2px solid #FFF;
+        }
+
+        /* Кнопка та легенда */
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 8px;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .legend {
+            display: flex;
+            gap: 18px;
+            font-size: 14px;
+            font-weight: 700;
+            color: #94A3B8;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .legend-line {
+            width: 14px;
+            height: 2px;
+            border-top: 2px dashed #38BDF8;
+        }
+
+        .btn-reset {
+            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 60%, #CBD5E1 100%);
+            color: #0F172A;
+            border: none;
+            padding: 10px 24px;
+            font-size: 16px;
+            font-weight: 800;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.8);
+            transition: filter 0.2s, transform 0.1s;
+        }
+
+        .btn-reset:hover {
+            filter: brightness(1.08);
+        }
+
+        .btn-reset:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+
+<div class="simulation-card">
+    <h1>Дослідження графіка y = ax² + bx + c</h1>
+
+    <div class="math-display" id="mathDisplay"></div>
+    <div class="linear-warning" id="linearWarning"></div>
+
+    <div class="canvas-wrapper">
+        <canvas id="graphCanvas" width="900" height="460"></canvas>
+    </div>
+
+    <div class="controls-grid">
+        <div class="slider-row">
+            <label for="sliderA" class="label-a">a</label>
+            <input type="range" id="sliderA" min="-5" max="5" step="0.5" value="1">
+            <div class="slider-val-box coef-a" id="valA">1.0</div>
+        </div>
+        <div class="slider-row">
+            <label for="sliderB" class="label-b">b</label>
+            <input type="range" id="sliderB" min="-10" max="10" step="0.5" value="0">
+            <div class="slider-val-box coef-b" id="valB">0.0</div>
+        </div>
+        <div class="slider-row">
+            <label for="sliderC" class="label-c">c</label>
+            <input type="range" id="sliderC" min="-10" max="10" step="0.5" value="0">
+            <div class="slider-val-box coef-c" id="valC">0.0</div>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #4ADE80; box-shadow: 0 0 6px #4ADE80;"></div>
+                <span>Вершина</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot" style="background: #F43F5E; box-shadow: 0 0 6px #F43F5E;"></div>
+                <span>Нулі функції (X)</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-line"></div>
+                <span>Вісь симетрії</span>
+            </div>
+        </div>
+        <button class="btn-reset" id="resetBtn">Скинути (y = x²)</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('graphCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const sliderA = document.getElementById('sliderA');
+    const sliderB = document.getElementById('sliderB');
+    const sliderC = document.getElementById('sliderC');
+    const valA = document.getElementById('valA');
+    const valB = document.getElementById('valB');
+    const valC = document.getElementById('valC');
+    const mathDisplay = document.getElementById('mathDisplay');
+    const linearWarning = document.getElementById('linearWarning');
+    const resetBtn = document.getElementById('resetBtn');
+
+    // Масштаб: координатна сітка від -10 до +10
+    const MIN_X = -10, MAX_X = 10;
+    const MIN_Y = -10, MAX_Y = 10;
+
+    function toScreenX(x) {
+        return ((x - MIN_X) / (MAX_X - MIN_X)) * canvas.width;
+    }
+
+    function toScreenY(y) {
+        return canvas.height - ((y - MIN_Y) / (MAX_Y - MIN_Y)) * canvas.height;
+    }
+
+    function formatNumber(n) {
+        return Number.isInteger(n) ? n.toString() : n.toFixed(1);
+    }
+
+    function updateEquation(a, b, c) {
+        valA.textContent = formatNumber(a);
+        valB.textContent = formatNumber(b);
+        valC.textContent = formatNumber(c);
+
+        if (a === 0) {
+            linearWarning.textContent = '⚡ При a = 0 квадратична функція вироджується в лінійну (пряма лінія)';
+        } else {
+            linearWarning.textContent = '';
+        }
+
+        // Побудова виразу
+        let html = '<span class="var-y">y</span> <span class="symbol">=</span> ';
+
+        if (a === 0 && b === 0 && c === 0) {
+            html += '<span class="symbol">0</span>';
+            mathDisplay.innerHTML = html;
+            return;
+        }
+
+        let parts = [];
+
+        // Член з x²
+        if (a !== 0) {
+            let aStr = '';
+            if (a === -1) aStr = '-';
+            else if (a !== 1) aStr = formatNumber(a);
+            parts.push(`<span class="coef-a">${aStr}x<span class="power">2</span></span>`);
+        }
+
+        // Член з x
+        if (b !== 0) {
+            let sign = b > 0 ? (parts.length > 0 ? '+ ' : '') : '- ';
+            let absB = Math.abs(b);
+            let bStr = absB === 1 ? '' : formatNumber(absB);
+            parts.push(`${sign}<span class="coef-b">${bStr}x</span>`);
+        }
+
+        // Вільний член c
+        if (c !== 0) {
+            let sign = c > 0 ? (parts.length > 0 ? '+ ' : '') : '- ';
+            parts.push(`${sign}<span class="coef-c">${formatNumber(Math.abs(c))}</span>`);
+        }
+
+        mathDisplay.innerHTML = html + parts.join(' ');
+    }
+
+    function drawPoint(x, y, color, label = '') {
+        const sx = toScreenX(x);
+        const sy = toScreenY(y);
+
+        ctx.save();
+        ctx.shadowColor = color;
+        ctx.shadowBlur = 12;
+        ctx.fillStyle = color;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 6, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(sx, sy, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (label) {
+            ctx.shadowBlur = 4;
+            ctx.font = 'bold 12px Arial';
+            ctx.fillStyle = '#FFFFFF';
+            ctx.fillText(label, sx + 8, sy - 8);
+        }
+        ctx.restore();
+    }
+
+    function draw() {
+        const a = parseFloat(sliderA.value);
+        const b = parseFloat(sliderB.value);
+        const c = parseFloat(sliderC.value);
+
+        updateEquation(a, b, c);
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 1. Координатна сітка
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.1)';
+        ctx.lineWidth = 1;
+
+        for (let x = MIN_X; x <= MAX_X; x++) {
+            ctx.beginPath();
+            ctx.moveTo(toScreenX(x), 0);
+            ctx.lineTo(toScreenX(x), canvas.height);
+            ctx.stroke();
+        }
+
+        for (let y = MIN_Y; y <= MAX_Y; y++) {
+            ctx.beginPath();
+            ctx.moveTo(0, toScreenY(y));
+            ctx.lineTo(canvas.width, toScreenY(y));
+            ctx.stroke();
+        }
+
+        // 2. Осі координат
+        ctx.save();
+        ctx.strokeStyle = '#38BDF8';
+        ctx.shadowColor = 'rgba(56, 189, 248, 0.4)';
+        ctx.shadowBlur = 6;
+        ctx.lineWidth = 2;
+
+        // Вісь X
+        ctx.beginPath();
+        ctx.moveTo(0, toScreenY(0));
+        ctx.lineTo(canvas.width, toScreenY(0));
+        ctx.stroke();
+
+        // Вісь Y
+        ctx.beginPath();
+        ctx.moveTo(toScreenX(0), 0);
+        ctx.lineTo(toScreenX(0), canvas.height);
+        ctx.stroke();
+        ctx.restore();
+
+        // 3. Підписи осей
+        ctx.font = 'bold 12px Arial';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.6)';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+
+        for (let x = MIN_X; x <= MAX_X; x += 2) {
+            if (x !== 0) {
+                ctx.fillText(x, toScreenX(x), toScreenY(0) + 6);
+            }
+        }
+
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        for (let y = MIN_Y; y <= MAX_Y; y += 2) {
+            if (y !== 0) {
+                ctx.fillText(y, toScreenX(0) - 6, toScreenY(y));
+            }
+        }
+
+        // 4. Додаткові елементи для квадратичної функції
+        if (a !== 0) {
+            const vx = -b / (2 * a);
+            const vy = a * vx * vx + b * vx + c;
+
+            // Вісь симетрії
+            if (vx >= MIN_X && vx <= MAX_X) {
+                ctx.save();
+                ctx.strokeStyle = 'rgba(56, 189, 248, 0.7)';
+                ctx.setLineDash([6, 6]);
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(toScreenX(vx), 0);
+                ctx.lineTo(toScreenX(vx), canvas.height);
+                ctx.stroke();
+                ctx.restore();
+            }
+
+            // Нулі функції (перетин з віссю X)
+            const D = b * b - 4 * a * c;
+            if (D > 0) {
+                const x1 = (-b - Math.sqrt(D)) / (2 * a);
+                const x2 = (-b + Math.sqrt(D)) / (2 * a);
+                if (x1 >= MIN_X && x1 <= MAX_X) drawPoint(x1, 0, '#F43F5E', `(${formatNumber(x1)}; 0)`);
+                if (x2 >= MIN_X && x2 <= MAX_X) drawPoint(x2, 0, '#F43F5E', `(${formatNumber(x2)}; 0)`);
+            } else if (Math.abs(D) < 1e-6) {
+                const x0 = -b / (2 * a);
+                if (x0 >= MIN_X && x0 <= MAX_X) drawPoint(x0, 0, '#F43F5E', `(${formatNumber(x0)}; 0)`);
+            }
+
+            // Вершина параболи
+            if (vx >= MIN_X && vx <= MAX_X && vy >= MIN_Y && vy <= MAX_Y) {
+                drawPoint(vx, vy, '#4ADE80', `V(${formatNumber(vx)}; ${formatNumber(vy)})`);
+            }
+        }
+
+        // 5. Малювання графіку функції
+        ctx.save();
+        ctx.strokeStyle = '#38BDF8';
+        ctx.shadowColor = '#0EA5E9';
+        ctx.shadowBlur = 14;
+        ctx.lineWidth = 3.5;
+
+        ctx.beginPath();
+        let isStarted = false;
+        const step = (MAX_X - MIN_X) / canvas.width;
+
+        for (let x = MIN_X; x <= MAX_X; x += step) {
+            const y = a * x * x + b * x + c;
+            const sx = toScreenX(x);
+            const sy = toScreenY(y);
+
+            if (!isStarted) {
+                ctx.moveTo(sx, sy);
+                isStarted = true;
+            } else {
+                ctx.lineTo(sx, sy);
+            }
+        }
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    // Слухачі подій
+    [sliderA, sliderB, sliderC].forEach(slider => {
+        slider.addEventListener('input', draw);
+    });
+
+    resetBtn.addEventListener('click', () => {
+        sliderA.value = 1;
+        sliderB.value = 0;
+        sliderC.value = 0;
+        draw();
+    });
+
+    // Початковий рендер
+    draw();
+</script>
+
+</body>
+</html>
