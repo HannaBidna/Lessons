@@ -19,51 +19,51 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 12px;
+            padding: 16px;
         }
 
         .simulation-card {
             background: #0a1324;
             width: 100%;
-            max-width: 860px;
-            padding: 18px 24px;
-            border-radius: 16px;
+            max-width: 600px;
+            padding: 20px 24px;
+            border-radius: 18px;
             border: 1.5px solid rgba(56, 189, 248, 0.25);
             box-shadow: 0 0 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(14, 165, 233, 0.12);
         }
 
         h1 {
             text-align: center;
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 800;
             color: #FFFFFF;
-            letter-spacing: 0.4px;
-            margin-bottom: 8px;
+            letter-spacing: 0.3px;
+            margin-bottom: 6px;
             text-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
         }
 
         /* Табло рівняння */
         .math-display {
             text-align: center;
-            font-size: 30px;
+            font-size: 26px;
             font-weight: 900;
             margin-bottom: 2px;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             user-select: none;
             flex-wrap: wrap;
         }
 
         .symbol { color: #FFFFFF; }
         .var-y { color: #38BDF8; }
-        .coef-a { color: #F43F5E; text-shadow: 0 0 12px rgba(244, 63, 94, 0.8); }
-        .coef-b { color: #C084FC; text-shadow: 0 0 12px rgba(192, 132, 252, 0.8); }
-        .coef-c { color: #FACC15; text-shadow: 0 0 12px rgba(250, 204, 21, 0.8); }
-        .power { font-size: 18px; vertical-align: super; }
+        .coef-a { color: #F43F5E; text-shadow: 0 0 10px rgba(244, 63, 94, 0.8); }
+        .coef-b { color: #C084FC; text-shadow: 0 0 10px rgba(192, 132, 252, 0.8); }
+        .coef-c { color: #FACC15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.8); }
+        .power { font-size: 16px; vertical-align: super; }
 
-        /* Попередження при a = 0 */
+        /* Попередження */
         .linear-warning {
             min-height: 16px;
             text-align: center;
@@ -74,24 +74,27 @@
             text-shadow: 0 0 6px rgba(248, 113, 113, 0.6);
         }
 
-        /* Компактне поле графіка */
+        /* Ідеально квадратний контейнер графіка */
         .canvas-wrapper {
             position: relative;
+            width: 100%;
+            max-width: 480px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto 16px auto;
             background: #030712;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 1px solid rgba(56, 189, 248, 0.3);
             box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.9);
             overflow: hidden;
-            margin-bottom: 14px;
         }
 
         canvas {
             display: block;
             width: 100%;
-            height: auto;
+            height: 100%;
         }
 
-        /* Блок повзунків */
+        /* Елементи керування */
         .controls-grid {
             display: flex;
             flex-direction: column;
@@ -100,13 +103,13 @@
 
         .slider-row {
             display: grid;
-            grid-template-columns: 24px 1fr 48px;
+            grid-template-columns: 20px 1fr 44px;
             align-items: center;
             gap: 12px;
         }
 
         .slider-row label {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 900;
             text-align: center;
         }
@@ -116,7 +119,7 @@
         .label-c { color: #FACC15; }
 
         .slider-val-box {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 800;
             text-align: right;
             color: #F8FAFC;
@@ -139,7 +142,7 @@
             border-radius: 50%;
             background: radial-gradient(circle, #FFF 30%, #F43F5E 80%);
             cursor: pointer;
-            box-shadow: 0 0 10px #F43F5E;
+            box-shadow: 0 0 8px #F43F5E;
             border: 2px solid #FFF;
         }
 
@@ -150,7 +153,7 @@
             border-radius: 50%;
             background: radial-gradient(circle, #FFF 30%, #C084FC 80%);
             cursor: pointer;
-            box-shadow: 0 0 10px #C084FC;
+            box-shadow: 0 0 8px #C084FC;
             border: 2px solid #FFF;
         }
 
@@ -161,7 +164,7 @@
             border-radius: 50%;
             background: radial-gradient(circle, #FFF 30%, #FACC15 80%);
             cursor: pointer;
-            box-shadow: 0 0 10px #FACC15;
+            box-shadow: 0 0 8px #FACC15;
             border: 2px solid #FFF;
         }
 
@@ -170,15 +173,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-top: 10px;
+            margin-top: 12px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
         }
 
         .legend {
             display: flex;
-            gap: 14px;
-            font-size: 12px;
+            gap: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: #94A3B8;
             flex-wrap: wrap;
@@ -187,17 +190,17 @@
         .legend-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .legend-dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
         }
 
         .legend-line {
-            width: 14px;
+            width: 12px;
             height: 2px;
             border-top: 2px dashed #38BDF8;
         }
@@ -206,12 +209,12 @@
             background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 60%, #CBD5E1 100%);
             color: #0F172A;
             border: none;
-            padding: 8px 16px;
-            font-size: 13px;
+            padding: 6px 14px;
+            font-size: 12px;
             font-weight: 800;
             border-radius: 6px;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.8);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255,255,255,0.8);
             transition: filter 0.2s, transform 0.1s;
         }
 
@@ -233,7 +236,7 @@
     <div class="linear-warning" id="linearWarning"></div>
 
     <div class="canvas-wrapper">
-        <canvas id="graphCanvas" width="860" height="340"></canvas>
+        <canvas id="graphCanvas" width="500" height="500"></canvas>
     </div>
 
     <div class="controls-grid">
@@ -262,7 +265,7 @@
             </div>
             <div class="legend-item">
                 <div class="legend-dot" style="background: #F43F5E; box-shadow: 0 0 5px #F43F5E;"></div>
-                <span>Нулі функції (X)</span>
+                <span>Нулі (X)</span>
             </div>
             <div class="legend-item">
                 <div class="legend-line"></div>
@@ -287,9 +290,10 @@
     const linearWarning = document.getElementById('linearWarning');
     const resetBtn = document.getElementById('resetBtn');
 
-    // Масштаб: X [-10, 10], Y [-10, 10]
-    const MIN_X = -10, MAX_X = 10;
-    const MIN_Y = -10, MAX_Y = 10;
+    // Однаковий діапазон по осях: від -10 до 10 (пропорція 1:1)
+    const RANGE = 10;
+    const MIN_X = -RANGE, MAX_X = RANGE;
+    const MIN_Y = -RANGE, MAX_Y = RANGE;
 
     function toScreenX(x) {
         return ((x - MIN_X) / (MAX_X - MIN_X)) * canvas.width;
@@ -309,7 +313,7 @@
         valC.textContent = formatNumber(c);
 
         if (a === 0) {
-            linearWarning.textContent = '⚡ При a = 0 квадратична функція вироджується в лінійну (пряма лінія)';
+            linearWarning.textContent = '⚡ При a = 0 графіком є пряма лінія';
         } else {
             linearWarning.textContent = '';
         }
@@ -352,7 +356,7 @@
 
         ctx.save();
         ctx.shadowColor = color;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 8;
         ctx.fillStyle = color;
         ctx.beginPath();
         ctx.arc(sx, sy, 4.5, 0, Math.PI * 2);
@@ -365,17 +369,17 @@
 
         if (label) {
             ctx.shadowBlur = 0;
-            ctx.font = 'bold 11px Arial';
+            ctx.font = 'bold 10px Arial';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
 
             const textWidth = ctx.measureText(label).width;
-            const padX = 5;
+            const padX = 4;
             const padY = 2;
-            const offsetY = position === 'top' ? -14 : 14;
+            const offsetY = position === 'top' ? -13 : 13;
 
             ctx.fillStyle = 'rgba(6, 11, 20, 0.85)';
-            ctx.fillRect(sx - textWidth / 2 - padX, sy + offsetY - 6 - padY, textWidth + padX * 2, 13 + padY * 2);
+            ctx.fillRect(sx - textWidth / 2 - padX, sy + offsetY - 5 - padY, textWidth + padX * 2, 11 + padY * 2);
 
             ctx.fillStyle = '#FFFFFF';
             ctx.fillText(label, sx, sy + offsetY);
@@ -391,29 +395,29 @@
         updateEquation(a, b, c);
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // 1. Координатна сітка
+        // 1. Квадратна координатна сітка
         ctx.strokeStyle = 'rgba(56, 189, 248, 0.08)';
         ctx.lineWidth = 1;
 
-        for (let x = MIN_X; x <= MAX_X; x++) {
+        for (let i = -RANGE; i <= RANGE; i++) {
+            // Вертикальні лінії
             ctx.beginPath();
-            ctx.moveTo(toScreenX(x), 0);
-            ctx.lineTo(toScreenX(x), canvas.height);
+            ctx.moveTo(toScreenX(i), 0);
+            ctx.lineTo(toScreenX(i), canvas.height);
+            ctx.stroke();
+
+            // Горизонтальні лінії
+            ctx.beginPath();
+            ctx.moveTo(0, toScreenY(i));
+            ctx.lineTo(canvas.width, toScreenY(i));
             ctx.stroke();
         }
 
-        for (let y = MIN_Y; y <= MAX_Y; y++) {
-            ctx.beginPath();
-            ctx.moveTo(0, toScreenY(y));
-            ctx.lineTo(canvas.width, toScreenY(y));
-            ctx.stroke();
-        }
-
-        // 2. Осі координат
+        // 2. Головні осі координат
         ctx.save();
         ctx.strokeStyle = '#38BDF8';
         ctx.shadowColor = 'rgba(56, 189, 248, 0.35)';
-        ctx.shadowBlur = 5;
+        ctx.shadowBlur = 4;
         ctx.lineWidth = 1.6;
 
         // Вісь X
@@ -430,8 +434,8 @@
         ctx.restore();
 
         // 3. Підписи осей
-        ctx.font = 'bold 11px Arial';
-        ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.font = 'bold 10px Arial';
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'top';
 
@@ -458,7 +462,7 @@
             if (vx >= MIN_X && vx <= MAX_X) {
                 ctx.save();
                 ctx.strokeStyle = 'rgba(56, 189, 248, 0.55)';
-                ctx.setLineDash([5, 5]);
+                ctx.setLineDash([4, 4]);
                 ctx.lineWidth = 1.4;
                 ctx.beginPath();
                 ctx.moveTo(toScreenX(vx), 0);
@@ -486,12 +490,12 @@
             }
         }
 
-        // 5. Графік функції
+        // 5. Графік параболи
         ctx.save();
         ctx.strokeStyle = '#38BDF8';
         ctx.shadowColor = '#0EA5E9';
-        ctx.shadowBlur = 10;
-        ctx.lineWidth = 2.8;
+        ctx.shadowBlur = 8;
+        ctx.lineWidth = 2.6;
 
         ctx.beginPath();
         let isStarted = false;
