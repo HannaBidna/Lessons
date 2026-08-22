@@ -3,82 +3,96 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Об'ємні тіла та їх розгортки</title>
+    <title>3D Розгортки геометричних тіл</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: Arial, sans-serif;
+            font-family: 'Arial', 'Segoe UI', sans-serif;
         }
 
         body {
-            background-color: #EFEEEC;
-            color: #333333;
+            background: radial-gradient(circle at center, #0e1c36 0%, #060b14 100%);
+            color: #F8FAFC;
             min-height: 100vh;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 16px;
         }
 
-        .container {
-            background: #FFFFFF;
+        .simulation-card {
+            background: #0a1324;
             width: 100%;
-            max-width: 900px;
-            padding: 24px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
+            max-width: 680px;
+            padding: 20px 24px;
+            border-radius: 18px;
+            border: 1.5px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(14, 165, 233, 0.12);
         }
 
         h1 {
             text-align: center;
-            font-size: 22px;
-            color: #2C3E50;
+            font-size: 20px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 0.3px;
+            margin-bottom: 12px;
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
         }
 
-        /* Меню вибору тіл */
-        .menu {
+        /* Меню вибору тіла */
+        .shape-nav {
             display: flex;
             justify-content: center;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
+            margin-bottom: 12px;
         }
 
         .btn-shape {
-            background-color: #E2E0DC;
-            border: none;
-            padding: 8px 14px;
-            font-size: 14px;
-            font-weight: bold;
+            background: #08152e;
+            color: #94A3B8;
+            border: 1px solid #1E293B;
+            padding: 6px 12px;
+            font-size: 13px;
+            font-weight: 700;
             border-radius: 6px;
             cursor: pointer;
-            color: #4A4A4A;
             transition: all 0.2s;
         }
 
         .btn-shape:hover {
-            background-color: #D1CFCA;
+            border-color: #38BDF8;
+            color: #F8FAFC;
         }
 
         .btn-shape.active {
-            background-color: #6B7A58;
-            color: #FFFFFF;
+            background: #1e293b;
+            color: #38BDF8;
+            border-color: #38BDF8;
+            box-shadow: 0 0 10px rgba(56, 189, 248, 0.4);
         }
 
-        /* Область 3D-сцени */
-        .canvas-container {
-            width: 100%;
-            height: 400px;
-            background: #F8F7F5;
-            border-radius: 12px;
+        /* 3D Сцена */
+        .canvas-wrapper {
             position: relative;
+            width: 100%;
+            max-width: 500px;
+            aspect-ratio: 1 / 1;
+            margin: 0 auto 14px auto;
+            background: #030712;
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
             overflow: hidden;
-            border: 1px solid #E5E3DF;
+            touch-action: none;
+            cursor: grab;
+        }
+
+        .canvas-wrapper:active {
+            cursor: grabbing;
         }
 
         canvas {
@@ -87,57 +101,101 @@
             height: 100%;
         }
 
-        /* Панель розгортання */
-        .controls {
+        /* Повзунок */
+        .controls-grid {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 6px;
         }
 
-        .slider-label {
+        .slider-header {
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 700;
+            color: #C084FC;
+            text-shadow: 0 0 8px rgba(192, 132, 252, 0.5);
+        }
+
+        .slider-val-box {
             font-size: 15px;
-            font-weight: bold;
-            color: #555555;
+            font-weight: 800;
+            color: #F8FAFC;
         }
 
-        input[type=range] {
+        input[type="range"] {
+            -webkit-appearance: none;
             width: 100%;
-            height: 8px;
-            border-radius: 4px;
-            background: #E2E0DC;
+            height: 6px;
+            background: #111e3b;
+            border-radius: 3px;
             outline: none;
-            accent-color: #6B7A58;
-            cursor: pointer;
+            border: 1px solid #1E293B;
         }
 
-        /* Інформаційний блок */
-        .info-box {
-            background: #F8F7F5;
-            padding: 12px 16px;
-            border-radius: 8px;
-            border-left: 4px solid #6B7A58;
-            font-size: 14px;
+        input#unfoldSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFF 30%, #C084FC 80%);
+            cursor: pointer;
+            box-shadow: 0 0 8px #C084FC;
+            border: 2px solid #FFF;
+        }
+
+        /* Інфо-панель */
+        .info-panel {
+            background: #08152e;
+            border-left: 3px solid #38BDF8;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-top: 10px;
+            font-size: 12px;
             line-height: 1.4;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
         }
 
         .info-title {
-            font-weight: bold;
-            color: #2C3E50;
+            font-weight: 800;
+            color: #38BDF8;
             margin-bottom: 2px;
         }
-    </style>
 
-    <!-- Підключення Three.js через CDN -->
+        .info-desc {
+            color: #CBD5E1;
+        }
+
+        .btn-reset {
+            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 60%, #CBD5E1 100%);
+            color: #0F172A;
+            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            transition: filter 0.2s, transform 0.1s;
+        }
+
+        .btn-reset:hover {
+            filter: brightness(1.08);
+        }
+
+        .btn-reset:active {
+            transform: scale(0.97);
+        }
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 </head>
 <body>
 
-<div class="container">
-    <h1>Об'ємні геометричні тіла та їх розгортки</h1>
+<div class="simulation-card">
+    <h1>3D Розгортки геометричних тіл</h1>
 
-    <div class="menu" id="shapeMenu">
+    <div class="shape-nav" id="shapeNav">
         <button class="btn-shape active" data-shape="cube">Куб</button>
         <button class="btn-shape" data-shape="box">Паралелепіпед</button>
         <button class="btn-shape" data-shape="cylinder">Циліндр</button>
@@ -145,295 +203,266 @@
         <button class="btn-shape" data-shape="pyramid">Піраміда</button>
     </div>
 
-    <div class="canvas-container" id="canvasContainer"></div>
+    <div class="canvas-wrapper" id="canvasWrapper"></div>
 
-    <div class="controls">
-        <div class="slider-label">
-            <span>Складено (0%)</span>
+    <div class="controls-grid">
+        <div class="slider-header">
             <span>Ступінь розгортки</span>
-            <span>Розгорнуто (100%)</span>
+            <span class="slider-val-box" id="sliderVal">0%</span>
         </div>
         <input type="range" id="unfoldSlider" min="0" max="100" value="0">
     </div>
 
-    <div class="info-box" id="infoBox">
+    <div class="info-panel">
         <div class="info-title" id="infoTitle">Куб</div>
-        <div id="infoDesc">Складається з 6 однакових квадратних граней. У розгортці утворюють форму хреста.</div>
+        <div class="info-desc" id="infoDesc">Складається з 6 однакових квадратних граней. У розгортці вони лягають на площину у формі хреста.</div>
     </div>
 </div>
 
 <script>
-    // Опис тіл та їх інформації
     const shapeData = {
-        cube: { title: "Куб", desc: "Складається з 6 однакових квадратних граней." },
-        box: { title: "Прямокутний паралелепіпед", desc: "Складається з 6 прямокутних граней, попарно рівних між собою." },
-        cylinder: { title: "Циліндр", desc: "Складається з двох рівних кругів (основ) та прямокутника бічної поверхні." },
-        cone: { title: "Конус", desc: "Складається з одного круга (основи) та кругового сектора (бічної поверхні)." },
-        pyramid: { title: "Чотирикутна піраміда", desc: "Складається з квадрата в основі та 4 трикутних бічних граней." }
+        cube: { title: "Куб", desc: "Складається з 6 однакових квадратних граней. У розгортці вони лягають на площину у формі хреста." },
+        box: { title: "Прямокутний паралелепіпед", desc: "Складається з 6 прямокутних граней, які попарно рівні між собою." },
+        cylinder: { title: "Циліндр", desc: "Розгортка містить 2 рівні круги (основи) та прямокутник бічної поверхні довжиною 2πR." },
+        cone: { title: "Конус", desc: "Розгортка складається з 1 круга (основи) та кругового сектора бічної поверхні." },
+        pyramid: { title: "Чотирикутна піраміда", desc: "Складається з 1 квадрата в основі та 4 рівних трикутних бічних граней." }
     };
 
-    const container = document.getElementById('canvasContainer');
+    const container = document.getElementById('canvasWrapper');
     const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
-    camera.position.set(0, 4, 7);
+
+    const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 1000);
+    camera.position.set(0, 7, 7.5);
     camera.lookAt(0, 0, 0);
 
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
-    renderer.setSize(container.clientWidth, container.clientHeight);
-    renderer.setClearColor(0xF8F7F5);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.setSize(500, 500);
+    renderer.setPixelRatio(window.devicePixelRatio || 1);
     container.appendChild(renderer.domElement);
 
-    // Освітлення
-    const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
-    scene.add(ambientLight);
-
+    // Світло
+    scene.add(new THREE.AmbientLight(0xffffff, 0.75));
     const dirLight = new THREE.DirectionalLight(0xffffff, 0.6);
-    dirLight.position.set(5, 10, 7);
+    dirLight.position.set(5, 12, 8);
     scene.add(dirLight);
 
-    // Обертання мишею
-    let isDragging = false;
-    let previousMousePosition = { x: 0, y: 0 };
-    let groupRotation = new THREE.Group();
-    scene.add(groupRotation);
+    // Допоміжна сітка площини
+    const grid = new THREE.GridHelper(10, 10, 0x38BDF8, 0x1E293B);
+    grid.position.y = 0;
+    scene.add(grid);
 
-    container.addEventListener('mousedown', (e) => { isDragging = true; previousMousePosition = { x: e.clientX, y: e.clientY }; });
-    container.addEventListener('mousemove', (e) => {
-        if (!isDragging) return;
-        let deltaX = e.clientX - previousMousePosition.x;
-        let deltaY = e.clientY - previousMousePosition.y;
-        groupRotation.rotation.y += deltaX * 0.008;
-        groupRotation.rotation.x += deltaY * 0.008;
-        previousMousePosition = { x: e.clientX, y: e.clientY };
-    });
-    window.addEventListener('mouseup', () => { isDragging = false; });
+    const mainGroup = new THREE.Group();
+    scene.add(mainGroup);
 
-    // Оливкові кольори для граней
-    const oliveColors = [0x78866B, 0x6B7A58, 0x8A9A7B, 0x5E6C4D, 0x9CB08B, 0x556344];
+    // Палітра неонових акцентів
+    const colors = [0x38BDF8, 0xC084FC, 0xFACC15, 0xF43F5E, 0x4ADE80, 0x60A5FA];
 
+    let parts = [];
     let currentShape = 'cube';
-    let parts = []; // Масив об'єктів { mesh, closedPos, closedRot, openPos, openRot }
 
-    function createFace(geometry, colorIndex, matType = 'standard') {
-        const material = new THREE.MeshStandardMaterial({
-            color: oliveColors[colorIndex % oliveColors.length],
-            roughness: 0.4,
-            metalness: 0.1,
+    function createMesh(geom, colorIdx) {
+        const mat = new THREE.MeshStandardMaterial({
+            color: colors[colorIdx % colors.length],
+            roughness: 0.35,
+            metalness: 0.15,
             side: THREE.DoubleSide
         });
-        return new THREE.Mesh(geometry, material);
+        const mesh = new THREE.Mesh(geom, mat);
+        // Додаємо контур ребер для чіткості
+        const edges = new THREE.EdgesGeometry(geom);
+        const line = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0xFFFFFF, transparent: true, opacity: 0.6 }));
+        mesh.add(line);
+        return mesh;
     }
 
     function buildShape(shape) {
-        // Очищення попередніх елементів
-        while(groupRotation.children.length > 0){ 
-            groupRotation.remove(groupRotation.children[0]); 
+        while (mainGroup.children.length > 0) {
+            mainGroup.remove(mainGroup.children[0]);
         }
         parts = [];
 
         if (shape === 'cube') {
-            const size = 1.2;
-            const h = size / 2;
-            // 6 граней куба: Bottom, Top, Front, Back, Left, Right
+            const s = 1.0;
+            const geom = new THREE.PlaneGeometry(s, s);
+
+            // Нижній квадрат лежить на Y=0
             const configs = [
-                { pOpen: [0, -h, 0], rOpen: [-Math.PI/2, 0, 0], pClose: [0, -h, 0], rClose: [0, 0, 0] }, // дно
-                { pOpen: [0, -h, size*2], rOpen: [Math.PI/2, 0, 0], pClose: [0, h, 0], rClose: [0, 0, 0] }, // верх (відкидається вперед)
-                { pOpen: [0, -h, h], rOpen: [0, 0, 0], pClose: [0, 0, h], rClose: [0, 0, 0] }, // перед
-                { pOpen: [0, -h, -h], rOpen: [Math.PI, 0, 0], pClose: [0, 0, -h], rClose: [0, Math.PI, 0] }, // зад
-                { pOpen: [-h, -h, 0], rOpen: [0, 0, Math.PI/2], pClose: [-h, 0, 0], rClose: [0, -Math.PI/2, 0] }, // ліво
-                { pOpen: [h, -h, 0], rOpen: [0, 0, -Math.PI/2], pClose: [h, 0, 0], rClose: [0, Math.PI/2, 0] }  // право
+                { geom, p0: [0, 0, 0], r0: [-Math.PI/2, 0, 0], p1: [0, 0, 0], r1: [-Math.PI/2, 0, 0] }, // Дно
+                { geom, p0: [0, s/2, s/2], r0: [0, 0, 0], p1: [0, 0, s], r1: [-Math.PI/2, 0, 0] }, // Перед
+                { geom, p0: [0, s/2, -s/2], r0: [Math.PI, 0, 0], p1: [0, 0, -s], r1: [-Math.PI/2, 0, 0] }, // Зад
+                { geom, p0: [-s/2, s/2, 0], r0: [0, -Math.PI/2, 0], p1: [-s, 0, 0], r1: [-Math.PI/2, 0, 0] }, // Ліво
+                { geom, p0: [s/2, s/2, 0], r0: [0, Math.PI/2, 0], p1: [s, 0, 0], r1: [-Math.PI/2, 0, 0] }, // Право
+                { geom, p0: [0, s, 0], r0: [Math.PI/2, 0, 0], p1: [0, 0, 2*s], r1: [-Math.PI/2, 0, 0] } // Верх
             ];
 
-            const geom = new THREE.PlaneGeometry(size, size);
-            configs.forEach((cfg, idx) => {
-                const mesh = createFace(geom, idx);
-                groupRotation.add(mesh);
-                parts.push({
-                    mesh,
-                    cPos: new THREE.Vector3(...cfg.pClose),
-                    cRot: new THREE.Euler(...cfg.rClose),
-                    oPos: new THREE.Vector3(...cfg.pOpen),
-                    oRot: new THREE.Euler(...cfg.rOpen)
-                });
+            configs.forEach((c, idx) => {
+                const mesh = createMesh(c.geom, idx);
+                mainGroup.add(mesh);
+                parts.push({ mesh, p0: new THREE.Vector3(...c.p0), r0: new THREE.Euler(...c.r0), p1: new THREE.Vector3(...c.p1), r1: new THREE.Euler(...c.r1) });
             });
 
         } else if (shape === 'box') {
-            const w = 1.6, h = 1.0, d = 1.0;
-            const hw = w/2, hh = h/2, hd = d/2;
+            const w = 1.6, h = 0.9, d = 1.0;
+            const geomBot = new THREE.PlaneGeometry(w, d);
+            const geomFB = new THREE.PlaneGeometry(w, h);
+            const geomLR = new THREE.PlaneGeometry(d, h);
+
             const configs = [
-                { pOpen: [0, -hh, 0], rOpen: [-Math.PI/2, 0, 0], pClose: [0, -hh, 0], rClose: [0, 0, 0] }, // дно
-                { pOpen: [0, -hh, d*2], rOpen: [Math.PI/2, 0, 0], pClose: [0, hh, 0], rClose: [0, 0, 0] }, // верх
-                { pOpen: [0, -hh, hd], rOpen: [0, 0, 0], pClose: [0, 0, hd], rClose: [0, 0, 0] }, // перед (w x h)
-                { pOpen: [0, -hh, -hd], rOpen: [Math.PI, 0, 0], pClose: [0, 0, -hd], rClose: [0, Math.PI, 0] }, // зад
-                { pOpen: [-hw, -hh, 0], rOpen: [0, 0, Math.PI/2], pClose: [-hw, 0, 0], rClose: [0, -Math.PI/2, 0] }, // ліво (d x h)
-                { pOpen: [hw, -hh, 0], rOpen: [0, 0, -Math.PI/2], pClose: [hw, 0, 0], rClose: [0, Math.PI/2, 0] }  // право
+                { geom: geomBot, p0: [0, 0, 0], r0: [-Math.PI/2, 0, 0], p1: [0, 0, 0], r1: [-Math.PI/2, 0, 0] }, // Дно
+                { geom: geomFB,  p0: [0, h/2, d/2], r0: [0, 0, 0], p1: [0, 0, d/2 + h/2], r1: [-Math.PI/2, 0, 0] }, // Перед
+                { geom: geomFB,  p0: [0, h/2, -d/2], r0: [Math.PI, 0, 0], p1: [0, 0, -d/2 - h/2], r1: [-Math.PI/2, 0, 0] }, // Зад
+                { geom: geomLR,  p0: [-w/2, h/2, 0], r0: [0, -Math.PI/2, 0], p1: [-w/2 - d/2, 0, 0], r1: [-Math.PI/2, 0, -Math.PI/2] }, // Ліво
+                { geom: geomLR,  p0: [w/2, h/2, 0], r0: [0, Math.PI/2, 0], p1: [w/2 + d/2, 0, 0], r1: [-Math.PI/2, 0, Math.PI/2] }, // Право
+                { geom: geomBot, p0: [0, h, 0], r0: [Math.PI/2, 0, 0], p1: [0, 0, d + h], r1: [-Math.PI/2, 0, 0] } // Верх
             ];
 
-            // Створюємо геометрії відповідних розмірів
-            const geomBottomTop = new THREE.PlaneGeometry(w, d);
-            const geomFrontBack = new THREE.PlaneGeometry(w, h);
-            const geomSides = new THREE.PlaneGeometry(d, h);
-
-            const geoms = [geomBottomTop, geomBottomTop, geomFrontBack, geomFrontBack, geomSides, geomSides];
-
-            configs.forEach((cfg, idx) => {
-                const mesh = createFace(geoms[idx], idx);
-                groupRotation.add(mesh);
-                parts.push({
-                    mesh,
-                    cPos: new THREE.Vector3(...cfg.pClose),
-                    cRot: new THREE.Euler(...cfg.rClose),
-                    oPos: new THREE.Vector3(...cfg.pOpen),
-                    oRot: new THREE.Euler(...cfg.rOpen)
-                });
+            configs.forEach((c, idx) => {
+                const mesh = createMesh(c.geom, idx);
+                mainGroup.add(mesh);
+                parts.push({ mesh, p0: new THREE.Vector3(...c.p0), r0: new THREE.Euler(...c.r0), p1: new THREE.Vector3(...c.p1), r1: new THREE.Euler(...c.r1) });
             });
 
         } else if (shape === 'cylinder') {
-            const r = 0.8, h = 2.0;
-            const hh = h/2;
-            // Нижня основа, Верхня основа, Бічна поверхня (прямокутник)
-            const sideWidth = 2 * Math.PI * r;
-            
-            const geomBottom = new THREE.CircleGeometry(r, 32);
-            const geomTop = new THREE.CircleGeometry(r, 32);
-            const geomSide = new THREE.PlaneGeometry(sideWidth, h);
+            const r = 0.7, h = 1.6;
+            const w = 2 * Math.PI * r;
+            const geomBase = new THREE.CircleGeometry(r, 32);
+            const geomSide = new THREE.PlaneGeometry(w, h);
 
             const configs = [
-                { geom: geomBottom, pClose: [0, -hh, 0], rClose: [-Math.PI/2, 0, 0], pOpen: [-sideWidth/2 - r - 0.2, -hh, 0], rOpen: [-Math.PI/2, 0, 0] },
-                { geom: geomTop,    pClose: [0, hh, 0],  rClose: [Math.PI/2, 0, 0],  pOpen: [sideWidth/2 + r + 0.2, -hh, 0],  rOpen: [-Math.PI/2, 0, 0] },
-                { geom: geomSide,   pClose: [0, 0, 0],   rClose: [0, 0, 0],          pOpen: [0, -hh, 0],                      rOpen: [-Math.PI/2, 0, 0] }
+                { geom: geomSide, p0: [0, h/2, 0], r0: [0, 0, 0], p1: [0, 0, 0], r1: [-Math.PI/2, 0, 0] }, // Розгорнутий прямокутник
+                { geom: geomBase, p0: [0, 0, 0], r0: [-Math.PI/2, 0, 0], p1: [0, 0, -h/2 - r], r1: [-Math.PI/2, 0, 0] }, // Нижня основа
+                { geom: geomBase, p0: [0, h, 0], r0: [Math.PI/2, 0, 0], p1: [0, 0, h/2 + r], r1: [-Math.PI/2, 0, 0] }   // Верхня основа
             ];
 
-            configs.forEach((cfg, idx) => {
-                const mesh = createFace(cfg.geom, idx);
-                groupRotation.add(mesh);
-                parts.push({
-                    mesh,
-                    cPos: new THREE.Vector3(...cfg.pClose),
-                    cRot: new THREE.Euler(...cfg.rClose),
-                    oPos: new THREE.Vector3(...cfg.pOpen),
-                    oRot: new THREE.Euler(...cfg.rOpen)
-                });
+            configs.forEach((c, idx) => {
+                const mesh = createMesh(c.geom, idx);
+                mainGroup.add(mesh);
+                parts.push({ mesh, p0: new THREE.Vector3(...c.p0), r0: new THREE.Euler(...c.r0), p1: new THREE.Vector3(...c.p1), r1: new THREE.Euler(...c.r1) });
             });
 
         } else if (shape === 'cone') {
-            const r = 1.0, h = 2.2;
-            const geomBase = new THREE.CircleGeometry(r, 32);
-            const sideLen = Math.sqrt(r*r + h*h);
-            const sectorAngle = 2 * Math.PI * (r / sideLen);
-            const geomSector = new THREE.ConeGeometry(r, h, 32); // Використаємо циліндричну розгортку через площину сектора
+            const r = 0.8, h = 1.6;
+            const L = Math.sqrt(r*r + h*h); // Твірна
+            const theta = (r / L) * 2 * Math.PI;
 
-            // Спрощена розгортка конуса: основа і сектор
-            const geomSec = new THREE.RingGeometry(0, sideLen, 32, 1, 0, sectorAngle);
+            const geomBase = new THREE.CircleGeometry(r, 32);
+            const geomSector = new THREE.RingGeometry(0, L, 32, 1, Math.PI/2 - theta/2, theta);
 
             const configs = [
-                { geom: geomBase, pClose: [0, -h/2, 0], rClose: [-Math.PI/2, 0, 0], pOpen: [-r - 0.5, -h/2, 0], rOpen: [-Math.PI/2, 0, 0] },
-                { geom: geomSec,  pClose: [0, 0, 0],    rClose: [0, 0, 0],          pOpen: [r + 0.5, -h/2, 0],   rOpen: [-Math.PI/2, 0, 0] }
+                { geom: geomBase,   p0: [0, 0, 0], r0: [-Math.PI/2, 0, 0], p1: [0, 0, -r - 0.2], r1: [-Math.PI/2, 0, 0] },
+                { geom: geomSector, p0: [0, h/2, 0], r0: [0, 0, 0], p1: [0, 0, L/2 + 0.2], r1: [-Math.PI/2, 0, 0] }
             ];
 
-            configs.forEach((cfg, idx) => {
-                const mesh = createFace(cfg.geom, idx);
-                groupRotation.add(mesh);
-                parts.push({
-                    mesh,
-                    cPos: new THREE.Vector3(...cfg.pClose),
-                    cRot: new THREE.Euler(...cfg.rClose),
-                    oPos: new THREE.Vector3(...cfg.pOpen),
-                    oRot: new THREE.Euler(...cfg.rOpen)
-                });
+            configs.forEach((c, idx) => {
+                const mesh = createMesh(c.geom, idx + 2);
+                mainGroup.add(mesh);
+                parts.push({ mesh, p0: new THREE.Vector3(...c.p0), r0: new THREE.Euler(...c.r0), p1: new THREE.Vector3(...c.p1), r1: new THREE.Euler(...c.r1) });
             });
 
         } else if (shape === 'pyramid') {
-            const baseSize = 1.6;
-            const h = 1.8;
-            const hb = baseSize / 2;
-            
-            const geomBase = new THREE.PlaneGeometry(baseSize, baseSize);
-            const triHeight = Math.sqrt(h*h + hb*hb);
-            const geomTri = new THREE.ConeGeometry ? new THREE.BufferGeometry() : null; // Зробимо трикутники через shape
+            const s = 1.2;
+            const h = 1.4;
+            const slantH = Math.sqrt(h*h + (s/2)*(s/2));
 
-            // База + 4 трикутники
-            const shapeTri = new THREE.Shape();
-            shapeTri.moveTo(-hb, 0);
-            shapeTri.lineTo(hb, 0);
-            shapeTri.lineTo(0, triHeight);
-            shapeTri.closePath();
-            const geomSideTri = new THREE.ShapeGeometry(shapeTri);
+            const geomBase = new THREE.PlaneGeometry(s, s);
+
+            // Створення трикутної грані
+            const triShape = new THREE.Shape();
+            triShape.moveTo(-s/2, 0);
+            triShape.lineTo(s/2, 0);
+            triShape.lineTo(0, slantH);
+            triShape.closePath();
+            const geomTri = new THREE.ShapeGeometry(triShape);
+
+            const alpha = Math.atan2(h, s/2); // Кут нахилу піраміди
 
             const configs = [
-                { geom: geomBase, pClose: [0, -h/3, 0], rClose: [-Math.PI/2, 0, 0], pOpen: [0, -h/3, 0], rOpen: [-Math.PI/2, 0, 0] }, // основа
-                { geom: geomSideTri, pClose: [0, 0, hb], rClose: [0, 0, 0], pOpen: [0, -h/3, hb + triHeight/2], rOpen: [-Math.PI/6, 0, 0] }, // перед
-                { geom: geomSideTri, pClose: [0, 0, -hb], rClose: [Math.PI, 0, 0], pOpen: [0, -h/3, -hb - triHeight/2], rOpen: [-Math.PI/6, Math.PI, 0] }, // зад
-                { geom: geomSideTri, pClose: [-hb, 0, 0], rClose: [0, Math.PI/2, 0], pOpen: [-hb - triHeight/2, -h/3, 0], rOpen: [-Math.PI/6, Math.PI/2, 0] }, // ліво
-                { geom: geomSideTri, pClose: [hb, 0, 0], rClose: [0, -Math.PI/2, 0], pOpen: [hb + triHeight/2, -h/3, 0], rOpen: [-Math.PI/6, -Math.PI/2, 0] }  // право
+                { geom: geomBase, p0: [0, 0, 0], r0: [-Math.PI/2, 0, 0], p1: [0, 0, 0], r1: [-Math.PI/2, 0, 0] }, // Основа
+                { geom: geomTri,  p0: [0, 0, s/2], r0: [Math.PI/2 - alpha, 0, 0], p1: [0, 0, s/2], r1: [-Math.PI/2, 0, 0] }, // Перед
+                { geom: geomTri,  p0: [0, 0, -s/2], r0: [-Math.PI/2 + alpha, Math.PI, 0], p1: [0, 0, -s/2], r1: [Math.PI/2, 0, 0] }, // Зад
+                { geom: geomTri,  p0: [-s/2, 0, 0], r0: [0, -Math.PI/2, Math.PI/2 - alpha], p1: [-s/2, 0, 0], r1: [-Math.PI/2, 0, Math.PI/2] }, // Ліво
+                { geom: geomTri,  p0: [s/2, 0, 0], r0: [0, Math.PI/2, -Math.PI/2 + alpha], p1: [s/2, 0, 0], r1: [-Math.PI/2, 0, -Math.PI/2] } // Право
             ];
 
-            configs.forEach((cfg, idx) => {
-                const mesh = createFace(cfg.geom, idx);
-                groupRotation.add(mesh);
-                parts.push({
-                    mesh,
-                    cPos: new THREE.Vector3(...cfg.pClose),
-                    cRot: new THREE.Euler(...cfg.rClose),
-                    oPos: new THREE.Vector3(...cfg.pOpen),
-                    oRot: new THREE.Euler(...cfg.rOpen)
-                });
+            configs.forEach((c, idx) => {
+                const mesh = createMesh(c.geom, idx);
+                mainGroup.add(mesh);
+                parts.push({ mesh, p0: new THREE.Vector3(...c.p0), r0: new THREE.Euler(...c.r0), p1: new THREE.Vector3(...c.p1), r1: new THREE.Euler(...c.r1) });
             });
         }
+
         updateUnfold(0);
     }
 
-    // Інтерполяція положення і повороту при розгортанні
     function updateUnfold(progress) {
         const t = progress / 100;
         parts.forEach(p => {
-            p.mesh.position.lerpVectors(p.cPos, p.oPos, t);
-            p.mesh.rotation.x = THREE.MathUtils.lerp(p.cRot.x, p.oRot.x, t);
-            p.mesh.rotation.y = THREE.MathUtils.lerp(p.cRot.y, p.oRot.y, t);
-            p.mesh.rotation.z = THREE.MathUtils.lerp(p.cRot.z, p.oRot.z, t);
+            p.mesh.position.lerpVectors(p.p0, p.p1, t);
+            p.mesh.rotation.x = THREE.MathUtils.lerp(p.r0.x, p.r1.x, t);
+            p.mesh.rotation.y = THREE.MathUtils.lerp(p.r0.y, p.r1.y, t);
+            p.mesh.rotation.z = THREE.MathUtils.lerp(p.r0.z, p.r1.z, t);
         });
     }
 
-    // Обробники подій меню
-    const menuButtons = document.querySelectorAll('.btn-shape');
-    menuButtons.forEach(btn => {
+    // Обертання сцени мишею
+    let isDragging = false;
+    let prevMouse = { x: 0, y: 0 };
+
+    container.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        prevMouse = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        const dx = e.clientX - prevMouse.x;
+        const dy = e.clientY - prevMouse.y;
+
+        mainGroup.rotation.y += dx * 0.01;
+        mainGroup.rotation.x += dy * 0.01;
+        grid.rotation.y = mainGroup.rotation.y;
+
+        prevMouse = { x: e.clientX, y: e.clientY };
+    });
+
+    window.addEventListener('pointerup', () => { isDragging = false; });
+
+    // Керування кнопками меню
+    const buttons = document.querySelectorAll('.btn-shape');
+    const slider = document.getElementById('unfoldSlider');
+    const sliderVal = document.getElementById('sliderVal');
+
+    buttons.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            menuButtons.forEach(b => b.classList.remove('active'));
+            buttons.forEach(b => b.classList.remove('active'));
             e.target.classList.add('active');
+
             currentShape = e.target.getAttribute('data-shape');
-            
-            // Оновлення тексту опису
             document.getElementById('infoTitle').textContent = shapeData[currentShape].title;
             document.getElementById('infoDesc').textContent = shapeData[currentShape].desc;
 
-            // Скидання повзунка
-            document.getElementById('unfoldSlider').value = 0;
-            groupRotation.rotation.set(0, 0, 0);
+            slider.value = 0;
+            sliderVal.textContent = '0%';
+            mainGroup.rotation.set(0, 0, 0);
+            grid.rotation.set(0, 0, 0);
+
             buildShape(currentShape);
         });
     });
 
-    const slider = document.getElementById('unfoldSlider');
     slider.addEventListener('input', (e) => {
-        updateUnfold(parseFloat(e.target.value));
+        const val = parseFloat(e.target.value);
+        sliderVal.textContent = `${Math.round(val)}%`;
+        updateUnfold(val);
     });
 
-    // Анімація рендерингу
     function animate() {
         requestAnimationFrame(animate);
         renderer.render(scene, camera);
     }
 
-    // Ініціалізація
     buildShape('cube');
     animate();
-
-    // Ресайз вікна
-    window.addEventListener('resize', () => {
-        camera.aspect = container.clientWidth / container.clientHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.clientWidth, container.clientHeight);
-    });
 </script>
 
 </body>
