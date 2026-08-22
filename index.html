@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nadia School — Головна</title>
+  <title>Nadia School — Навчальні предмети</title>
   <style>
     :root {
       --bg-main: #131419;
@@ -11,13 +11,10 @@
       --bg-card-hover: #252630;
       --border-color: #2e303d;
       --accent: #00d2ff;
-      --accent-glow: rgba(0, 210, 255, 0.25);
       --text-main: #f0f2f5;
       --text-sub: #9ba1b0;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     body {
       background-color: var(--bg-main);
       color: var(--text-main);
@@ -29,45 +26,16 @@
       justify-content: center;
       padding: 40px 20px;
     }
-
-    .container {
-      width: 100%;
-      max-width: 600px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .brand-header {
-      text-align: center;
-      margin-bottom: 40px;
-    }
-
-    .logo-img {
-      max-width: 250px;
-      width: 100%;
-      height: auto;
-      margin-bottom: 12px;
-      filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.7));
-    }
-
-    .brand-subtitle {
-      font-size: 15px;
-      color: var(--text-sub);
-    }
-
-    .menu-grid {
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
-    }
-
+    .container { width: 100%; max-width: 600px; display: flex; flex-direction: column; align-items: center; }
+    .brand-header { text-align: center; margin-bottom: 35px; }
+    .logo-img { max-width: 250px; width: 100%; height: auto; margin-bottom: 12px; filter: drop-shadow(0 4px 20px rgba(0, 0, 0, 0.7)); }
+    .brand-subtitle { font-size: 15px; color: var(--text-sub); }
+    .menu-grid { width: 100%; display: flex; flex-direction: column; gap: 14px; }
     .card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 20px 24px;
+      padding: 18px 22px;
       text-decoration: none;
       color: var(--text-main);
       display: flex;
@@ -76,112 +44,90 @@
       transition: all 0.25s cubic-bezier(0.2, 0.8, 0.2, 1);
       box-shadow: 0 4px 14px rgba(0, 0, 0, 0.3);
     }
-
     .card:hover {
       background: var(--bg-card-hover);
       border-color: var(--accent);
       transform: translateY(-3px);
-      box-shadow: 0 8px 25px var(--accent-glow);
+      box-shadow: 0 8px 25px rgba(0, 210, 255, 0.2);
     }
-
-    .card-left {
-      display: flex;
-      align-items: center;
-      gap: 18px;
-    }
-
+    .card-left { display: flex; align-items: center; gap: 18px; }
     .card-icon {
       font-size: 26px;
-      background: rgba(0, 210, 255, 0.08);
-      border: 1px solid rgba(0, 210, 255, 0.2);
-      width: 52px;
-      height: 52px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      width: 50px;
+      height: 50px;
       display: flex;
       align-items: center;
       justify-content: center;
       border-radius: 12px;
+      flex-shrink: 0;
     }
-
-    .card-title {
-      font-size: 18px;
-      font-weight: 600;
-      color: #fff;
-      margin-bottom: 4px;
-    }
-
-    .card-desc {
-      font-size: 13px;
-      color: var(--text-sub);
-    }
-
-    .card-arrow {
-      color: var(--accent);
-      font-size: 22px;
-      font-weight: bold;
-      transition: transform 0.2s ease;
-    }
-
-    .card:hover .card-arrow {
-      transform: translateX(5px);
-    }
-
-    footer {
-      margin-top: 45px;
-      font-size: 13px;
-      color: #606770;
-    }
+    .card-title { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+    .card-desc { font-size: 13px; color: var(--text-sub); }
+    .card-arrow { color: var(--accent); font-size: 22px; font-weight: bold; transition: transform 0.2s; }
+    .card:hover .card-arrow { transform: translateX(5px); }
+    footer { margin-top: 40px; font-size: 13px; color: #606770; }
   </style>
 </head>
 <body>
-
   <div class="container">
     <header class="brand-header">
       <img src="nadia_school_white_logo.png" alt="Nadia School" class="logo-img">
-      <p class="brand-subtitle">Інтерактивні симуляції та навчальні історії</p>
+      <p class="brand-subtitle">Оберіть навчальний предмет:</p>
     </header>
 
     <main class="menu-grid">
-      
-      <!-- 1. Розділ Симуляції -->
-      <a href="simulations.html" class="card">
+      <!-- Фізика (Активний розділ) -->
+      <a href="physics.html" class="card">
+        <div class="card-left">
+          <div class="card-icon">⚡</div>
+          <div>
+            <div class="card-title">Фізика</div>
+            <div class="card-desc">Симуляції, відеодосліди та наукові історії</div>
+          </div>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </a>
+
+      <!-- Математика -->
+      <a href="math.html" class="card">
+        <div class="card-left">
+          <div class="card-icon">📐</div>
+          <div>
+            <div class="card-title">Математика</div>
+            <div class="card-desc">Інтерактивні задачі та моделі</div>
+          </div>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </a>
+
+      <!-- Хімія -->
+      <a href="chemistry.html" class="card">
         <div class="card-left">
           <div class="card-icon">🧪</div>
           <div>
-            <div class="card-title">Симуляції</div>
-            <div class="card-desc">Інтерактивні фізичні моделі та досліди</div>
+            <div class="card-title">Хімія</div>
+            <div class="card-desc">Реакції, експерименти та властивості речовин</div>
           </div>
         </div>
         <div class="card-arrow">&rarr;</div>
       </a>
 
-      <!-- 2. Розділ Історії -->
-      <a href="stories.html" class="card">
+      <!-- Біологія -->
+      <a href="biology.html" class="card">
         <div class="card-left">
-          <div class="card-icon">📖</div>
+          <div class="card-icon">🌿</div>
           <div>
-            <div class="card-title">Історії</div>
-            <div class="card-desc">Ілюстровані наукові сторібуки та комікси</div>
+            <div class="card-title">Біологія</div>
+            <div class="card-desc">Дослідження природи та живих систем</div>
           </div>
         </div>
         <div class="card-arrow">&rarr;</div>
       </a>
-
-      <!-- 3. Розділ Відео -->
-      <a href="videos.html" class="card">
-        <div class="card-left">
-          <div class="card-icon">🎬</div>
-          <div>
-            <div class="card-title">Відео</div>
-            <div class="card-desc">Відеопояснення та навчальні ролики</div>
-          </div>
-        </div>
-        <div class="card-arrow">&rarr;</div>
-      </a>
-
     </main>
 
     <footer>&copy; Nadia School. Всі права захищено.</footer>
   </div>
-
 </body>
 </html>
