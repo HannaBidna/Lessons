@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Внутрішні різносторонні кути при паралельних прямих</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', 'Segoe UI', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #0e1c36 0%, #060b14 100%);
+            color: #F8FAFC;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .simulation-card {
+            background: #0a1324;
+            width: 100%;
+            max-width: 680px;
+            padding: 20px 24px;
+            border-radius: 18px;
+            border: 1.5px solid rgba(56, 189, 248, 0.25);
+            box-shadow: 0 0 35px rgba(0, 0, 0, 0.8), 0 0 15px rgba(14, 165, 233, 0.12);
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 20px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 0.3px;
+            margin-bottom: 8px;
+            text-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+        }
+
+        /* Статус-панель з градусами */
+        .status-badge {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+            background: #08152e;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .status-badge.parallel {
+            border-color: #4ADE80;
+            background: rgba(74, 222, 128, 0.1);
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .angle-val {
+            font-size: 20px;
+            font-weight: 900;
+        }
+
+        .angle-1 { color: #C084FC; text-shadow: 0 0 10px rgba(192, 132, 252, 0.8); }
+        .angle-2 { color: #FACC15; text-shadow: 0 0 10px rgba(250, 204, 21, 0.8); }
+
+        .parallel-tag {
+            font-size: 13px;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 6px;
+            background: rgba(239, 68, 68, 0.15);
+            color: #F87171;
+            border: 1px solid rgba(239, 68, 68, 0.4);
+        }
+
+        .status-badge.parallel .parallel-tag {
+            background: rgba(74, 222, 128, 0.2);
+            color: #4ADE80;
+            border-color: #4ADE80;
+            text-shadow: 0 0 8px rgba(74, 222, 128, 0.6);
+        }
+
+        /* Полотно */
+        .canvas-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 520px;
+            aspect-ratio: 16 / 11;
+            margin: 0 auto 14px auto;
+            background: #030712;
+            border-radius: 12px;
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: inset 0 0 25px rgba(0, 0, 0, 0.9);
+            overflow: hidden;
+            touch-action: none;
+            cursor: grab;
+        }
+
+        .canvas-wrapper:active {
+            cursor: grabbing;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Повзунки */
+        .controls-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .slider-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 50px;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .slider-label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #94A3B8;
+        }
+
+        .slider-val-box {
+            font-size: 14px;
+            font-weight: 800;
+            text-align: right;
+            color: #F8FAFC;
+        }
+
+        input[type="range"] {
+            -webkit-appearance: none;
+            width: 100%;
+            height: 6px;
+            background: #111e3b;
+            border-radius: 3px;
+            outline: none;
+            border: 1px solid #1E293B;
+        }
+
+        input#angleSlider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            background: radial-gradient(circle, #FFF 30%, #38BDF8 80%);
+            cursor: pointer;
+            box-shadow: 0 0 8px #38BDF8;
+            border: 2px solid #FFF;
+        }
+
+        /* Підвал */
+        .bottom-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .hint-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #94A3B8;
+        }
+
+        .btn-action {
+            background: linear-gradient(180deg, #FFFFFF 0%, #E2E8F0 60%, #CBD5E1 100%);
+            color: #0F172A;
+            border: none;
+            padding: 6px 14px;
+            font-size: 12px;
+            font-weight: 800;
+            border-radius: 6px;
+            cursor: pointer;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
+            transition: filter 0.2s, transform 0.1s;
+        }
+
+        .btn-action:hover {
+            filter: brightness(1.08);
+        }
+
+        .btn-action:active {
+            transform: scale(0.97);
+        }
+    </style>
+</head>
+<body>
+
+<div class="simulation-card">
+    <h1>Ознака паралельності прямих</h1>
+
+    <div class="status-badge" id="statusBadge">
+        <div>Кут 1 (∠1): <span class="angle-val angle-1" id="valA1">60°</span></div>
+        <div>Кут 2 (∠2): <span class="angle-val angle-2" id="valA2">60°</span></div>
+        <div class="parallel-tag" id="parallelStatus">a ∥ b (Паралельні)</div>
+    </div>
+
+    <div class="canvas-wrapper" id="canvasWrapper">
+        <canvas id="simCanvas" width="520" height="360"></canvas>
+    </div>
+
+    <div class="controls-grid">
+        <div class="slider-row">
+            <span class="slider-label">Нахил прямої b:</span>
+            <input type="range" id="angleSlider" min="-45" max="45" step="0.5" value="0">
+            <span class="slider-val-box" id="angleValBox">0.0°</span>
+        </div>
+    </div>
+
+    <div class="bottom-bar">
+        <span class="hint-text">💡 Порада: тягни пряму b за маркер або крути повзунок.</span>
+        <button class="btn-action" id="setParallelBtn">Зробити паралельними</button>
+    </div>
+</div>
+
+<script>
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const angleSlider = document.getElementById('angleSlider');
+    const angleValBox = document.getElementById('angleValBox');
+    const statusBadge = document.getElementById('statusBadge');
+    const valA1 = document.getElementById('valA1');
+    const valA2 = document.getElementById('valA2');
+    const parallelStatus = document.getElementById('parallelStatus');
+    const setParallelBtn = document.getElementById('setParallelBtn');
+
+    // Параметри ліній
+    const fixedLineY = 110;        // Пряма a
+    const movableCenter = { x: 260, y: 250 }; // Центр обертання прямої b
+    let lineBAngleDeg = 0;         // Кут нахилу прямої b відносно горизонту
+
+    // Січна пряма c: сполучає точки (160, 40) та (360, 320)
+    const secantPointA = { x: 170, y: 40 };
+    const secantPointB = { x: 350, y: 320 };
+    const secantAngleRad = Math.atan2(secantPointB.y - secantPointA.y, secantPointB.x - secantPointA.x);
+    const secantAngleDeg = secantAngleRad * (180 / Math.PI); // ~57.26°
+
+    let isDragging = false;
+
+    // Знаходження перетину двох прямих
+    function getIntersection(x1, y1, x2, y2, x3, y3, x4, y4) {
+        const denom = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+        if (denom === 0) return null;
+        const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / denom;
+        return {
+            x: x1 + t * (x2 - x1),
+            y: y1 + t * (y2 - y1)
+        };
+    }
+
+    function drawGrid() {
+        ctx.strokeStyle = 'rgba(56, 189, 248, 0.06)';
+        ctx.lineWidth = 1;
+        for (let x = 0; x < canvas.width; x += 25) {
+            ctx.beginPath();
+            ctx.moveTo(x, 0);
+            ctx.lineTo(x, canvas.height);
+            ctx.stroke();
+        }
+        for (let y = 0; y < canvas.height; y += 25) {
+            ctx.beginPath();
+            ctx.moveTo(0, y);
+            ctx.lineTo(canvas.width, y);
+            ctx.stroke();
+        }
+    }
+
+    function drawInfiniteLine(x0, y0, angleRad, color, lineWidth = 2.5, isGlow = false) {
+        const len = 700;
+        const dx = Math.cos(angleRad) * len;
+        const dy = Math.sin(angleRad) * len;
+
+        ctx.save();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = lineWidth;
+        if (isGlow) {
+            ctx.shadowColor = color;
+            ctx.shadowBlur = 12;
+        }
+        ctx.beginPath();
+        ctx.moveTo(x0 - dx, y0 - dy);
+        ctx.lineTo(x0 + dx, y0 + dy);
+        ctx.stroke();
+        ctx.restore();
+    }
+
+    function drawAngleSector(center, startAngle, endAngle, radius, fillColor, strokeColor, label, labelColor) {
+        ctx.save();
+        ctx.fillStyle = fillColor;
+        ctx.strokeStyle = strokeColor;
+        ctx.lineWidth = 2;
+
+        ctx.beginPath();
+        ctx.moveTo(center.x, center.y);
+        ctx.arc(center.x, center.y, radius, startAngle, endAngle, false);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Підпис градуса
+        const midAngle = (startAngle + endAngle) / 2;
+        const lx = center.x + Math.cos(midAngle) * (radius + 20);
+        const ly = center.y + Math.sin(midAngle) * (radius + 20);
+
+        ctx.font = 'bold 13px Arial';
+        ctx.fillStyle = labelColor;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+        ctx.shadowBlur = 4;
+        ctx.fillText(label, lx, ly);
+        ctx.restore();
+    }
+
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        drawGrid();
+
+        const bRad = (lineBAngleDeg * Math.PI) / 180;
+        const isParallel = Math.abs(lineBAngleDeg) < 0.3;
+
+        // 1. Точки перетину
+        // Перетин січної c з прямою a (горизонтальна Y = 110)
+        const pA = getIntersection(
+            secantPointA.x, secantPointA.y, secantPointB.x, secantPointB.y,
+            0, fixedLineY, canvas.width, fixedLineY
+        );
+
+        // Перетин січної c з прямою b
+        const bPt2 = { x: movableCenter.x + Math.cos(bRad) * 100, y: movableCenter.y + Math.sin(bRad) * 100 };
+        const pB = getIntersection(
+            secantPointA.x, secantPointA.y, secantPointB.x, secantPointB.y,
+            movableCenter.x, movableCenter.y, bPt2.x, bPt2.y
+        );
+
+        // 2. Обчислення внутрішніх різносторонніх кутів
+        // Кут 1 (біля прямої a, внутрішній знизу-праворуч)
+        const angle1Deg = 180 - secantAngleDeg;
+
+        // Кут 2 (біля прямої b, внутрішній зверху-ліворуч)
+        let angle2Deg = secantAngleDeg - lineBAngleDeg;
+        if (angle2Deg < 0) angle2Deg += 180;
+        if (angle2Deg > 180) angle2Deg -= 180;
+
+        // 3. Малювання кутів
+        if (pA) {
+            // Внутрішній кут 1: між променем вправо (0 rad) і променем січної вниз (secantAngleRad)
+            drawAngleSector(
+                pA, 0, secantAngleRad, 32,
+                'rgba(192, 132, 252, 0.25)', '#C084FC',
+                `${Math.round(angle1Deg)}°`, '#C084FC'
+            );
+        }
+
+        if (pB) {
+            // Внутрішній кут 2: між променем вліво (bRad + π) і променем січної вгору (secantAngleRad + π)
+            const rayLeftB = bRad + Math.PI;
+            const rayUpSecant = secantAngleRad + Math.PI;
+            const startA = Math.min(rayLeftB, rayUpSecant);
+            const endA = Math.max(rayLeftB, rayUpSecant);
+
+            drawAngleSector(
+                pB, startA, endA, 32,
+                'rgba(250, 204, 21, 0.25)', '#FACC15',
+                `${Math.round(angle2Deg)}°`, '#FACC15'
+            );
+        }
+
+        // 4. Малювання ліній
+        // Пряма a
+        drawInfiniteLine(200, fixedLineY, 0, '#38BDF8', 2.8, false);
+
+        // Пряма b (акцентне світіння при паралельності)
+        const lineBColor = isParallel ? '#4ADE80' : '#38BDF8';
+        drawInfiniteLine(movableCenter.x, movableCenter.y, bRad, lineBColor, isParallel ? 3.5 : 2.8, isParallel);
+
+        // Січна c
+        drawInfiniteLine(secantPointA.x, secantPointA.y, secantAngleRad, '#F43F5E', 2.2, false);
+
+        // 5. Підписи ліній
+        ctx.font = 'bold 15px Arial';
+        ctx.fillStyle = '#38BDF8';
+        ctx.fillText('a', 30, fixedLineY - 10);
+        ctx.fillStyle = lineBColor;
+        ctx.fillText('b', 30, movableCenter.y - 10 - Math.tan(bRad) * 230);
+        ctx.fillStyle = '#F43F5E';
+        ctx.fillText('c (січна)', secantPointB.x - 20, secantPointB.y + 25);
+
+        // 6. Інтерактивний маркер на прямій b
+        const handleDist = 160;
+        const hx = movableCenter.x + Math.cos(bRad) * handleDist;
+        const hy = movableCenter.y + Math.sin(bRad) * handleDist;
+
+        ctx.save();
+        ctx.shadowColor = lineBColor;
+        ctx.shadowBlur = 10;
+        ctx.fillStyle = lineBColor;
+        ctx.beginPath();
+        ctx.arc(hx, hy, 7, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = '#FFFFFF';
+        ctx.beginPath();
+        ctx.arc(hx, hy, 3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.restore();
+
+        // Оновлення текстового стану
+        valA1.textContent = `${Math.round(angle1Deg)}°`;
+        valA2.textContent = `${Math.round(angle2Deg)}°`;
+        angleValBox.textContent = `${lineBAngleDeg.toFixed(1)}°`;
+
+        if (isParallel) {
+            statusBadge.classList.add('parallel');
+            parallelStatus.textContent = 'a ∥ b (∠1 = ∠2 = ' + Math.round(angle1Deg) + '°)';
+        } else {
+            statusBadge.classList.remove('parallel');
+            parallelStatus.textContent = 'a ∦ b (∠1 ≠ ∠2)';
+        }
+    }
+
+    // Керування перетягуванням прямої b
+    function updateAngleFromPointer(clientX, clientY) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        const px = (clientX - rect.left) * scaleX;
+        const py = (clientY - rect.top) * scaleY;
+
+        let rad = Math.atan2(py - movableCenter.y, px - movableCenter.x);
+        let deg = rad * (180 / Math.PI);
+
+        // Дозволяємо рух лише у фронтальному секторі [-45, 45]
+        if (deg > 90) deg -= 180;
+        if (deg < -90) deg += 180;
+
+        deg = Math.max(-45, Math.min(45, deg));
+
+        // Магнітне прилипання до 0° (паралельність)
+        if (Math.abs(deg) < 1.2) deg = 0;
+
+        lineBAngleDeg = deg;
+        angleSlider.value = deg;
+        draw();
+    }
+
+    canvas.addEventListener('pointerdown', (e) => {
+        isDragging = true;
+        updateAngleFromPointer(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('pointermove', (e) => {
+        if (!isDragging) return;
+        updateAngleFromPointer(e.clientX, e.clientY);
+    });
+
+    window.addEventListener('pointerup', () => { isDragging = false; });
+
+    angleSlider.addEventListener('input', (e) => {
+        lineBAngleDeg = parseFloat(e.target.value);
+        draw();
+    });
+
+    setParallelBtn.addEventListener('click', () => {
+        lineBAngleDeg = 0;
+        angleSlider.value = 0;
+        draw();
+    });
+
+    draw();
+</script>
+
+</body>
+</html>
