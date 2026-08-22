@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nadia School — Хімія</title>
+  <style>
+    :root {
+      --bg-main: #121b27;
+      --bg-card: rgba(28, 33, 44, 0.85);
+      --bg-card-hover: rgba(38, 46, 62, 0.95);
+      --border-color: rgba(255, 255, 255, 0.15);
+      --accent: #5ce1e6;
+      --text-main: #f0f2f5;
+      --text-sub: #a4b3c6;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+      background-color: #121b27;
+      background: linear-gradient(rgba(14, 20, 29, 0.85), rgba(14, 20, 29, 0.9)), 
+                  url('./bg_simulations.jpg') no-repeat center center / cover;
+      background-attachment: fixed;
+    }
+    .container { width: 100%; max-width: 600px; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 25px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 16px;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover { background: rgba(0, 0, 0, 0.6); color: var(--accent); }
+    .page-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+    .page-desc { color: var(--text-sub); font-size: 15px; margin-bottom: 28px; }
+    .menu-grid { display: flex; flex-direction: column; gap: 14px; }
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 18px 22px;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      backdrop-filter: blur(12px);
+      transition: all 0.25s ease;
+    }
+    .card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(92, 225, 230, 0.2);
+    }
+    .card-left { display: flex; align-items: center; gap: 16px; }
+    .card-icon {
+      font-size: 24px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 12px;
+      flex-shrink: 0;
+    }
+    .card-title { font-size: 17px; font-weight: 600; color: #fff; margin-bottom: 3px; }
+    .card-desc { font-size: 13px; color: var(--text-sub); }
+    .card-arrow { color: var(--accent); font-size: 20px; font-weight: bold; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="index.html" class="back-link">&larr; До списку предметів</a>
+    <h1 class="page-title">🧪 Хімія</h1>
+    <p class="page-desc">Оберіть тип навчальних матеріалів:</p>
+
+    <div class="menu-grid">
+      <div class="card">
+        <div class="card-left">
+          <div class="card-icon">⚗️</div>
+          <div>
+            <div class="card-title">Симуляції</div>
+            <div class="card-desc">Віртуальна лабораторія та хімічні реакції</div>
+          </div>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </div>
+
+      <div class="card">
+        <div class="card-left">
+          <div class="card-icon">📖</div>
+          <div>
+            <div class="card-title">Історії</div>
+            <div class="card-desc">Відкриття елементів та великі хіміки</div>
+          </div>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </div>
+
+      <div class="card">
+        <div class="card-left">
+          <div class="card-icon">🎬</div>
+          <div>
+            <div class="card-title">Відео</div>
+            <div class="card-desc">Яскраві лабораторні досліди та експерименти</div>
+          </div>
+        </div>
+        <div class="card-arrow">&rarr;</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
