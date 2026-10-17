@@ -6,20 +6,17 @@
   <title>Вимірювання довжин тіл за допомогою власних мір</title>
   <style>
     :root {
-      --bg-main: #131419;
-      --bg-card: rgba(28, 33, 44, 0.9);
-      --border-color: rgba(255, 255, 255, 0.15);
-      --accent: #00d2ff;
-      --accent-orange: #ff9f43;
-      --text-main: #f0f2f5;
-      --text-sub: #a4b3c6;
+      --bg-main: #f0f4f8;
+      --bg-card: #ffffff;
+      --border-color: #cbd5e1;
+      --accent: #0284c7;
+      --accent-orange: #ea580c;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      background-color: #121b27;
-      background: linear-gradient(rgba(14, 20, 29, 0.9), rgba(14, 20, 29, 0.95)), 
-                  url('./bg_simulations.jpg') no-repeat center center / cover;
-      background-attachment: fixed;
+      background-color: var(--bg-main);
       color: var(--text-main);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       padding: 30px 15px;
@@ -30,82 +27,93 @@
     .back-btn {
       display: inline-flex;
       align-items: center;
-      color: #fff;
+      color: var(--text-main);
       text-decoration: none;
       font-size: 14px;
       margin-bottom: 20px;
-      background: rgba(0, 0, 0, 0.4);
+      background: #ffffff;
       padding: 8px 16px;
       border-radius: 20px;
       border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
       transition: all 0.2s;
     }
     .back-btn:hover { color: var(--accent); border-color: var(--accent); }
     
-    h1 { font-size: 26px; color: #fff; text-align: center; margin-bottom: 10px; }
+    h1 { font-size: 26px; color: var(--text-main); text-align: center; margin-bottom: 8px; }
     .subtitle { text-align: center; color: var(--text-sub); font-size: 14px; margin-bottom: 25px; }
 
     .card-block {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
       border-radius: 16px;
-      padding: 22px;
+      padding: 24px;
       margin-bottom: 25px;
-      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
 
-    h2 { font-size: 18px; color: var(--accent); margin-bottom: 15px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+    h2 { font-size: 18px; color: var(--accent); margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
     
+    .text-content { font-size: 14px; line-height: 1.6; color: var(--text-main); margin-bottom: 15px; }
+    .text-content p { margin-bottom: 10px; }
+
     .info-box {
-      background: rgba(0, 210, 255, 0.08);
+      background: #f0f9ff;
       border-left: 4px solid var(--accent);
-      padding: 12px 16px;
-      border-radius: 4px;
-      margin-bottom: 18px;
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 15px 0;
       font-size: 14px;
       line-height: 1.5;
+      color: #0369a1;
     }
 
-    .img-container {
-      text-align: center;
-      margin: 15px 0;
+    /* Сітка для наочного пояснення стародавніх мір */
+    .history-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
     }
-    .img-container img {
-      max-width: 100%;
-      border-radius: 12px;
+    .history-card {
+      background: #f8fafc;
       border: 1px solid var(--border-color);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
     }
-    .img-caption {
-      font-size: 12px;
-      color: var(--text-sub);
-      margin-top: 6px;
-    }
+    .history-title { color: var(--accent-orange); font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
+    .history-val { color: var(--accent); font-weight: bold; font-size: 14px; }
+    .history-desc { color: var(--text-sub); font-size: 13px; line-height: 1.4; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
     @media (max-width: 600px) { .grid-2 { grid-template-columns: 1fr; } }
 
-    label { display: block; font-size: 13px; color: var(--text-sub); margin-bottom: 5px; }
-    input[type="number"], input[type="text"] {
+    label { display: block; font-size: 13px; color: var(--text-sub); margin-bottom: 5px; font-weight: 500; }
+    input[type="number"], input[type="text"], textarea {
       width: 100%;
       padding: 10px;
-      background: rgba(0,0,0,0.3);
+      background: #ffffff;
       border: 1px solid var(--border-color);
       border-radius: 8px;
-      color: #fff;
+      color: var(--text-main);
       font-size: 14px;
       outline: none;
+      font-family: inherit;
     }
-    input:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 80px; }
+    input:focus, textarea:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
 
     table { width: 100%; border-collapse: collapse; margin-top: 15px; }
     th, td { border: 1px solid var(--border-color); padding: 10px; text-align: center; font-size: 13px; }
-    th { background: rgba(0, 210, 255, 0.15); color: var(--accent); }
+    th { background: #e0f2fe; color: #0369a1; font-weight: 600; }
 
     .btn-calc {
       width: 100%;
       padding: 14px;
-      background: linear-gradient(90deg, #00d2ff, #0072ff);
+      background: linear-gradient(90deg, #0284c7, #0369a1);
       border: none;
       border-radius: 10px;
       color: #fff;
@@ -118,14 +126,15 @@
     .btn-calc:hover { opacity: 0.9; }
 
     .result-box {
-      background: rgba(0, 210, 255, 0.08);
-      border: 1px solid var(--accent);
+      background: #f0fdf4;
+      border: 1px solid #22c55e;
       border-radius: 12px;
       padding: 15px;
       margin-top: 15px;
       display: none;
+      color: #166534;
     }
-    .result-box h3 { color: var(--accent); font-size: 16px; margin-bottom: 8px; }
+    .result-box h3 { color: #15803d; font-size: 16px; margin-bottom: 8px; }
     .result-box p { font-size: 14px; margin-bottom: 6px; line-height: 1.4; }
   </style>
 </head>
@@ -133,65 +142,59 @@
   <div class="container">
     <a href="physics.html" class="back-btn">&larr; До розділу Фізика</a>
     <h1>Вимірювання довжин тіл за допомогою власних мір</h1>
-    <p class="subtitle">Практичне дослідження стародавніх одиниць довжини та визначення похибок</p>
+    <p class="subtitle">Лабораторно-дослідна робота з фізики</p>
 
-    <!-- ТЕОРЕТИЧНИЙ ВСТУП -->
+    <!-- 1. ПІДГОТОВКА ТА ПОЯСНЕННЯ -->
     <div class="card-block">
-      <h2>📘 Підготовка до експерименту</h2>
-      <div class="info-box">
-        У цій роботі ми дослідимо стародавні одиниці довжини (п'ядь і лікоть), виміряємо ними побутові предмети, переведемо результати в метри (систему СІ) та порівняємо точність із контрольними вимірами.
-      </div>
+      <h2>1. Підготовка до експерименту та теорія</h2>
+      <div class="text-content">
+        <p>У давнину люди не мали єдиних стандартних приладів для вимірювання (як-от сучасних лінійок чи рулеток), тому використовували те, що завжди було при собі — власне тіло. Звідси й виникли антропометричні одиниці довжини.</p>
+        
+        <div class="history-grid">
+          <div class="history-card">
+            <span class="history-title">✋ П'ядь</span>
+            <span class="history-val">≈ 17.78 см</span>
+            <span class="history-desc"><strong>Звідки взялася:</strong> Відстань по прямій між кінцями витягнутих великого і вказівного пальців руки. Застосовувалася для вимірювання невеликих предметів тканин, посуду.</span>
+          </div>
+          <div class="history-card">
+            <span class="history-title">💪 Лікоть</span>
+            <span class="history-val">≈ 42–45 см</span>
+            <span class="history-desc"><strong>Звідки взялася:</strong> Відстань від ліктьового згину до кінця витягнутого середнього пальця. Була основною мірою в торгівлі полотном та сукном.</span>
+          </div>
+        </div>
 
-      <p style="font-size: 14px; line-height: 1.6; color: var(--text-main);">
-        <strong>Ознайомтеся зі стародавніми мірами:</strong><br>
-        • <strong>П'ядь</strong> — відстань по прямій між кінцями витягнутих великого і вказівного пальців руки.<br>
-        • <strong>Лікоть</strong> — відстань по прямій від ліктьового згину до кінця витягнутого середнього пальця руки.
-      </p>
-
-      <div class="img-container">
-        <!-- Схематична ілюстрація мір кисті -->
-        <svg width="100%" height="120" viewBox="0 0 500 120" style="background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid rgba(255,255,255,0.1);">
-          <text x="50" y="40" fill="#00d2ff" font-size="14" font-weight="bold">✋ 1 П'ядь</text>
-          <text x="50" y="65" fill="#a4b3c6" font-size="12">Великий - Вказівний</text>
-          <line x1="40" y1="80" x2="160" y2="80" stroke="#00d2ff" stroke-width="2" stroke-dasharray="4"/>
-
-          <text x="200" y="40" fill="#ff9f43" font-size="14" font-weight="bold">💪 1 Лікоть</text>
-          <text x="200" y="65" fill="#a4b3c6" font-size="12">Лікоть - Середній палець</text>
-          <line x1="190" y1="80" x2="350" y2="80" stroke="#ff9f43" stroke-width="2" stroke-dasharray="4"/>
-
-          <text x="380" y="40" fill="#2ecc71" font-size="14" font-weight="bold">📐 Контроль</text>
-          <text x="380" y="65" fill="#a4b3c6" font-size="12">Рулетка / Стрічка</text>
-        </svg>
-        <div class="img-caption">Основні антропометричні міри довжини</div>
+        <div class="info-box">
+          <strong>Як проводити вимірювання:</strong> Візьміть звичайну учнівську лінійку та виміряйте довжину своєї п'яді та ліктя в сантиметрах, щоб перевести їх у майбутньому в метри системи СІ.
+        </div>
       </div>
 
       <div class="grid-2" style="margin-top: 15px;">
         <div>
           <label>Моя п'ядь (P), см:</label>
-          <input type="number" id="P_val" step="0.1" placeholder="напр. 18">
+          <input type="number" id="P_val" step="0.1" placeholder="наприклад: 18">
         </div>
         <div>
           <label>Мій лікоть (L), см:</label>
-          <input type="number" id="L_val" step="0.1" placeholder="напр. 42">
+          <input type="number" id="L_val" step="0.1" placeholder="наприклад: 42">
         </div>
       </div>
     </div>
 
-    <!-- ТАБЛИЦЯ ТА ОБЧИСЛЕННЯ -->
+    <!-- 2. ТАБЛИЦЯ ВИМІРЮВАНЬ -->
     <div class="card-block">
-      <h2>📏 Виконання роботи та обчислення похибок</h2>
-      <div class="info-box">
-        <strong>Формула абсолютної похибки:</strong> $\Delta l = \vert{}l_{\text{мір}} - l_{\text{контр}}\vert{}$, де $l_{\text{мір}}$ — довжина в метрах, отримана за допомогою власної міри, а $l_{\text{контр}}$ — контрольний вимір у метрах (рулеткою).
+      <h2>2. Виконання роботи та таблиця результатів</h2>
+      <div class="text-content">
+        <p>Виміряйте довжину дивана та ширину шафи спочатку власними п'ядями, а потім ліктями. Запишіть цілі кількості у таблицю, обчисліть значення в сантиметрах та переведіть у метри. Для контролю виміряйте ці ж предмети рулеткою.</p>
       </div>
 
       <div style="overflow-x:auto;">
         <table>
           <thead>
             <tr>
-              <th>Об'єкт вимірювання</th>
+              <th>Вимірюваний об'єкт</th>
               <th>Кількість п'ядей</th>
               <th>Кількість ліктів</th>
-              <th>Контрольний вимір (м)</th>
+              <th>Контрольний вимір рулеткою (м)</th>
             </tr>
           </thead>
           <tbody>
@@ -210,26 +213,57 @@
           </tbody>
         </table>
       </div>
-      <button class="btn-calc" onclick="calcMain()">Обчислити значення та абсолютні похибки</button>
+      <button class="btn-calc" onclick="calcMain()">Обчислити значення та абсолютні похибки Δl</button>
 
       <div id="res_main" class="result-box"></div>
     </div>
 
-    <!-- СІМЕЙНЕ ДОСЛІДЖЕННЯ ТА ІЛЮСТРАЦІЯ СТАРОДАВНІХ МІР -->
+    <!-- 3. ПОХИБКИ ТА ЗАПИТАННЯ -->
     <div class="card-block">
-      <h2>🏛️ Стародавні українські міри власним тілом</h2>
-      
-      <!-- Картинка плакату українських мір -->
-      <div class="img-container">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/e2/Old_Ukrainian_units_of_length.jpg/800px-Old_Ukrainian_units_of_length.jpg" alt="Стародавні українські міри" onerror="this.src='https://via.placeholder.com/600x350/1c1d24/ffffff?text=%D0%A1%D1%82%D0%B0%D1%80%D0%BE%D0%B4%D0%B0%D0%B2%D0%BD%D1%96+%D0%A3%D0%BA%D1%80%D0%B0%D1%97%D0%BD%D1%81%D1%8C%D0%BA%D1%96+%D0%9C%D1%96%D1%80%D0%B8';">
-        <div class="img-caption">Ілюстрація: Стародавні українські міри довжини власним тілом (Аршин, Сажень, Фут, Перст, Вершок)</div>
-      </div>
-
+      <h2>3. Аналітичні запитання та похибки</h2>
       <div class="info-box">
-        <strong>Проведіть сімейне дослідження:</strong> Виміряйте власні значення (фут, перст, вершок) та попросіть когось із дорослих виміряти той самий предмет своїми частинами тіла!
+        <strong>Формула абсолютної похибки:</strong> $\Delta l = \vert{}l_{\text{мір}} - l_{\text{контр}}\vert{}$, де $l_{\text{мір}}$ — довжина за допомогою власних мір (у метрах), а $l_{\text{контр}}$ — контрольний вимір у системі СІ. Модуль показує, що похибка завжди додатна.
+      </div>
+      <div class="text-content" style="margin-top: 15px;">
+        <p><strong>Запитання 1:</strong> Поясніть, чому результати вимірювання одного й того ж предмета п'яддю у різних людей можуть суттєво відрізнятися?</p>
+        <textarea placeholder="Напишіть вашу відповідь..."></textarea>
+
+        <p style="margin-top: 15px;"><strong>Запитання 2:</strong> Зробіть висновок, який із методів (п'ядь чи лікоть) забезпечує меншу похибку під час вимірювання більших предметів.</p>
+        <textarea placeholder="Напишіть вашу відповідь..."></textarea>
+      </div>
+    </div>
+
+    <!-- 4. ДОВІДНИК ТА СІМЕЙНЕ ДОСЛІДЖЕННЯ -->
+    <div class="card-block">
+      <h2>4. Довідник стародавніх мір та сімейне дослідження</h2>
+      <div class="text-content">
+        <p>Дізнайтеся більше про інші стародавні міри, якими користувалися наші предки, та порівняйте їх із показниками членів вашої родини:</p>
       </div>
 
-      <div style="overflow-x:auto;">
+      <div class="history-grid">
+        <div class="history-card">
+          <span class="history-title">📍 Перст</span>
+          <span class="history-val">2.5 см</span>
+          <span class="history-desc">Ширина одного вказівного пальця.</span>
+        </div>
+        <div class="history-card">
+          <span class="history-title">✌️ Вершок</span>
+          <span class="history-val">4.4 см</span>
+          <span class="history-desc">Ширина двох пальців (вказівного та середнього).</span>
+        </div>
+        <div class="history-card">
+          <span class="history-title">🦶 Фут</span>
+          <span class="history-val">30.48 см</span>
+          <span class="history-desc">Довжина ступні ноги.</span>
+        </div>
+        <div class="history-card">
+          <span class="history-title">🙋‍♂️ Аршин</span>
+          <span class="history-val">71.12 см</span>
+          <span class="history-desc">Довжина витягнутої руки від плеча до пальців.</span>
+        </div>
+      </div>
+
+      <div style="overflow-x:auto; margin-top: 15px;">
         <table>
           <thead>
             <tr>
@@ -244,40 +278,39 @@
             <tr>
               <td><strong>Фут</strong></td>
               <td>Довжина ступні</td>
-              <td><input type="text" id="obj_foot" value="Диван"></td>
+              <td><input type="text" value="Диван"></td>
               <td><input type="number" id="foot_own" step="0.1"></td>
               <td><input type="number" id="foot_rel" step="0.1"></td>
             </tr>
             <tr>
               <td><strong>Перст</strong></td>
-              <td>Ширина одного пальця</td>
-              <td><input type="text" id="obj_finger" value="Підручник"></td>
+              <td>Ширина пальця</td>
+              <td><input type="text" value="Підручник"></td>
               <td><input type="number" id="finger_own" step="0.1"></td>
               <td><input type="number" id="finger_rel" step="0.1"></td>
             </tr>
             <tr>
               <td><strong>Вершок</strong></td>
               <td>Ширина двох пальців</td>
-              <td><input type="text" id="obj_versmok" value="Шафа"></td>
+              <td><input type="text" value="Шафа"></td>
               <td><input type="number" id="vershok_own" step="0.1"></td>
               <td><input type="number" id="vershok_rel" step="0.1"></td>
             </tr>
           </tbody>
         </table>
       </div>
-      <button class="btn-calc" style="background: linear-gradient(90deg, #ff9f43, #ff5252);" onclick="calcFamily()">Розрахувати похибку сімейного дослідження</button>
+      <button class="btn-calc" style="background: linear-gradient(90deg, #ea580c, #c2410c);" onclick="calcFamily()">Розрахувати похибку сімейного дослідження</button>
 
       <div id="res_family" class="result-box"></div>
     </div>
 
-    <!-- ІСТОРИЧНІ РОЗРАХУНКИ -->
+    <!-- 5. ВИСНОВКИ -->
     <div class="card-block">
-      <h2>🧮 Розрахунки за числовими даними плакату</h2>
-      <p style="font-size: 14px; color: var(--text-sub); margin-bottom: 12px; line-height: 1.5;">
-        На основі історичних значень: 1 перст = 2.5 см, 1 п'ядь = 17.78 см, 1 фут = 30.48 см, 1 аршин = 71.12 см.
-      </p>
-      <button class="btn-calc" style="background: rgba(255,255,255,0.1); border: 1px solid var(--border-color);" onclick="calcHistory()">Перевірити скільки перстів у п'яді та футів у аршині</button>
-      <div id="res_history" class="result-box"></div>
+      <h2>5. Загальні висновки</h2>
+      <div class="text-content">
+        <p>1. Які саме стародавні одиниці довжини ви досліджували та які переваги й недоліки вони мають порівняно із сучасними еталонами в системі СІ?</p>
+        <textarea placeholder="Ваші висновки..."></textarea>
+      </div>
     </div>
 
   </div>
@@ -288,7 +321,7 @@
       const L = parseFloat(document.getElementById('L_val').value);
 
       if (!P || !L) {
-        alert('Будь ласка, вкажіть розмір вашої п\'яді (P) та ліктя (L) у першому блоці!');
+        alert('Вкажіть значення вашої п\'яді та ліктя у першому блоці!');
         return;
       }
 
@@ -312,11 +345,11 @@
 
       const ratio = (L / P).toFixed(2);
 
-      let html = `<h3>Обчислені результати:</h3>`;
+      let html = `<h3>Результати розрахунків:</h3>`;
       html += `<p>• <strong>Співвідношення мір:</strong> Ваш лікоть більший за п'ядь у <strong>${ratio}</strong> разів.</p>`;
-      html += `<hr style="border-color:rgba(255,255,255,0.1); margin:10px 0;">`;
-      html += `<p>• <strong>Диван:</strong><br> - за п'ядьми: ${sofaP_m.toFixed(2)} м | Похибка Δl = <strong>${errSofaP} м</strong><br> - за ліктями: ${sofaL_m.toFixed(2)} м | Похибка Δl = <strong>${errSofaL} м</strong></p>`;
-      html += `<p>• <strong>Шафа:</strong><br> - за п'ядьми: ${wardP_m.toFixed(2)} м | Похибка Δl = <strong>${errWardP} м</strong><br> - за ліктями: ${wardL_m.toFixed(2)} м | Похибка Δl = <strong>${errWardL} м</strong></p>`;
+      html += `<hr style="border-color:#bbf7d0; margin:8px 0;">`;
+      html += `<p>• <strong>Диван:</strong><br>- за п'ядьми: ${sofaP_m.toFixed(2)} м (похибка Δl = <strong>${errSofaP} м</strong>)<br>- за ліктями: ${sofaL_m.toFixed(2)} м (похибка Δl = <strong>${errSofaL} м</strong>)</p>`;
+      html += `<p>• <strong>Шафа:</strong><br>- за п'ядьми: ${wardP_m.toFixed(2)} м (похибка Δl = <strong>${errWardP} м</strong>)<br>- за ліктями: ${wardL_m.toFixed(2)} м (похибка Δl = <strong>${errWardL} м</strong>)</p>`;
       
       const res = document.getElementById('res_main');
       res.innerHTML = html;
@@ -335,26 +368,12 @@
       const errP = Math.abs(pOwn - pRel).toFixed(1);
       const errV = Math.abs(vOwn - vRel).toFixed(1);
 
-      let html = `<h3>Похибка між вашими значеннями та значеннями родича |l<sub>влас</sub> - l<sub>род</sub>|:</h3>`;
-      html += `<p>• <strong>Фут (довжина ступні):</strong> Різниця = <strong>${errF} см</strong></p>`;
-      html += `<p>• <strong>Перст (палець):</strong> Різниця = <strong>${errP} см</strong></p>`;
-      html += `<p>• <strong>Вершок (два пальці):</strong> Різниця = <strong>${errV} см</strong></p>`;
-      html += `<p><em>Висновок:</em> Оскільки розміри тіла у кожної людини унікальні, давні міри викликали суттєві розбіжності при торгівлі!</p>`;
+      let html = `<h3>Абсолютна похибка сімейних вимірів |l<sub>влас</sub> - l<sub>род</sub>|:</h3>`;
+      html += `<p>• <strong>Фут:</strong> ${errF} см</p>`;
+      html += `<p>• <strong>Перст:</strong> ${errP} см</p>`;
+      html += `<p>• <strong>Вершок:</strong> ${errV} см</p>`;
 
       const res = document.getElementById('res_family');
-      res.innerHTML = html;
-      res.style.display = 'block';
-    }
-
-    function calcHistory() {
-      const perstInPyad = (17.78 / 2.5).toFixed(1);
-      const footInArshin = (71.12 / 30.48).toFixed(2);
-
-      let html = `<h3>Розрахунки на основі плакату:</h3>`;
-      html += `<p>1. В одній п'яді міститься (17.78 / 2.5) ≈ <strong>${perstInPyad} перстів</strong>.</p>`;
-      html += `<p>2. Один аршин становить (71.12 / 30.48) ≈ <strong>${footInArshin} футів</strong>.</p>`;
-
-      const res = document.getElementById('res_history');
       res.innerHTML = html;
       res.style.display = 'block';
     }
