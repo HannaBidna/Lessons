@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вимірювання лінійних розмірів та площі</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #2c3e50; text-align: center; }
+        .section { margin-bottom: 25px; padding: 15px; background: #eef2f5; border-radius: 8px; }
+        input[type="number"] { width: 90%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #e67e22; color: white; }
+        button { background-color: #e67e22; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 15px; width: 100%; }
+        button:hover { background-color: #d35400; }
+        .result-box { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 6px; margin-top: 15px; }
+        .back-link { display: inline-block; margin-bottom: 15px; text-decoration: none; color: #3498db; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="index.html" class="back-link">← На головну</a>
+    <h1>Вимірювання лінійних розмірів та площ поверхонь</h1>
+
+    <div class="section">
+        <h2>1. Введення виміряних даних</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Об'єкт</th>
+                    <th>Довжина $l$, см</th>
+                    <th>Ширина $b$, см</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Смартфон</td>
+                    <td><input type="number" id="phone_l" step="0.1" value="15"></td>
+                    <td><input type="number" id="phone_b" step="0.1" value="7.5"></td>
+                </tr>
+                <tr>
+                    <td>Підручник</td>
+                    <td><input type="number" id="book_l" step="0.1" value="26"></td>
+                    <td><input type="number" id="book_b" step="0.1" value="20"></td>
+                </tr>
+                <tr>
+                    <td>Кришка парти</td>
+                    <td><input type="number" id="desk_l" step="0.1" value="120"></td>
+                    <td><input type="number" id="desk_b" step="0.1" value="50"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="calculateArea()">Обчислити площі та перевести в СІ</button>
+    </div>
+
+    <div id="output" class="result-box" style="display:none;"></div>
+</div>
+
+<script>
+function calculateArea() {
+    const pL = parseFloat(document.getElementById('phone_l').value);
+    const pB = parseFloat(document.getElementById('phone_b').value);
+    const bL = parseFloat(document.getElementById('book_l').value);
+    const bB = parseFloat(document.getElementById('book_b').value);
+    const dL = parseFloat(document.getElementById('desk_l').value);
+    const dB = parseFloat(document.getElementById('desk_b').value);
+
+    const sPhone = pL * pB; // см²
+    const sBook = bL * bB;   // см²
+    const sDesk = dL * dB;   // см²
+
+    const sPhoneSI = (sPhone * 0.0001).toFixed(4); // м²
+    const sBookSI = (sBook * 0.0001).toFixed(4);   // м²
+    const sDeskSI = (sDesk * 0.0001).toFixed(4);   // м²
+
+    const ratioBookPhone = (sBook / sPhone).toFixed(1);
+    const ratioDeskPhone = (sDesk / sPhone).toFixed(1);
+    const filmRoll = 2.0; // 2 м²
+    const desksCovered = Math.floor(filmRoll / (sDesk * 0.0001));
+
+    let html = `<h3>Обчислені результати:</h3>`;
+    html += `<p><strong>Площа смартфона:</strong> ${sPhone} см² = <strong>${sPhoneSI} м²</strong></p>`;
+    html += `<p><strong>Площа підручника:</strong> ${sBook} см² = <strong>${sBookSI} м²</strong></p>`;
+    html += `<p><strong>Площа парти:</strong> ${sDesk} см² = <strong>${sDeskSI} м²</strong></p>`;
+    html += `<hr>`;
+    html += `<h3>Додаткові завдання:</h3>`;
+    html += `<p>1. Площа підручника більша за площу смартфона у <strong>${ratioBookPhone}</strong> разів.</p>`;
+    html += `<p>2. Смартфон може покрити парту <strong>${ratioDeskPhone}</strong> разів.</p>`;
+    html += `<p>3. Рулоном захисної плівки (2 м²) можна повністю покрити <strong>${desksCovered}</strong> парт(и).</p>`;
+
+    const outputDiv = document.getElementById('output');
+    outputDiv.innerHTML = html;
+    outputDiv.style.display = 'block';
+}
+</script>
+</body>
+</html>
