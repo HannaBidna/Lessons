@@ -68,7 +68,7 @@
       color: #0369a1;
     }
 
-    /* Сітка для наочного пояснення стародавніх мір */
+    /* Сітка з міні-ілюстраціями замість емодзі */
     .history-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -84,8 +84,28 @@
       flex-direction: column;
       gap: 6px;
     }
-    .history-title { color: var(--accent-orange); font-weight: 700; font-size: 16px; display: flex; align-items: center; gap: 8px; }
-    .history-val { color: var(--accent); font-weight: bold; font-size: 14px; }
+    .history-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .history-icon {
+      width: 36px;
+      height: 36px;
+      background: #e0f2fe;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .history-icon img {
+      width: 22px;
+      height: 22px;
+      object-fit: contain;
+    }
+    .history-title { color: var(--accent-orange); font-weight: 700; font-size: 16px; }
+    .history-val { color: var(--accent); font-weight: bold; font-size: 14px; margin-top: 4px; }
     .history-desc { color: var(--text-sub); font-size: 13px; line-height: 1.4; }
 
     .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -148,23 +168,35 @@
     <div class="card-block">
       <h2>1. Підготовка до експерименту та теорія</h2>
       <div class="text-content">
-        <p>У давнину люди не мали єдиних стандартних приладів для вимірювання (як-от сучасних лінійок чи рулеток), тому використовували те, що завжди було при собі — власне тіло. Звідси й виникли антропометричні одиниці довжини.</p>
+        <p>У давнину люди не мали єдиних стандартних приладів для вимірювання (як-от сучасних лінійок чи рулеток), тому використовували те, що завжди було під рукою — власне тіло. Звідси й виникли антропометричні одиниці довжини.</p>
         
         <div class="history-grid">
           <div class="history-card">
-            <span class="history-title">✋ П'ядь</span>
+            <div class="history-header">
+              <div class="history-icon">
+                <!-- Іконка п'яді -->
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="#0284c7" stroke-width="2" fill="none"><path d="M18 11V6a2 2 0 0 0-4 0v1a2 2 0 0 1-4 0v3a2 2 0 0 0-4 0v7a8 8 0 0 0 8 8h1a7 7 0 0 0 7-7v-4a2 2 0 0 0-4 0z"/></svg>
+              </div>
+              <span class="history-title">П'ядь</span>
+            </div>
             <span class="history-val">≈ 17.78 см</span>
-            <span class="history-desc"><strong>Звідки взялася:</strong> Відстань по прямій між кінцями витягнутих великого і вказівного пальців руки. Застосовувалася для вимірювання невеликих предметів тканин, посуду.</span>
+            <span class="history-desc"><strong>Звідки взялася:</strong> Відстань по прямій між кінцями витягнутих великого і вказівного пальців руки. Застосовувалася для вимірювання невеликих предметів.</span>
           </div>
           <div class="history-card">
-            <span class="history-title">💪 Лікоть</span>
+            <div class="history-header">
+              <div class="history-icon">
+                <!-- Іконка ліктя -->
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="#0284c7" stroke-width="2" fill="none"><path d="M4 20h16M6 16l6-6 4 4-6 6H6v-4z"/></svg>
+              </div>
+              <span class="history-title">Лікоть</span>
+            </div>
             <span class="history-val">≈ 42–45 см</span>
-            <span class="history-desc"><strong>Звідки взялася:</strong> Відстань від ліктьового згину до кінця витягнутого середнього пальця. Була основною мірою в торгівлі полотном та сукном.</span>
+            <span class="history-desc"><strong>Звідки взялася:</strong> Відстань від ліктьового згину до кінця витягнутого середнього пальця. Була основною мірою в торгових розрахунках сукна та полотна.</span>
           </div>
         </div>
 
         <div class="info-box">
-          <strong>Як проводити вимірювання:</strong> Візьміть звичайну учнівську лінійку та виміряйте довжину своєї п'яді та ліктя в сантиметрах, щоб перевести їх у майбутньому в метри системи СІ.
+          <strong>Як проводити вимірювання:</strong> Візьміть звичайну учнівську лінійку та виміряйте довжину своєї п'яді та ліктя в сантиметрах, щоб перевести їх у метри системи СІ.
         </div>
       </div>
 
@@ -222,7 +254,7 @@
     <div class="card-block">
       <h2>3. Аналітичні запитання та похибки</h2>
       <div class="info-box">
-        <strong>Формула абсолютної похибки:</strong> $\Delta l = \vert{}l_{\text{мір}} - l_{\text{контр}}\vert{}$, де $l_{\text{мір}}$ — довжина за допомогою власних мір (у метрах), а $l_{\text{контр}}$ — контрольний вимір у системі СІ. Модуль показує, що похибка завжди додатна.
+        <strong>Формула абсолютної похибки:</strong> $\Delta l = \vert{}l_{\text{мір}} - l_{\text{контр}}\vert{}$, де $l_{\text{мір}}$ — довжина за допомогою власних мір (у метрах), а $l_{\text{контр}}$ — контрольний вимір у системі СІ. Знак модуля гарантує, що похибка завжди додатна.
       </div>
       <div class="text-content" style="margin-top: 15px;">
         <p><strong>Запитання 1:</strong> Поясніть, чому результати вимірювання одного й того ж предмета п'яддю у різних людей можуть суттєво відрізнятися?</p>
@@ -242,22 +274,34 @@
 
       <div class="history-grid">
         <div class="history-card">
-          <span class="history-title">📍 Перст</span>
+          <div class="history-header">
+            <div class="history-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#0284c7" stroke-width="2" fill="none"><circle cx="12" cy="12" r="3"/></svg></div>
+            <span class="history-title">Перст</span>
+          </div>
           <span class="history-val">2.5 см</span>
           <span class="history-desc">Ширина одного вказівного пальця.</span>
         </div>
         <div class="history-card">
-          <span class="history-title">✌️ Вершок</span>
+          <div class="history-header">
+            <div class="history-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#0284c7" stroke-width="2" fill="none"><path d="M4 12h16m-8-8v16"/></svg></div>
+            <span class="history-title">Вершок</span>
+          </div>
           <span class="history-val">4.4 см</span>
           <span class="history-desc">Ширина двох пальців (вказівного та середнього).</span>
         </div>
         <div class="history-card">
-          <span class="history-title">🦶 Фут</span>
+          <div class="history-header">
+            <div class="history-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#0284c7" stroke-width="2" fill="none"><path d="M3 18h18v-2H3v2zM5 10h14V8H5v2z"/></svg></div>
+            <span class="history-title">Фут</span>
+          </div>
           <span class="history-val">30.48 см</span>
           <span class="history-desc">Довжина ступні ноги.</span>
         </div>
         <div class="history-card">
-          <span class="history-title">🙋‍♂️ Аршин</span>
+          <div class="history-header">
+            <div class="history-icon"><svg viewBox="0 0 24 24" width="20" height="20" stroke="#0284c7" stroke-width="2" fill="none"><path d="M2 12h20M12 2v20"/></svg></div>
+            <span class="history-title">Аршин</span>
+          </div>
           <span class="history-val">71.12 см</span>
           <span class="history-desc">Довжина витягнутої руки від плеча до пальців.</span>
         </div>
