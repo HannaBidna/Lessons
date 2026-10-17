@@ -1,99 +1,404 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Вимірювання лінійних розмірів та площі</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; color: #333; }
-        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        h1, h2 { color: #2c3e50; text-align: center; }
-        .section { margin-bottom: 25px; padding: 15px; background: #eef2f5; border-radius: 8px; }
-        input[type="number"] { width: 90%; padding: 6px; border: 1px solid #ccc; border-radius: 4px; }
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #e67e22; color: white; }
-        button { background-color: #e67e22; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 15px; width: 100%; }
-        button:hover { background-color: #d35400; }
-        .result-box { background: #fff3cd; border: 1px solid #ffeeba; color: #856404; padding: 15px; border-radius: 6px; margin-top: 15px; }
-        .back-link { display: inline-block; margin-bottom: 15px; text-decoration: none; color: #3498db; font-weight: bold; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Вимірювання лінійних розмірів та площ поверхонь</title>
+  <style>
+    :root {
+      --bg-main: #f0f4f8;
+      --bg-card: #ffffff;
+      --border-color: #cbd5e1;
+      --accent: #0284c7;
+      --accent-orange: #ea580c;
+      --text-main: #1e293b;
+      --text-sub: #64748b;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-main);
+      color: var(--text-main);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 30px 15px;
+      display: flex;
+      justify-content: center;
+    }
+    .container { width: 100%; max-width: 900px; }
+    .back-btn {
+      display: inline-flex;
+      align-items: center;
+      color: var(--text-main);
+      text-decoration: none;
+      font-size: 14px;
+      margin-bottom: 20px;
+      background: #ffffff;
+      padding: 8px 16px;
+      border-radius: 20px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+      transition: all 0.2s;
+    }
+    .back-btn:hover { color: var(--accent); border-color: var(--accent); }
+    
+    h1 { font-size: 26px; color: var(--text-main); text-align: center; margin-bottom: 8px; }
+    .subtitle { text-align: center; color: var(--text-sub); font-size: 14px; margin-bottom: 25px; }
+
+    .card-block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 25px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    h2 { font-size: 18px; color: var(--accent); margin-bottom: 15px; border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; }
+    
+    .text-content { font-size: 14px; line-height: 1.6; color: var(--text-main); margin-bottom: 15px; }
+    .text-content p { margin-bottom: 10px; }
+
+    .info-box {
+      background: #f0f9ff;
+      border-left: 4px solid var(--accent);
+      padding: 14px 16px;
+      border-radius: 6px;
+      margin: 15px 0;
+      font-size: 14px;
+      line-height: 1.5;
+      color: #0369a1;
+    }
+
+    .theory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 15px;
+      margin: 15px 0;
+    }
+    .theory-card {
+      background: #f8fafc;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .theory-header {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent-orange);
+      font-weight: 700;
+      font-size: 15px;
+    }
+    .theory-icon {
+      width: 32px; height: 32px;
+      background: #e0f2fe;
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .theory-desc { font-size: 13px; color: var(--text-sub); line-height: 1.4; margin-top: 4px; }
+
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    @media (max-width: 600px) { .grid-3 { grid-template-columns: 1fr; } }
+
+    label { display: block; font-size: 13px; color: var(--text-sub); margin-bottom: 5px; font-weight: 500; }
+    input[type="number"], input[type="text"], textarea, select {
+      width: 100%;
+      padding: 10px;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+    }
+    textarea { resize: vertical; min-height: 80px; }
+    input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1); }
+
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; min-width: 700px; }
+    .table-wrapper { overflow-x: auto; }
+    th, td { border: 1px solid var(--border-color); padding: 8px; text-align: center; font-size: 13px; }
+    th { background: #e0f2fe; color: #0369a1; font-weight: 600; }
+
+    .btn-calc {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(90deg, #0284c7, #0369a1);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 15px;
+      transition: opacity 0.2s;
+    }
+    .btn-calc:hover { opacity: 0.9; }
+
+    .result-box {
+      background: #f0fdf4;
+      border: 1px solid #22c55e;
+      border-radius: 12px;
+      padding: 15px;
+      margin-top: 15px;
+      display: none;
+      color: #166534;
+    }
+    .result-box h3 { color: #15803d; font-size: 16px; margin-bottom: 8px; }
+    .result-box p { font-size: 14px; margin-bottom: 6px; line-height: 1.4; }
+  </style>
 </head>
 <body>
-<div class="container">
-    <a href="index.html" class="back-link">← На головну</a>
+  <div class="container">
+    <a href="physics.html" class="back-btn">&larr; До розділу Фізика</a>
     <h1>Вимірювання лінійних розмірів та площ поверхонь</h1>
+    <p class="subtitle">Шкільна лабораторія: робота з вимірювальними приладами</p>
 
-    <div class="section">
-        <h2>1. Введення виміряних даних</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Об'єкт</th>
-                    <th>Довжина $l$, см</th>
-                    <th>Ширина $b$, см</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>Смартфон</td>
-                    <td><input type="number" id="phone_l" step="0.1" value="15"></td>
-                    <td><input type="number" id="phone_b" step="0.1" value="7.5"></td>
-                </tr>
-                <tr>
-                    <td>Підручник</td>
-                    <td><input type="number" id="book_l" step="0.1" value="26"></td>
-                    <td><input type="number" id="book_b" step="0.1" value="20"></td>
-                </tr>
-                <tr>
-                    <td>Кришка парти</td>
-                    <td><input type="number" id="desk_l" step="0.1" value="120"></td>
-                    <td><input type="number" id="desk_b" step="0.1" value="50"></td>
-                </tr>
-            </tbody>
-        </table>
-        <button onclick="calculateArea()">Обчислити площі та перевести в СІ</button>
+    <!-- 1. ПІДГОТОВКА ТА ТЕОРІЯ -->
+    <div class="card-block">
+      <h2>1. Підготовка до експерименту та теорія</h2>
+      <div class="text-content">
+        <p>В цій роботі ми виміряємо лінійні розміри різноманітних тіл, підбираючи для кожного предмета відповідний вимірювальний прилад, та обчислимо їхні площі.</p>
+        
+        <div class="theory-grid">
+          <div class="theory-card">
+            <div class="theory-header">
+              <div class="theory-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><rect x="3" y="8" width="18" height="8" rx="2"/><path d="M7 8v4M11 8v4M15 8v4M19 8v4"/></svg></div>
+              Ціна поділки приладу
+            </div>
+            <div class="theory-desc">Це значення найменшої поділки шкали. Перед вимірюванням завжди визначайте, скільки сантиметрів або міліметрів припадає на одну мінімальну поділку вашої лінійки чи рулетки.</div>
+          </div>
+          <div class="theory-card">
+            <div class="theory-header">
+              <div class="theory-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ea580c" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg></div>
+              Формула площі (S)
+            </div>
+            <div class="theory-desc">Площа прямокутника обчислюється як добуток його довжини <strong>(l)</strong> та ширини <strong>(b)</strong>: <br><br><center><strong>S = l × b</strong></center></div>
+          </div>
+        </div>
+
+        <div class="info-box">
+          <strong>Важливо:</strong> Для обчислення площі в Системі СІ результати мають бути в метрах квадратних (м²). Нагадаємо: <strong>1 м² = 10 000 см²</strong>.
+        </div>
+      </div>
+
+      <h3>Визначте ціну поділки приладів, які ви будете використовувати:</h3>
+      <div class="grid-3" style="margin-top: 10px;">
+        <div>
+          <label>Учнівська лінійка:</label>
+          <input type="text" placeholder="напр. 1 мм">
+        </div>
+        <div>
+          <label>Вимірювальна стрічка:</label>
+          <input type="text" placeholder="напр. 1 см">
+        </div>
+        <div>
+          <label>Рулетка:</label>
+          <input type="text" placeholder="напр. 1 мм">
+        </div>
+      </div>
     </div>
 
-    <div id="output" class="result-box" style="display:none;"></div>
-</div>
+    <!-- 2. ТАБЛИЦЯ ВИМІРЮВАНЬ -->
+    <div class="card-block">
+      <h2>2. Виконання роботи</h2>
+      <div class="text-content">
+        <p>Доберіть самостійно вимірювальний прилад для кожного об'єкта, виміряйте довжину (l) та ширину (b) і запишіть результати. Для менших предметів зручніше використовувати сантиметри (см), а для великих — метри (м).</p>
+      </div>
 
-<script>
-function calculateArea() {
-    const pL = parseFloat(document.getElementById('phone_l').value);
-    const pB = parseFloat(document.getElementById('phone_b').value);
-    const bL = parseFloat(document.getElementById('book_l').value);
-    const bB = parseFloat(document.getElementById('book_b').value);
-    const dL = parseFloat(document.getElementById('desk_l').value);
-    const dB = parseFloat(document.getElementById('desk_b').value);
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr>
+              <th>№</th>
+              <th>Об'єкт вимірювання</th>
+              <th>Прилад</th>
+              <th>Одиниці</th>
+              <th>Довжина (l)</th>
+              <th>Ширина (b)</th>
+              <th>Площа (S)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Гумка-стирачка</td>
+              <td><input type="text" value="Лінійка"></td>
+              <td>
+                <select id="u1">
+                  <option value="cm">см</option>
+                  <option value="m">м</option>
+                </select>
+              </td>
+              <td><input type="number" id="l1" step="0.1"></td>
+              <td><input type="number" id="b1" step="0.1"></td>
+              <td><span id="s1_res">-</span></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Екран смартфона</td>
+              <td><input type="text" value="Лінійка"></td>
+              <td>
+                <select id="u2">
+                  <option value="cm">см</option>
+                  <option value="m">м</option>
+                </select>
+              </td>
+              <td><input type="number" id="l2" step="0.1"></td>
+              <td><input type="number" id="b2" step="0.1"></td>
+              <td><span id="s2_res">-</span></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Підручник</td>
+              <td><input type="text" value="Лінійка"></td>
+              <td>
+                <select id="u3">
+                  <option value="cm">см</option>
+                  <option value="m">м</option>
+                </select>
+              </td>
+              <td><input type="number" id="l3" step="0.1"></td>
+              <td><input type="number" id="b3" step="0.1"></td>
+              <td><span id="s3_res">-</span></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Кришка парти</td>
+              <td><input type="text" value="Стрічка"></td>
+              <td>
+                <select id="u4">
+                  <option value="cm">см</option>
+                  <option value="m">м</option>
+                </select>
+              </td>
+              <td><input type="number" id="l4" step="0.1"></td>
+              <td><input type="number" id="b4" step="0.1"></td>
+              <td><span id="s4_res">-</span></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>Шкільна дошка</td>
+              <td><input type="text" value="Рулетка"></td>
+              <td>
+                <select id="u5">
+                  <option value="m" selected>м</option>
+                  <option value="cm">см</option>
+                </select>
+              </td>
+              <td><input type="number" id="l5" step="0.1"></td>
+              <td><input type="number" id="b5" step="0.1"></td>
+              <td><span id="s5_res">-</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <button class="btn-calc" onclick="calcArea()">Обчислити площі та розв'язати задачі</button>
 
-    const sPhone = pL * pB; // см²
-    const sBook = bL * bB;   // см²
-    const sDesk = dL * dB;   // см²
+      <div id="res_main" class="result-box"></div>
+    </div>
 
-    const sPhoneSI = (sPhone * 0.0001).toFixed(4); // м²
-    const sBookSI = (sBook * 0.0001).toFixed(4);   // м²
-    const sDeskSI = (sDesk * 0.0001).toFixed(4);   // м²
+    <!-- 3. ДОДАТКОВІ ЗАВДАННЯ ТА РОЗРАХУНКИ -->
+    <div class="card-block">
+      <h2>3. Додаткові розрахункові завдання</h2>
+      <div class="info-box">
+        Результати цих розрахунків згенеруються автоматично у зеленому полі вище після того, як ви заповните таблицю і натиснете кнопку обчислення.
+      </div>
+      <div class="text-content">
+        <p><strong>Завдання 1:</strong> У скільки разів площа обкладинки підручника перевищує площу екрана смартфона?</p>
+        <p><strong>Завдання 2:</strong> Скільки разів площа екрана смартфона може повністю покрити площу кришки шкільної парти?</p>
+        <p><strong>Завдання 3:</strong> Для покриття парти плівкою використовується рулон площею <strong>10 м²</strong>. Скільки парт можна покрити цим рулоном?</p>
+      </div>
+    </div>
 
-    const ratioBookPhone = (sBook / sPhone).toFixed(1);
-    const ratioDeskPhone = (sDesk / sPhone).toFixed(1);
-    const filmRoll = 2.0; // 2 м²
-    const desksCovered = Math.floor(filmRoll / (sDesk * 0.0001));
+    <!-- 4. ЗАПИТАННЯ ТА ВИСНОВКИ -->
+    <div class="card-block">
+      <h2>4. Аналіз експерименту та висновки</h2>
+      <div class="text-content">
+        <p><strong>1.</strong> Який саме прилад ви обрали для маленьких предметів, а який — для великих об'єктів? Чому такий вибір є зручним?</p>
+        <textarea placeholder="Ваша відповідь..."></textarea>
 
-    let html = `<h3>Обчислені результати:</h3>`;
-    html += `<p><strong>Площа смартфона:</strong> ${sPhone} см² = <strong>${sPhoneSI} м²</strong></p>`;
-    html += `<p><strong>Площа підручника:</strong> ${sBook} см² = <strong>${sBookSI} м²</strong></p>`;
-    html += `<p><strong>Площа парти:</strong> ${sDesk} см² = <strong>${sDeskSI} м²</strong></p>`;
-    html += `<hr>`;
-    html += `<h3>Додаткові завдання:</h3>`;
-    html += `<p>1. Площа підручника більша за площу смартфона у <strong>${ratioBookPhone}</strong> разів.</p>`;
-    html += `<p>2. Смартфон може покрити парту <strong>${ratioDeskPhone}</strong> разів.</p>`;
-    html += `<p>3. Рулоном захисної плівки (2 м²) можна повністю покрити <strong>${desksCovered}</strong> парт(и).</p>`;
+        <p style="margin-top:15px;"><strong>2.</strong> До яких незручностей чи похибок призвело б використання занадто короткого інструмента (наприклад, лінійки 15 см для вимірювання стіни)?</p>
+        <textarea placeholder="Ваша відповідь..."></textarea>
 
-    const outputDiv = document.getElementById('output');
-    outputDiv.innerHTML = html;
-    outputDiv.style.display = 'block';
-}
-</script>
+        <p style="margin-top:15px;"><strong>3.</strong> Чому важливо стежити за однаковими одиницями вимірювання довжини та ширини під час обчислення площі?</p>
+        <textarea placeholder="Ваша відповідь..."></textarea>
+
+        <p style="margin-top:15px;"><strong>4. Підсумок:</strong> Що саме ви вимірювали під час роботи та яких правил важливо дотримуватися під час обчислення площі?</p>
+        <textarea placeholder="Ваш загальний висновок..."></textarea>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    function getAreaInSqMeters(l, b, unit) {
+      if(isNaN(l) || isNaN(b) || l === 0 || b === 0) return 0;
+      let area = l * b;
+      if (unit === 'cm') {
+        return area / 10000; // перевід см² у м²
+      }
+      return area; // вже у м²
+    }
+
+    function calcArea() {
+      let m2_areas = [];
+
+      for(let i=1; i<=5; i++) {
+        let l = parseFloat(document.getElementById('l'+i).value);
+        let b = parseFloat(document.getElementById('b'+i).value);
+        let unit = document.getElementById('u'+i).value;
+        let resSpan = document.getElementById('s'+i+'_res');
+
+        if(!isNaN(l) && !isNaN(b)) {
+          let area = l * b;
+          let m2_area = getAreaInSqMeters(l, b, unit);
+          m2_areas[i] = m2_area;
+          
+          if(unit === 'cm') {
+            resSpan.innerHTML = `<strong>${area.toFixed(2)} см²</strong> <br><span style="color:#64748b;font-size:11px;">(${m2_area.toFixed(4)} м²)</span>`;
+          } else {
+            resSpan.innerHTML = `<strong>${area.toFixed(4)} м²</strong>`;
+          }
+        } else {
+          m2_areas[i] = 0;
+          resSpan.innerHTML = '-';
+        }
+      }
+
+      let areaPhone = m2_areas[2];
+      let areaBook = m2_areas[3];
+      let areaDesk = m2_areas[4];
+
+      let html = `<h3>Автоматичний розв'язок додаткових завдань:</h3>`;
+      
+      if(areaPhone > 0 && areaBook > 0) {
+        let ratioBook = (areaBook / areaPhone).toFixed(1);
+        html += `<p>• <strong>Завдання 1:</strong> Площа підручника перевищує площу смартфона у <strong>${ratioBook} разів</strong>.</p>`;
+      } else {
+        html += `<p>• <strong>Завдання 1:</strong> <em>Заповніть дані для смартфона та підручника.</em></p>`;
+      }
+
+      if(areaPhone > 0 && areaDesk > 0) {
+        let ratioDesk = (areaDesk / areaPhone).toFixed(1);
+        html += `<p>• <strong>Завдання 2:</strong> Екран смартфона поміститься на парті приблизно <strong>${ratioDesk} разів</strong>.</p>`;
+      } else {
+        html += `<p>• <strong>Завдання 2:</strong> <em>Заповніть дані для смартфона та парти.</em></p>`;
+      }
+
+      if(areaDesk > 0) {
+        let desksInRoll = Math.floor(10 / areaDesk);
+        html += `<p>• <strong>Завдання 3:</strong> Рулоном у 10 м² можна повністю покрити <strong>${desksInRoll} парт(и)</strong>.</p>`;
+      } else {
+        html += `<p>• <strong>Завдання 3:</strong> <em>Заповніть розміри кришки парти.</em></p>`;
+      }
+
+      const res = document.getElementById('res_main');
+      res.innerHTML = html;
+      res.style.display = 'block';
+    }
+  </script>
 </body>
 </html>
