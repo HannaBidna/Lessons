@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Вимірювання довжин власними мірами</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f6f9; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h1, h2 { color: #2c3e50; text-align: center; }
+        .section { margin-bottom: 25px; padding: 15px; background: #eef2f5; border-radius: 8px; }
+        label { display: block; margin-top: 10px; font-weight: bold; }
+        input[type="number"], select { width: 100%; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; }
+        th { background-color: #3498db; color: white; }
+        button { background-color: #27ae60; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-size: 16px; margin-top: 15px; width: 100%; }
+        button:hover { background-color: #219150; }
+        .result-box { background: #d4edda; border: 1px solid #c3e6cb; color: #155724; padding: 15px; border-radius: 6px; margin-top: 15px; }
+        .back-link { display: inline-block; margin-bottom: 15px; text-decoration: none; color: #3498db; font-weight: bold; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <a href="index.html" class="back-link">← На головну</a>
+    <h1>Вимірювання довжин тіл за допомогою власних мір</h1>
+    
+    <div class="section">
+        <h2>1. Ваші власні міри тіла</h2>
+        <label for="pyad">Моя п'ядь (P), см:</label>
+        <input type="number" id="pyad" step="0.1" placeholder="Наприклад: 18">
+        
+        <label for="likot">Мій лікоть (L), см:</label>
+        <input type="number" id="likot" step="0.1" placeholder="Наприклад: 42">
+    </div>
+
+    <div class="section">
+        <h2>2. Результати вимірювань предметів</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Об'єкт</th>
+                    <th>Кількість п'ядей</th>
+                    <th>Кількість ліктів</th>
+                    <th>Контрольний вимір (рулетка), м</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Довжина дивана</td>
+                    <td><input type="number" id="sofa_pyad" step="1"></td>
+                    <td><input type="number" id="sofa_likot" step="1"></td>
+                    <td><input type="number" id="sofa_real" step="0.01"></td>
+                </tr>
+                <tr>
+                    <td>Ширина шафи</td>
+                    <td><input type="number" id="wardrobe_pyad" step="1"></td>
+                    <td><input type="number" id="wardrobe_likot" step="1"></td>
+                    <td><input type="number" id="wardrobe_real" step="0.01"></td>
+                </tr>
+            </tbody>
+        </table>
+        <button onclick="calculateLength()">Обчислити та порівняти</button>
+    </div>
+
+    <div id="output" class="result-box" style="display:none;"></div>
+</div>
+
+<script>
+function calculateLength() {
+    const P = parseFloat(document.getElementById('pyad').value);
+    const L = parseFloat(document.getElementById('likot').value);
+
+    if (!P || !L) {
+        alert('Будь ласка, введіть значення п\'яді та ліктя!');
+        return;
+    }
+
+    const sofaP = parseFloat(document.getElementById('sofa_pyad').value) || 0;
+    const sofaL = parseFloat(document.getElementById('sofa_likot').value) || 0;
+    const sofaReal = parseFloat(document.getElementById('sofa_real').value) || 0;
+
+    const sofaP_m = (sofaP * P) / 100;
+    const sofaL_m = (sofaL * L) / 100;
+
+    const errP = Math.abs(sofaP_m - sofaReal).toFixed(2);
+    const errL = Math.abs(sofaL_m - sofaReal).toFixed(2);
+    const ratio = (L / P).toFixed(2);
+
+    let html = `<h3>Результати розрахунків:</h3>`;
+    html += `<p><strong>Співвідношення:</strong> Ваш лікоть більший за п'ядь у <strong>${ratio}</strong> разів.</p>`;
+    html += `<p><strong>Диван (за п'ядьми):</strong> ${sofaP_m.toFixed(2)} м. Абсолютна похибка: <strong>${errP} м</strong>.</p>`;
+    html += `<p><strong>Диван (за ліктями):</strong> ${sofaL_m.toFixed(2)} м. Абсолютна похибка: <strong>${errL} м</strong>.</p>`;
+    
+    if (parseFloat(errL) <= parseFloat(errP)) {
+        html += `<p><em>Висновок:</em> Вимірювання ліктем виявилося точнішим для великого предмета.</p>`;
+    } else {
+        html += `<p><em>Висновок:</em> Вимірювання п'яддю виявилося точнішим.</p>`;
+    }
+
+    const outputDiv = document.getElementById('output');
+    outputDiv.innerHTML = html;
+    outputDiv.style.display = 'block';
+}
+</script>
+</body>
+</html>
