@@ -34,7 +34,7 @@
             </div>
 
             <!-- Canvas Container -->
-            <div id="canvasContainer" class="w-full aspect-[4/3] bg-slate-950 rounded-xl border border-slate-800 relative mt-8 overflow-hidden flex items-center justify-center shadow-inner">
+            <div id="canvasContainer" class="w-full aspect-[4/3] min-h-[300px] bg-slate-950 rounded-xl border border-slate-800 relative mt-8 overflow-hidden flex items-center justify-center shadow-inner">
                 <canvas id="simCanvas" class="w-full h-full block cursor-pointer"></canvas>
             </div>
 
@@ -188,22 +188,10 @@
         const numIonsY = 5;
         const numElectrons = 35;
 
-        function resizeCanvas() {
-            const width = container.clientWidth;
-            const height = container.clientHeight;
-            if (width > 0 && height > 0) {
-                canvas.width = width;
-                canvas.height = height;
-                if (ions.length === 0) {
-                    initGrid();
-                }
-            }
-        }
-
-        function initGrid() {
+        function initGrid(w, h) {
             ions = [];
-            const stepX = canvas.width / (numIonsX + 1);
-            const stepY = canvas.height / (numIonsY + 1);
+            const stepX = w / (numIonsX + 1);
+            const stepY = h / (numIonsY + 1);
 
             for (let i = 1; i <= numIonsX; i++) {
                 for (let j = 1; j <= numIonsY; j++) {
@@ -221,12 +209,22 @@
             electrons = [];
             for (let i = 0; i < numElectrons; i++) {
                 electrons.push({
-                    x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
+                    x: Math.random() * w,
+                    y: Math.random() * h,
                     vx: (Math.random() - 0.5) * 6,
                     vy: (Math.random() - 0.5) * 6,
                     radius: 4
                 });
+            }
+        }
+
+        function setupCanvas() {
+            const width = container.clientWidth || 600;
+            const height = container.clientHeight || 450;
+            canvas.width = width;
+            canvas.height = height;
+            if (ions.length === 0) {
+                initGrid(width, height);
             }
         }
 
@@ -281,13 +279,14 @@
             powerBtnText.textContent = "Увімкнути джерело струму";
             fieldBadge.className = "absolute top-4 left-4 px-3 py-1 rounded-full text-xs font-semibold bg-red-500/20 text-red-400 border border-red-500/30 transition-all duration-300 z-10";
             fieldBadge.textContent = "Джерело струму: ВИМКНЕНО (Хаос)";
-            initGrid();
+            setupCanvas();
+            initGrid(canvas.width, canvas.height);
         });
 
         // Main Animation Loop
         function update() {
             if (canvas.width === 0 || canvas.height === 0) {
-                resizeCanvas();
+                setupCanvas();
             }
 
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -321,4 +320,130 @@
             ions.forEach(ion => {
                 ion.phase += 0.15 * (temperature / 300);
                 ion.x = ion.baseX + Math.sin(ion.phase) * vibrationAmp;
-                ion.y = ion.baseY + Math.cos(ion.phase * 1
+                ion.y = ion.baseY + Math.cos(ion.phase * 1.3) * vibrationAmp;
+
+                // Draw Ion
+                ctx.shadowColor = "rgba(239, 68, 68, 0.5)";
+                ctx.shadowBlur = 8;
+                ctx.fillStyle = "#ef4444";
+                ctx.beginPath();
+                ctx.arc(ion.x, ion.y, ion.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Plus sign on ion
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(ion.x - 3, ion.y);
+                ctx.lineTo(ion.x + 3, ion.y);
+                ctx.moveTo(ion.x, ion.y - 3);
+                ctx.lineTo(ion.x, ion.y + 3);
+                ctx.stroke();
+            });
+
+            // Update & Draw Electrons
+            const thermalFactor = Math.sqrt(temperature / 300);
+            const driftForce = (voltage / 100) * 0.75; // Сила електричного поля для направленого дрейфу
+
+            electrons.forEach(el => {
+                // Тепловий хаотичний рух
+                el.vx += (Math.random() - 0.5) * 0.6 * thermalFactor;
+                el.vy += (Math.random() - 0.5) * 0.6 * thermalFactor;
+
+                // Обмеження теплової швидкості
+                const maxTherm = 4 * thermalFactor;
+                const currentTherm = Math.sqrt(el.vx * el.vx + el.vy * el.vy);
+                if (currentTherm > maxTherm) {
+                    el.vx = (el.vx / currentTherm) * maxTherm;
+                    el.vy = (el.vy / currentTherm) * maxTherm;
+                }
+
+                // Якщо джерело увімкнено — додаємо спрямований потік вправо (дрейф)
+                if (isPowerOn) {
+                    el.vx += driftForce;
+                }
+
+                el.x += el.vx;
+                el.y += el.vy;
+
+                // Зациклення по краях канвасу
+                if (el.x < 0) el.x = canvas.width;
+                if (el.x > canvas.width) el.x = 0;
+                if (el.y < 0) el.y = canvas.height;
+                if (el.y > canvas.height) el.y = 0;
+
+                // Зіткнення з іонами решітки
+                ions.forEach(ion => {
+                    const dx = el.x - ion.x;
+                    const dy = el.y - ion.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
+                    const minDist = el.radius + ion.radius;
+
+                    if (dist < minDist) {
+                        const angle = Math.atan2(dy, dx);
+                        const speed = Math.sqrt(el.vx * el.vx + el.vy * el.vy);
+                        
+                        let bounceVx = Math.cos(angle) * speed * (0.7 + Math.random() * 0.3);
+                        let bounceVy = Math.sin(angle) * speed * (0.7 + Math.random() * 0.3);
+
+                        // Після зіткнення під дією поля електрони продовжують рух вперед
+                        if (isPowerOn) {
+                            bounceVx += driftForce * 1.5;
+                        }
+
+                        el.vx = bounceVx;
+                        el.vy = bounceVy;
+
+                        el.x = ion.x + Math.cos(angle) * (minDist + 1);
+                        el.y = ion.y + Math.sin(angle) * (minDist + 1);
+                    }
+                });
+
+                // Малювання електрона
+                ctx.shadowColor = "rgba(59, 130, 246, 0.8)";
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = "#3b82f6";
+                ctx.beginPath();
+                ctx.arc(el.x, el.y, el.radius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Мінус на електроні
+                ctx.shadowBlur = 0;
+                ctx.strokeStyle = "#ffffff";
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(el.x - 2.5, el.y);
+                ctx.lineTo(el.x + 2.5, el.y);
+                ctx.stroke();
+            });
+
+            // Оновлення показників на панелі
+            const tSpeedKmS = Math.round(temperature * 3.3);
+            thermSpeedVal.textContent = "~" + tSpeedKmS + " км/с";
+
+            const dSpeedMmS = (voltage * 0.05 * (temperature / 300)).toFixed(2);
+            driftSpeedVal.textContent = dSpeedMmS + " мм/с";
+
+            const currentAmp = (voltage * 0.024).toFixed(2);
+            currentVal.textContent = currentAmp + " А";
+
+            requestAnimationFrame(update);
+        }
+
+        window.addEventListener('resize', () => {
+            setupCanvas();
+        });
+
+        window.addEventListener('load', () => {
+            setupCanvas();
+            requestAnimationFrame(update);
+        });
+
+        if (document.readyState === 'complete' || document.readyState === 'interactive') {
+            setupCanvas();
+            requestAnimationFrame(update);
+        }
+    </script>
+</body>
+</html>
