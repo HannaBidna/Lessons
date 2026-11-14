@@ -22,7 +22,6 @@
       background-attachment: fixed;
     }
 
-    /* Рівень 1: Головний заголовок сторінки */
     h1, .page-title {
       font-size: 32px;
       font-weight: 800;
@@ -31,7 +30,6 @@
       letter-spacing: -0.5px;
     }
 
-    /* Рівень 2: Підзаголовок / опис розділу */
     h2, .section-subtitle {
       font-size: 18px;
       font-weight: 500;
@@ -39,7 +37,6 @@
       color: #c0cbbd;
     }
 
-    /* Рівень 3: Заголовок відео / досліду */
     h3, .video-title {
       font-size: 17px;
       font-weight: 700;
@@ -47,7 +44,6 @@
       margin-bottom: 6px;
     }
 
-    /* Опис під відео */
     p, .video-text {
       font-size: 13px;
       color: #b5c2b0;
@@ -87,7 +83,6 @@
       gap: 26px;
     }
 
-    /* Картка відео */
     .video-card {
       background: rgba(28, 33, 26, 0.95);
       border: 1px solid rgba(255, 255, 255, 0.15);
@@ -158,7 +153,21 @@
         </div>
       </div>
 
-      <!-- Відео 3: Дрейф електронів / Електричний струм (те, що ви завантажували як current.mp4) -->
+      <!-- Відео 3 -->
+      <div class="video-card">
+        <div class="video-wrapper">
+          <video controls preload="metadata">
+            <source src="diff_3.mp4" type="video/mp4">
+            Ваш браузер не підтримує відео.
+          </video>
+        </div>
+        <div class="video-info">
+          <h3 class="video-title">🧪 Дослід 3: Швидкість дифузії</h3>
+          <p class="video-text">Динаміка процесу розповсюдження фарби у снігу.</p>
+        </div>
+      </div>
+
+      <!-- Відео 4 -->
       <div class="video-card">
         <div class="video-wrapper">
           <video controls preload="metadata">
@@ -167,7 +176,7 @@
           </video>
         </div>
         <div class="video-info">
-          <h3 class="video-title">⚡ Дослід 3: Рух вільних електронів та дрейф</h3>
+          <h3 class="video-title">⚡ Дослід 4: Рух вільних електронів та дрейф</h3>
           <p class="video-text">Візуалізація переходу хаотичного руху у спрямований потік заряджених частинок.</p>
         </div>
       </div>
