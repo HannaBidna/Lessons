@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nadia School — Тренування з математики</title>
+  <style>
+    :root {
+      --bg-main: #141713;
+      --bg-card: rgba(36, 42, 33, 0.85);
+      --bg-card-hover: rgba(48, 56, 44, 0.95);
+      --border-color: rgba(255, 255, 255, 0.15);
+      --accent: #b7e4c7;
+      --text-main: #f4f6f0;
+      --text-sub: #b2bdae;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      color: var(--text-main);
+      background-color: #1a1e18;
+      background: linear-gradient(rgba(18, 20, 16, 0.85), rgba(18, 20, 16, 0.9)),
+                  url('./bg_videos.jpg') no-repeat center center / cover;
+      background-attachment: fixed;
+    }
+    .container { width: 100%; max-width: 600px; }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 25px;
+      background: rgba(0, 0, 0, 0.35);
+      padding: 8px 16px;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border-color);
+      transition: all 0.2s ease;
+    }
+    .back-link:hover { background: rgba(0, 0, 0, 0.6); color: var(--accent); }
+    .page-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; color: #fff; }
+    .page-desc { color: var(--text-sub); font-size: 15px; margin-bottom: 28px; }
+
+    .class-block {
+      background: rgba(24, 28, 22, 0.72);
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 18px;
+      margin-bottom: 18px;
+      backdrop-filter: blur(10px);
+    }
+    .class-header {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .sub-grid { display: flex; flex-direction: column; gap: 10px; }
+    .sub-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 14px 16px;
+      text-decoration: none;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+    .sub-card:hover {
+      background: var(--bg-card-hover);
+      border-color: var(--accent);
+      transform: translateX(4px);
+    }
+    .sub-title { font-size: 15px; font-weight: 500; color: #fff; }
+    .card-arrow { color: var(--accent); font-size: 18px; font-weight: bold; }
+    .empty-text { font-size: 13px; color: var(--text-sub); opacity: 0.75; padding: 4px 2px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <a href="math.html" class="back-link">&larr; Назад до Математики</a>
+    <h1 class="page-title">🏋️ Тренування</h1>
+    <p class="page-desc">Оберіть свій клас та тренувальну вправу:</p>
+
+    <!-- 5 КЛАС -->
+    <div class="class-block">
+      <div class="class-header">5 клас</div>
+      <div class="sub-grid">
+        <a href="math_exercise_5_1.html" class="sub-card">
+          <span class="sub-title"><strong>Вправа 1:</strong> Назва вашої першої вправи</span>
+          <span class="card-arrow">&rarr;</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- 6 КЛАС -->
+    <div class="class-block">
+      <div class="class-header">6 клас</div>
+      <div class="sub-grid">
+        <div class="empty-text">Вправи готуються...</div>
+      </div>
+    </div>
+
+    <!-- 7 КЛАС -->
+    <div class="class-block">
+      <div class="class-header">7 клас</div>
+      <div class="sub-grid">
+        <div class="empty-text">Вправи готуються...</div>
+      </div>
+    </div>
+
+    <!-- 8 КЛАС -->
+    <div class="class-block">
+      <div class="class-header">8 клас</div>
+      <div class="sub-grid">
+        <div class="empty-text">Вправи готуються...</div>
+      </div>
+    </div>
+
+    <!-- 9 КЛАС -->
+    <div class="class-block">
+      <div class="class-header">9 клас</div>
+      <div class="sub-grid">
+        <div class="empty-text">Вправи готуються...</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
