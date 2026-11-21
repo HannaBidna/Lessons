@@ -29,7 +29,6 @@
                   url('./bg_videos.jpg') no-repeat center center / cover;
       background-attachment: fixed;
     }
-    /* Розширили контейнер під 2 колонки */
     .container { width: 100%; max-width: 1040px; }
     .back-link {
       display: inline-flex;
@@ -51,7 +50,6 @@
     .page-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; color: #fff; }
     .page-desc { color: var(--text-sub); font-size: 15px; margin-bottom: 28px; }
 
-    /* Сітка на 2 колонки */
     .classes-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
@@ -59,7 +57,6 @@
       align-items: start;
     }
 
-    /* На телефонах і вузьких екранах — знову 1 колонка */
     @media (max-width: 768px) {
       .classes-grid {
         grid-template-columns: 1fr;
@@ -102,6 +99,48 @@
     .sub-title { font-size: 15px; font-weight: 500; color: #fff; }
     .card-arrow { color: var(--accent); font-size: 18px; font-weight: bold; }
     .empty-text { font-size: 13px; color: var(--text-sub); opacity: 0.75; padding: 4px 2px; }
+
+    /* Стилі для розкривного підменю (Алгебра / Геометрія) */
+    .subject-details {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      overflow: hidden;
+    }
+    .subject-summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card);
+      transition: background 0.2s ease, color 0.2s ease;
+      user-select: none;
+    }
+    .subject-summary::-webkit-details-marker { display: none; }
+    .subject-summary:hover {
+      background: var(--bg-card-hover);
+      color: var(--accent);
+    }
+    .subject-chevron {
+      color: var(--accent);
+      font-size: 14px;
+      transition: transform 0.25s ease;
+    }
+    .subject-details[open] .subject-chevron {
+      transform: rotate(180deg);
+    }
+    .subject-content {
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
   </style>
 </head>
 <body>
@@ -228,8 +267,29 @@
       <div class="class-block">
         <div class="class-header">7 клас</div>
         <div class="sub-grid">
-          <div class="class-header">Алгебра</div>
-          <div class="class-header">Геометрія</div>
+          <!-- Алгебра -->
+          <details class="subject-details">
+            <summary class="subject-summary">
+              <span>Алгебра</span>
+              <span class="subject-chevron">▼</span>
+            </summary>
+            <div class="subject-content">
+              <!-- Сюди вставляйте картки вправ з алгебри -->
+              <div class="empty-text">Вправи готуються...</div>
+            </div>
+          </details>
+
+          <!-- Геометрія -->
+          <details class="subject-details">
+            <summary class="subject-summary">
+              <span>Геометрія</span>
+              <span class="subject-chevron">▼</span>
+            </summary>
+            <div class="subject-content">
+              <!-- Сюди вставляйте картки вправ з геометрії -->
+              <div class="empty-text">Вправи готуються...</div>
+            </div>
+          </details>
         </div>
       </div>
 
