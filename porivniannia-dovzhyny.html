@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Порівняння іменованих чисел: довжина</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+
+  .hint .box{line-height:2.1}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;align-items:start}
+  .cmp{border:2px solid var(--line);border-radius:16px;background:var(--sand-xl);padding:12px 10px 10px;position:relative;text-align:center}
+  .row{display:flex;align-items:center;justify-content:center;gap:10px;font-size:19px;white-space:nowrap;font-weight:700;min-height:66px}
+  .slot{width:48px;height:48px;border-radius:12px;border:2px dashed var(--terra);background:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:var(--terra)}
+  .slot.filled{border-style:solid;border-color:var(--navy);color:var(--navy)}
+  .signs{display:flex;gap:8px;justify-content:center;margin-top:8px}
+  .sg{width:44px;height:38px;border-radius:19px;border:2px solid var(--sand);background:#fff;font-size:20px;font-weight:700;line-height:1}
+  .sg:hover{border-color:var(--terra)}
+  .sg.on{background:var(--navy);border-color:var(--navy);color:#fff}
+  .cmp.ok{border-color:var(--ok);background:var(--ok-bg)}
+  .cmp.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .cmp.ok .slot{border-color:var(--ok);color:var(--ok)}
+  .cmp.bad .slot{border-color:var(--bad);color:var(--bad)}
+  .cmp.ok .signs{display:none}
+  .cmp.ok::after,.cmp.bad::after{position:absolute;right:8px;top:6px;font-size:13px;color:#fff;border-radius:50%;width:20px;height:20px;line-height:20px}
+  .cmp.ok::after{content:"✓";background:var(--ok)}
+  .cmp.bad::after{content:"✗";background:var(--bad)}
+  .cmp .ex{display:none;margin-top:8px;font-size:14px;line-height:1.9;text-align:left;background:#fff;border-radius:10px;padding:6px 10px}
+  .cmp.bad .ex{display:block}
+  .cmp.ok.show .ex{display:block}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .count{margin-left:auto;font-size:15px;color:var(--grey);font-weight:600}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Порівняння іменованих чисел</h1>
+  <p>Довжина: метри, дециметри, сантиметри. Постав знак &gt;, &lt; або =</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Порівняй довжини</h2>
+    <p class="how">Переведи обидві довжини в однакові одиниці, порівняй і натисни на правильний знак. Відповідей може бути три: більше, менше або дорівнює.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box" id="hint"></div>
+    </details>
+    <div class="grid" id="grid"></div>
+    <div class="bar">
+      <button class="btn main" id="check">Перевірити</button>
+      <button class="btn sec hidden" id="retry">Виправити помилки</button>
+      <button class="btn sec" id="restart">Почати спочатку</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="fb" id="fb"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. a і b це дві величини, s це правильний знак (">", "<" або "="),
+   e це пояснення, яке з'явиться після неправильної відповіді.
+   ===================================================================== */
+const F = (a,b) => `<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const HINT = `<b>1 м = 10 дм = 100 см</b>, &nbsp; <b>1 дм = 10 см</b>.<br>
+  Щоб порівняти довжини, переведи обидві в менші одиниці. Наприклад, 3 м 4 дм = 30 дм + 4 дм = 34 дм.<br>
+  Не плутай 37 і 73: важливо, яка цифра означає дециметри, а яка сантиметри.`;
+const ITEMS = [
+  {a:"47 см",      b:"4 дм 5 см", s:">", e:"4 дм 5 см = 40 + 5 = 45 см. 47 &gt; 45."},
+  {a:"8 дм 6 см",  b:"6 дм 8 см", s:">", e:"8 дм 6 см = 86 см, а 6 дм 8 см = 68 см. 86 &gt; 68."},
+  {a:"2 м 6 дм",   b:"27 дм",     s:"<", e:"2 м 6 дм = 20 + 6 = 26 дм. 26 &lt; 27."},
+  {a:"7 м 8 дм",   b:"70 дм",     s:">", e:"7 м 8 дм = 70 + 8 = 78 дм. 78 &gt; 70."},
+  {a:"99 дм",      b:"9 м 9 дм",  s:"=", e:"9 м 9 дм = 90 + 9 = 99 дм. Довжини однакові."},
+  {a:"49 дм",      b:"9 м 4 дм",  s:"<", e:"9 м 4 дм = 90 + 4 = 94 дм. 49 &lt; 94. Не плутай 49 і 94!"},
+  {a:"5 м 3 дм",   b:"53 дм",     s:"=", e:"5 м 3 дм = 50 + 3 = 53 дм. Довжини однакові."},
+  {a:"3 дм 7 см",  b:"73 см",     s:"<", e:"3 дм 7 см = 30 + 7 = 37 см. 37 &lt; 73."}
+];
+const SIGNS = [">","<","="];
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+let ans = {}, firstScore = null, cards = [];
+$("hint").innerHTML = HINT;
+
+function setup(){
+  ans = {}; firstScore = null;
+  const grid = $("grid"); grid.innerHTML = "";
+  cards = [];
+  shuffle(ITEMS.map((_,i)=>i)).forEach(i=>{
+    const it = ITEMS[i], c = document.createElement("div");
+    c.className = "cmp"; c.dataset.i = i;
+    c.innerHTML = `<div class="row"><span>${it.a}</span><span class="slot"></span><span>${it.b}</span></div>
+      <div class="signs">${SIGNS.map(s=>`<button class="sg" data-s="${s}">${s}</button>`).join("")}</div>
+      <div class="ex">${it.e}</div>`;
+    c.querySelectorAll(".sg").forEach(b=>b.onclick=()=>choose(c,b.dataset.s));
+    grid.appendChild(c); cards[i]=c;
+  });
+  $("fb").textContent=""; $("fb").className="fb";
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  count();
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function choose(c, s){
+  if(c.classList.contains("ok")) return;
+  const i=+c.dataset.i; ans[i]=s;
+  c.classList.remove("bad");
+  c.querySelector(".slot").textContent=s; c.querySelector(".slot").classList.add("filled");
+  c.querySelectorAll(".sg").forEach(b=>b.classList.toggle("on", b.dataset.s===s));
+  $("fb").textContent=""; count();
+}
+function count(){ $("count").textContent = `Залишилося: ${ITEMS.length-Object.keys(ans).length}`; }
+
+$("check").onclick = ()=>{
+  if(Object.keys(ans).length<ITEMS.length){ $("fb").className="fb meh"; $("fb").textContent="Постав знак у кожній картці."; return; }
+  let g=0;
+  ITEMS.forEach((it,i)=>{ const ok=ans[i]===it.s; cards[i].classList.toggle("ok",ok); cards[i].classList.toggle("bad",!ok); if(ok) g++; });
+  if(firstScore===null) firstScore=g;
+  if(g===ITEMS.length){
+    $("fb").className="fb good";
+    $("fb").innerHTML=`<span class="score">${firstScore} з ${ITEMS.length}</span>`+(firstScore===ITEMS.length?"Бездоганно! Усі знаки правильні з першої спроби.":"Готово! Усі знаки правильні. У рахунок пішла перша спроба.");
+    $("check").classList.add("hidden"); $("retry").classList.add("hidden");
+  } else {
+    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${ITEMS.length}. У червоних картках знак неправильний, під ними є пояснення.`;
+    $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
+  }
+};
+$("retry").onclick = ()=>{
+  ITEMS.forEach((_,i)=>{ const c=cards[i]; if(c.classList.contains("bad")){ c.classList.remove("bad"); delete ans[i]; c.querySelector(".slot").textContent=""; c.querySelector(".slot").classList.remove("filled"); c.querySelectorAll(".sg").forEach(b=>b.classList.remove("on")); } });
+  $("fb").textContent=""; $("fb").className="fb";
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden"); count();
+};
+$("restart").onclick = setup;
+setup();
+</script>
+</body>
+</html>
