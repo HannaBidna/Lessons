@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Відсотки від числа: з'єднай пари</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1100px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1100px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 18px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+  .hint .f{font-weight:700;font-size:19px;white-space:nowrap}
+
+  .field{position:relative;background:var(--sand-xl);border:2px solid var(--line);border-radius:18px;padding:30px 18px 22px}
+  .cards{display:grid;grid-template-columns:repeat(6,1fr);gap:40px 22px;position:relative;z-index:2}
+  @media (max-width:900px){.cards{grid-template-columns:repeat(4,1fr)}}
+  @media (max-width:560px){.cards{grid-template-columns:repeat(2,1fr);gap:24px 14px}}
+  .card{touch-action:none;user-select:none;-webkit-user-select:none;position:relative;background:#fff;border:2px solid var(--navy);border-radius:14px;min-height:62px;padding:10px 6px;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:600;font-size:18px;line-height:1.25;white-space:nowrap;box-shadow:0 3px 0 var(--sand);transition:transform .12s,background .12s}
+  @media (max-width:560px){.card{font-size:17px}}
+  .card:hover{transform:translateY(-2px);border-color:var(--terra)}
+  .card .dot{position:absolute;top:-12px;left:50%;width:24px;height:24px;margin-left:-12px;z-index:2;border-radius:50%;background:var(--sand);border:2px solid #fff;color:#fff;font-size:13px;font-weight:700;line-height:20px;text-align:center}
+  .card.sel{background:var(--sel);outline:3px solid #E8B93A}
+  .card.linked .dot{background:var(--c)}
+  .card.linked{border-color:var(--c)}
+  .card.ok{background:var(--ok-bg);border-color:var(--ok);cursor:default}
+  .card.ok:hover{transform:none}
+  .card.bad{background:var(--bad-bg);border-color:var(--bad)}
+  .card.ok::after{content:"✓";position:absolute;right:6px;top:2px;font-size:15px;color:var(--ok);font-weight:700}
+  .card.bad::after{content:"✗";position:absolute;right:6px;top:2px;font-size:15px;color:var(--bad);font-weight:700}
+  svg.lines{position:absolute;inset:0;width:100%;height:100%;z-index:1;pointer-events:none;overflow:visible}
+  svg.lines line{stroke-width:4;stroke-linecap:round;opacity:.75}
+  svg.lines circle{opacity:.9}
+
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .count{margin-left:auto;font-size:15px;color:var(--grey);font-weight:600}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .why{margin-top:14px;background:var(--sand-xl);border-left:6px solid var(--sand);border-radius:12px;padding:12px 16px}
+  .why h3{margin:0 0 6px;font-size:18px}
+  .why ul{margin:0;padding-left:20px}
+  .why li{margin:4px 0}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Відсотки від числа</h1>
+  <p>Знайди відсоток від числа і з'єднай картку з правильною відповіддю</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>З'єднай пари</h2>
+    <p class="how">Обчисли, скільки становить відсоток на картці. Натисни на картку із завданням, а потім на відповідь. Можна й потягнути лінію від однієї картки до іншої. Щоб роз'єднати пару, натисни на будь-яку її картку.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box">
+        Щоб знайти відсоток від числа, поділи число на 100 і помнож на кількість відсотків.<br>
+        Наприклад, <span class="f">5 % від 200 = 200 : 100 · 5 = 10</span>.<br>
+        Корисно пам'ятати: 10 % це десята частина числа, а 50 % це половина.
+      </div>
+    </details>
+    <div class="field" id="field">
+      <div class="cards" id="cards"></div>
+      <svg class="lines" id="lines"></svg>
+    </div>
+    <div class="bar">
+      <button class="btn main" id="check">Перевірити</button>
+      <button class="btn sec hidden" id="retry">Виправити помилки</button>
+      <button class="btn sec" id="restart">Почати спочатку</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="fb" id="fb"></div>
+    <div class="why hidden" id="why"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. Кожна пара: a і b це два вирази з однаковим значенням,
+   e це пояснення, яке з'явиться після правильного з'єднання.
+   Щоб зробити вправу на іншу тему, заміни заголовки вгорі й цей список.
+   ===================================================================== */
+const PAIRS = [
+  {a:"50 % від 6000",  b:"3000", e:"50 % від 6000 = 6000 : 100 · 50 = 3000 (це половина числа)"},
+  {a:"5 % від 200",    b:"10",   e:"5 % від 200 = 200 : 100 · 5 = 2 · 5 = 10"},
+  {a:"12 % від 360",   b:"43,2", e:"12 % від 360 = 360 : 100 · 12 = 3,6 · 12 = 43,2"},
+  {a:"17 % від 450",   b:"76,5", e:"17 % від 450 = 450 : 100 · 17 = 4,5 · 17 = 76,5"},
+  {a:"10 % від 600",   b:"60",   e:"10 % від 600 = 600 : 100 · 10 = 60 (це десята частина числа)"},
+  {a:"120 % від 40",   b:"48",   e:"120 % від 40 = 40 : 100 · 120 = 0,4 · 120 = 48 (більше за саме число, бо відсотків більше ніж 100)"},
+  {a:"55 % від 1800",  b:"990",  e:"55 % від 1800 = 1800 : 100 · 55 = 18 · 55 = 990"},
+  {a:"7 % від 300",    b:"21",   e:"7 % від 300 = 300 : 100 · 7 = 3 · 7 = 21"},
+  {a:"3 % від 80",     b:"2,4",  e:"3 % від 80 = 80 : 100 · 3 = 0,8 · 3 = 2,4"}
+];
+const COLORS = ["#AF5940","#253042","#3B7EA1","#C9962B","#7A4E8C","#4F8A6E","#D07A5A","#5C6B8A","#8C7B4F"];
+
+const cardsEl = document.getElementById("cards");
+const svg = document.getElementById("lines");
+const field = document.getElementById("field");
+const $ = id => document.getElementById(id);
+let cards = [], links = [], sel = null, checked = false, firstScore = null;
+
+function setup(){
+  cards = shuffle(PAIRS.flatMap((p,i)=>[{t:p.a,pair:i},{t:p.b,pair:i}]));
+  links = []; sel = null; checked = false; firstScore = null;
+  cardsEl.innerHTML = "";
+  cards.forEach((c,idx)=>{
+    const d = document.createElement("div");
+    d.className = "card"; d.dataset.idx = idx;
+    d.innerHTML = `<span class="dot"></span>${c.t}`;
+    c.el = d; cardsEl.appendChild(d);
+  });
+  $("fb").textContent=""; $("fb").className="fb";
+  $("why").classList.add("hidden");
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  draw();
+}
+function shuffle(a){ a=a.slice(); for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+const linkOf = i => links.find(l=>l.a===i||l.b===i);
+const isLocked = i => { const l=linkOf(i); return l && l.state==="ok"; };
+function freeColor(){ const used=links.map(l=>l.color); return COLORS.find(c=>!used.includes(c)) || COLORS[0]; }
+
+function connect(i,j){
+  if(i===j || isLocked(i) || isLocked(j)) return;
+  [i,j].forEach(k=>{ const l=linkOf(k); if(l) links.splice(links.indexOf(l),1); });
+  links.push({a:i,b:j,color:freeColor(),state:null});
+  clearMarks(); draw();
+}
+function disconnect(i){ const l=linkOf(i); if(!l||l.state==="ok") return; links.splice(links.indexOf(l),1); clearMarks(); draw(); }
+function clearMarks(){ links.forEach(l=>{ if(l.state==="bad") l.state=null; }); $("fb").textContent=""; }
+
+function center(el){
+  const f=field.getBoundingClientRect(), r=el.querySelector(".dot").getBoundingClientRect();
+  return {x:r.left-f.left+r.width/2, y:r.top-f.top+r.height/2};
+}
+function draw(tmp){
+  cards.forEach((c,i)=>{
+    const l=linkOf(i), el=c.el;
+    el.classList.toggle("linked",!!l);
+    el.classList.toggle("ok",!!l&&l.state==="ok");
+    el.classList.toggle("bad",!!l&&l.state==="bad");
+    el.classList.toggle("sel",sel===i);
+    el.style.setProperty("--c", l ? (l.state==="ok"?"#2E8B57":l.state==="bad"?"#C8423B":l.color) : "");
+    el.querySelector(".dot").textContent = l ? (links.indexOf(l)+1) : "";
+  });
+  let h="";
+  links.forEach(l=>{
+    const p=center(cards[l.a].el), q=center(cards[l.b].el);
+    const col = l.state==="ok"?"#2E8B57":l.state==="bad"?"#C8423B":l.color;
+    h+=`<line x1="${p.x}" y1="${p.y}" x2="${q.x}" y2="${q.y}" stroke="${col}"/>`;
+  });
+  if(tmp) h+=`<line x1="${tmp.x1}" y1="${tmp.y1}" x2="${tmp.x2}" y2="${tmp.y2}" stroke="#AF5940" stroke-dasharray="8 8"/>`;
+  svg.innerHTML=h;
+  const n=links.length;
+  $("count").textContent = `З'єднано пар: ${n} з ${PAIRS.length}`;
+}
+
+/* Натискання і перетягування */
+let drag=null;
+cardsEl.addEventListener("pointerdown", e=>{
+  const el=e.target.closest(".card"); if(!el) return;
+  drag={i:+el.dataset.idx, x:e.clientX, y:e.clientY, moved:false};
+});
+document.addEventListener("pointermove", e=>{
+  if(!drag) return;
+  if(!drag.moved && Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<8) return;
+  if(isLocked(drag.i)) return;
+  drag.moved=true; sel=null;
+  const p=center(cards[drag.i].el), f=field.getBoundingClientRect();
+  draw({x1:p.x,y1:p.y,x2:e.clientX-f.left,y2:e.clientY-f.top});
+  e.preventDefault();
+},{passive:false});
+document.addEventListener("pointerup", e=>{
+  if(!drag) return; const d=drag; drag=null;
+  if(d.moved){
+    const under=document.elementFromPoint(e.clientX,e.clientY);
+    const t=under&&under.closest(".card");
+    if(t) connect(d.i,+t.dataset.idx); else draw();
+    return;
+  }
+  const i=d.i;
+  if(isLocked(i)) return;
+  if(sel===null){ if(linkOf(i)) disconnect(i); else { sel=i; draw(); } }
+  else if(sel===i){ sel=null; draw(); }
+  else { const s=sel; sel=null; connect(s,i); }
+});
+document.addEventListener("pointercancel", ()=>{ drag=null; draw(); });
+window.addEventListener("resize", ()=>draw());
+
+/* Перевірка */
+$("check").onclick = ()=>{
+  if(links.length<PAIRS.length){ $("fb").className="fb meh"; $("fb").textContent="З'єднай усі картки, а потім перевір."; return; }
+  let g=0;
+  links.forEach(l=>{ l.state = cards[l.a].pair===cards[l.b].pair ? "ok" : "bad"; if(l.state==="ok") g++; });
+  if(firstScore===null) firstScore=g;
+  draw();
+  const why=$("why");
+  const okPairs = links.filter(l=>l.state==="ok").map(l=>PAIRS[cards[l.a].pair]);
+  why.innerHTML = `<h3>Як рахували</h3><ul>${okPairs.map(p=>`<li>${p.e}</li>`).join("")}</ul>`;
+  why.classList.remove("hidden");
+  if(g===PAIRS.length){
+    $("fb").className="fb good";
+    $("fb").innerHTML = `<span class="score">${firstScore} з ${PAIRS.length}</span>` + (firstScore===PAIRS.length ? "Бездоганно! Усі пари знайдено з першої спроби." : "Готово! Усі пари знайдено. У рахунок пішла перша спроба.");
+    $("check").classList.add("hidden"); $("retry").classList.add("hidden");
+  } else {
+    $("fb").className="fb meh";
+    $("fb").textContent = `Правильно ${g} з ${PAIRS.length}. Червоні пари з'єднано неправильно.`;
+    $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
+  }
+};
+$("retry").onclick = ()=>{
+  links = links.filter(l=>l.state==="ok");
+  $("fb").textContent=""; $("fb").className="fb";
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  draw();
+};
+$("restart").onclick = setup;
+
+setup();
+if(document.fonts) document.fonts.ready.then(()=>draw());
+</script>
+</body>
+</html>

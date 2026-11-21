@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Координатний промінь</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1100px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1100px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px;line-height:2}
+
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1;font-size:.92em}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 3px}
+
+  .wrap{overflow-x:auto;background:var(--sand-xl);border:2px solid var(--line);border-radius:18px}
+  .area{position:relative;height:300px;touch-action:none;--ay:226px}
+  .axis{position:absolute;left:30px;right:30px;top:var(--ay);height:6px;background:var(--navy);border-radius:3px}
+  .axis::after{content:"";position:absolute;right:-16px;top:-7px;border-left:16px solid var(--navy);border-top:10px solid transparent;border-bottom:10px solid transparent}
+  .tick{position:absolute;top:calc(var(--ay) - 14px);width:3px;height:34px;margin-left:-1.5px;background:var(--navy);border-radius:2px}
+  .tlabel{position:absolute;top:calc(var(--ay) + 22px);width:40px;margin-left:-20px;text-align:center;font-weight:700;font-size:20px}
+  .band{position:absolute;top:calc(var(--ay) - 8px);height:22px;border-radius:6px;background:rgba(175,89,64,.18);border:2px solid rgba(175,89,64,.45)}
+  .pmark{position:absolute;top:calc(var(--ay) - 18px);width:18px;height:18px;margin-left:-9px;border-radius:50%;background:var(--terra);border:3px solid #fff;box-shadow:0 0 0 2px var(--terra)}
+  .hl{position:absolute;pointer-events:none;display:none;z-index:1}
+  .hl.band{background:rgba(255,232,168,.8);border-color:#E8B93A}
+  .hl.pmark{background:#E8B93A;box-shadow:0 0 0 2px #E8B93A}
+
+  .bank{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;min-height:80px;padding:16px;border-radius:16px;background:var(--sand-l);border:2px solid var(--line);margin-top:16px}
+  .bank.hover{background:#EFE2D3}
+  .bank:empty::after{content:"Усі числа на промені 👍";color:var(--grey);font-size:16px;align-self:center}
+  .chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:2px solid var(--navy);border-radius:12px;padding:6px 14px;min-width:52px;text-align:center;font-size:20px;font-weight:700;line-height:1.3;cursor:grab;box-shadow:0 3px 0 var(--sand);position:relative;white-space:nowrap}
+  .chip:hover{border-color:var(--terra)}
+  .area .chip{position:absolute;padding:3px 10px;font-size:17px;z-index:2}
+  @media (max-width:600px){.area .chip{padding:2px 6px;font-size:15px;min-width:34px}.tlabel{font-size:16px}.area{--pad:18px}}
+  .chip.selected{background:var(--sel);outline:3px solid #E8B93A}
+  .chip.placeholder{opacity:.3}
+  .chip.ok{border-color:var(--ok);background:var(--ok-bg);box-shadow:none;cursor:default}
+  .chip.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .chip.ok::after,.chip.bad::after{position:absolute;right:-8px;top:-10px;font-size:12px;color:#fff;border-radius:50%;width:18px;height:18px;line-height:18px;text-align:center}
+  .chip.ok::after{content:"✓";background:var(--ok)}
+  .chip.bad::after{content:"✗";background:var(--bad)}
+  .ghost{position:fixed;z-index:1000;pointer-events:none;box-shadow:0 10px 24px rgba(37,48,66,.3);transform:rotate(-3deg);margin:0}
+
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .count{margin-left:auto;font-size:15px;color:var(--grey);font-weight:600}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .why{margin-top:14px;background:var(--sand-xl);border-left:6px solid var(--sand);border-radius:12px;padding:12px 16px}
+  .why h3{margin:0 0 6px;font-size:18px}
+  .why ul{margin:0;padding-left:20px}
+  .why li{margin:4px 0;line-height:2.1}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Координатний промінь</h1>
+  <p>Розташуй числа на координатному промені, порівнюючи їх</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Постав кожне число на промінь</h2>
+    <p class="how">Перетягни число на промінь. Якщо воно дорівнює цілому числу, клади точно на позначку. Якщо ні, клади між двома сусідніми цілими. Можна й так: натисни на число, а потім на місце на промені.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box" id="hint"></div>
+    </details>
+    <div class="wrap"><div class="area" id="area" data-zone="line"><div class="axis"></div></div></div>
+    <div class="bank" id="bank" data-zone="bank"></div>
+    <div class="bar">
+      <button class="btn main" id="check">Перевірити</button>
+      <button class="btn sec hidden" id="retry">Виправити помилки</button>
+      <button class="btn sec" id="restart">Почати спочатку</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="fb" id="fb"></div>
+    <div class="why hidden" id="why"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. MAX це довжина променя (від 0 до MAX).
+   h це як число виглядає на картці, v його значення.
+   Якщо v ціле, правильне місце на позначці v; якщо ні, між цілими.
+   e це пояснення, яке з'явиться, якщо число поставили неправильно.
+   ===================================================================== */
+const MAX = 10;
+const F = (a,b) => `<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const HINT = `Якщо число дорівнює цілому, як <b>6,0</b> чи ${F(24,3)}, його місце точно на позначці.<br>
+  Десятковий дріб порівнюй за цілою частиною: <b>3,7</b> більше за 3, але менше за 4.<br>
+  Неправильний дріб спочатку перетвори на мішане число: ${F(23,4)} = 5 ${F(3,4)}, тобто між 5 і 6.`;
+const ITEMS = [
+  {h:"1",        v:1,     e:"1 це ціле число, його місце точно на позначці 1."},
+  {h:"1,5",      v:1.5,   e:"1,5 більше за 1, але менше за 2, тому між 1 і 2."},
+  {h:"3,7",      v:3.7,   e:"3,7 більше за 3, але менше за 4, тому між 3 і 4."},
+  {h:"6,0",      v:6,     e:"6,0 = 6, тому точно на позначці 6."},
+  {h:"6,99",     v:6.99,  e:"6,99 менше за 7, хоч і дуже близько до нього, тому між 6 і 7."},
+  {h:F(1,3),     v:1/3,   e:F(1,3)+" менше за 1, бо чисельник менший за знаменник, тому між 0 і 1."},
+  {h:F(23,4),    v:23/4,  e:F(23,4)+" = 5 "+F(3,4)+", тому між 5 і 6."},
+  {h:F(24,3),    v:8,     e:F(24,3)+" = 24 : 3 = 8, тому точно на позначці 8."},
+  {h:F(66,7),    v:66/7,  e:F(66,7)+" = 9 "+F(3,7)+", тому між 9 і 10."}
+];
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+const area = $("area"), bank = $("bank");
+const CHIP_H = 40; let PAD = 30, AXIS_Y = 226;
+let place = {}, chips = [], firstScore = null, hl;
+$("hint").innerHTML = HINT;
+
+const targetOf = v => Math.abs(v-Math.round(v))<1e-9 ? "p"+Math.round(v) : "i"+Math.floor(v);
+const unit = () => (area.clientWidth - 2*PAD)/MAX;
+const xOf = k => PAD + k*unit();
+
+function drawAxis(){
+  area.querySelectorAll(".tick,.tlabel,.band,.pmark").forEach(e=>{ if(!e.classList.contains("hl")) e.remove(); });
+  for(let k=0;k<=MAX;k++){
+    const t=document.createElement("div"); t.className="tick"; t.style.left=xOf(k)+"px"; area.appendChild(t);
+    const l=document.createElement("div"); l.className="tlabel"; l.textContent=k; l.style.left=xOf(k)+"px"; area.appendChild(l);
+  }
+}
+function setup(){
+  firstScore=null; place={};
+  chips.forEach(c=>c.remove()); chips=[];
+  shuffle(ITEMS.map((_,i)=>i)).forEach(i=>{
+    const c=document.createElement("div"); c.className="chip"; c.dataset.i=i; c.innerHTML=ITEMS[i].h;
+    bank.appendChild(c); chips[i]=c; place[i]=null;
+  });
+  $("fb").textContent=""; $("fb").className="fb"; $("why").classList.add("hidden");
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  layout();
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+
+/* Розкладка карток на промені */
+function layout(){
+  PAD = area.clientWidth < 560 ? 18 : 30;
+  area.querySelector(".axis").style.left = area.querySelector(".axis").style.right = PAD+"px";
+  drawAxis();
+  const groups={};
+  Object.keys(place).forEach(i=>{ const s=place[i]; if(s){ (groups[s]=groups[s]||[]).push(+i); } });
+  const placed=[];
+  Object.entries(groups).forEach(([s,list])=>{
+    const k=+s.slice(1), isP=s[0]==="p";
+    if(isP){ const m=document.createElement("div"); m.className="pmark"; m.style.left=xOf(k)+"px"; area.appendChild(m); }
+    else { const b=document.createElement("div"); b.className="band"; b.style.left=(xOf(k)+3)+"px"; b.style.width=(unit()-6)+"px"; area.appendChild(b); }
+    const cx = isP ? xOf(k) : xOf(k)+unit()/2;
+    list.forEach(i=>{ const c=chips[i]; if(c.parentElement!==area) area.appendChild(c); placed.push({c,cx,w:c.offsetWidth}); });
+  });
+  /* ряди: картки, що перетинаються, стають одна над одною */
+  placed.sort((a,b)=>a.cx-b.cx);
+  const tops=[];
+  const rows=[];
+  placed.forEach(p=>{
+    const L=p.cx-p.w/2, R=p.cx+p.w/2;
+    let r=0; while(rows[r] && rows[r].some(q=>L<q.R+6 && R>q.L-6)) r++;
+    (rows[r]=rows[r]||[]).push({L,R});
+    p.c.style.left=L+"px"; tops.push([p.c,r]);
+  });
+  const H = Math.max(260, 110 + rows.length*(CHIP_H+6));
+  AXIS_Y = H - 74; area.style.height=H+"px"; area.style.setProperty("--ay", AXIS_Y+"px");
+  tops.forEach(([c,r])=>{ c.style.top=(AXIS_Y - 26 - (r+1)*(CHIP_H+6))+"px"; });
+  chips.forEach((c,i)=>{ if(!place[i] && c.parentElement!==bank){ c.style.left=""; c.style.top=""; bank.appendChild(c); } });
+  $("count").textContent = `Залишилося поставити: ${Object.values(place).filter(v=>!v).length}`;
+}
+
+/* Куди потрапляє точка на промені */
+function slotAt(clientX){
+  const r=area.getBoundingClientRect(), u=(clientX-r.left-PAD)/unit();
+  if(u<-0.3 || u>MAX+0.3) return null;
+  const k=Math.round(u);
+  if(Math.abs(u-k)<0.25 && k>=0 && k<=MAX) return "p"+k;
+  return "i"+Math.min(MAX-1,Math.max(0,Math.floor(u)));
+}
+function showHL(s){
+  if(!hl){ hl=document.createElement("div"); area.appendChild(hl); }
+  if(!s){ hl.style.display="none"; return; }
+  const k=+s.slice(1);
+  if(s[0]==="p"){ hl.className="hl pmark"; hl.style.left=xOf(k)+"px"; hl.style.width=""; }
+  else { hl.className="hl band"; hl.style.left=(xOf(k)+3)+"px"; hl.style.width=(unit()-6)+"px"; }
+  hl.style.display="block";
+  if(hl.parentElement!==area) area.appendChild(hl);
+}
+function put(chip, where){
+  const i=+chip.dataset.i;
+  if(chip.classList.contains("ok")) return;
+  chip.classList.remove("bad");
+  place[i]=where; $("fb").textContent=""; layout();
+}
+
+/* Перетягування й натискання */
+let drag=null, sel=null;
+const clearSel=()=>{ if(sel){ sel.classList.remove("selected"); sel=null; } };
+function dropTarget(x,y){
+  const u=document.elementFromPoint(x,y); const z=u&&u.closest("[data-zone]");
+  if(!z) return undefined;
+  if(z.dataset.zone==="bank") return null;
+  return slotAt(x);
+}
+document.addEventListener("pointerdown", e=>{
+  const c=e.target.closest(".chip"); if(!c||c.classList.contains("ok")) return;
+  drag={c,x:e.clientX,y:e.clientY,ghost:null};
+});
+document.addEventListener("pointermove", e=>{
+  if(!drag) return;
+  if(!drag.ghost){
+    if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6) return;
+    const r=drag.c.getBoundingClientRect(), g=drag.c.cloneNode(true);
+    g.classList.add("ghost"); g.classList.remove("selected"); g.style.width=r.width+"px"; g.style.left=g.style.top="";
+    document.body.appendChild(g); drag.ghost=g; drag.ox=drag.x-r.left; drag.oy=drag.y-r.top;
+    drag.c.classList.add("placeholder"); clearSel();
+  }
+  drag.ghost.style.left=(e.clientX-drag.ox)+"px"; drag.ghost.style.top=(e.clientY-drag.oy)+"px";
+  const t=dropTarget(e.clientX,e.clientY);
+  showHL(t||null); bank.classList.toggle("hover", t===null);
+  e.preventDefault();
+},{passive:false});
+document.addEventListener("pointerup", e=>{
+  if(!drag) return; const d=drag; drag=null;
+  if(d.ghost){
+    d.ghost.remove(); d.c.classList.remove("placeholder"); showHL(null); bank.classList.remove("hover");
+    const t=dropTarget(e.clientX,e.clientY);
+    if(t!==undefined) put(d.c,t);
+  } else { if(sel===d.c) clearSel(); else { clearSel(); sel=d.c; sel.classList.add("selected"); } }
+});
+document.addEventListener("pointercancel", ()=>{ if(drag&&drag.ghost){ drag.ghost.remove(); drag.c.classList.remove("placeholder"); } drag=null; showHL(null); });
+document.addEventListener("click", e=>{
+  if(!sel || e.target.closest(".chip")) return;
+  const t=dropTarget(e.clientX,e.clientY);
+  if(t!==undefined){ put(sel,t); clearSel(); }
+});
+area.addEventListener("pointermove", e=>{ if(sel && !drag) showHL(slotAt(e.clientX)); });
+area.addEventListener("pointerleave", ()=>{ if(!drag) showHL(null); });
+window.addEventListener("resize", layout);
+
+/* Перевірка */
+$("check").onclick = ()=>{
+  if(Object.values(place).some(v=>!v)){ $("fb").className="fb meh"; $("fb").textContent="Спочатку постав на промінь усі числа."; return; }
+  let g=0; const wrong=[];
+  ITEMS.forEach((it,i)=>{
+    const ok = place[i]===targetOf(it.v);
+    chips[i].classList.toggle("ok",ok); chips[i].classList.toggle("bad",!ok);
+    if(ok) g++; else wrong.push(it);
+  });
+  if(firstScore===null) firstScore=g;
+  if(wrong.length){
+    $("why").innerHTML=`<h3>Де помилка</h3><ul>${wrong.map(it=>`<li>${it.e}</li>`).join("")}</ul>`;
+    $("why").classList.remove("hidden");
+    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${ITEMS.length}. Червоні числа стоять не на своєму місці.`;
+    $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
+  } else {
+    $("why").classList.add("hidden");
+    $("fb").className="fb good";
+    $("fb").innerHTML=`<span class="score">${firstScore} з ${ITEMS.length}</span>`+(firstScore===ITEMS.length?"Бездоганно! Усі числа на своїх місцях з першої спроби.":"Готово! Усі числа на своїх місцях. У рахунок пішла перша спроба.");
+    $("check").classList.add("hidden"); $("retry").classList.add("hidden");
+  }
+};
+$("retry").onclick = ()=>{
+  ITEMS.forEach((_,i)=>{ if(chips[i].classList.contains("bad")){ chips[i].classList.remove("bad"); place[i]=null; } });
+  $("fb").textContent=""; $("fb").className="fb"; $("why").classList.add("hidden");
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden"); layout();
+};
+$("restart").onclick = setup;
+setup();
+if(document.fonts) document.fonts.ready.then(layout);
+</script>
+</body>
+</html>

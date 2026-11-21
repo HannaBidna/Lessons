@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ознаки подільності на 2, 3 і 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+  .bank{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;min-height:76px;padding:16px;border-radius:16px;background:var(--sand-l);border:2px solid var(--line)}
+  .bank.hover{background:#EFE2D3}
+  .bank:empty::after{content:"Усі числа розкладено 👍";color:var(--grey);font-size:16px;align-self:center}
+  .zones{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+  @media (max-width:640px){.zones{grid-template-columns:1fr}.zone{min-height:120px}}
+  .zone{border-radius:18px;border:3px dashed var(--zc);background:var(--zbg);min-height:220px;padding:0 12px 14px;transition:background .12s}
+  .zone.hover{border-style:solid;background:var(--zhv)}
+  .zone h3{margin:0 -12px 12px;padding:10px 12px;border-radius:14px 14px 0 0;background:var(--zc);color:#fff;text-align:center;font-size:20px;font-weight:700}
+  .zone .in{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+  .z0{--zc:#253042;--zbg:#EEF1F5;--zhv:#DDE3EC}
+  .z1{--zc:#AF5940;--zbg:#FBEFEA;--zhv:#F5DCD2}
+  .z2{--zc:#797B6E;--zbg:#F1F1EC;--zhv:#E2E3DA}
+  .chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:2px solid var(--navy);border-radius:12px;padding:8px 18px;font-size:22px;font-weight:700;line-height:1.3;cursor:grab;box-shadow:0 3px 0 var(--sand);position:relative}
+  .chip:hover{border-color:var(--terra)}
+  .chip.selected{background:var(--sel);outline:3px solid #E8B93A}
+  .chip.placeholder{opacity:.3}
+  .chip.ok{border-color:var(--ok);background:var(--ok-bg);box-shadow:none;cursor:default}
+  .chip.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .chip.ok::after{content:"✓";position:absolute;right:-7px;top:-11px;font-size:14px;color:#fff;background:var(--ok);border-radius:50%;width:20px;height:20px;line-height:20px;text-align:center}
+  .chip.bad::after{content:"✗";position:absolute;right:-7px;top:-11px;font-size:14px;color:#fff;background:var(--bad);border-radius:50%;width:20px;height:20px;line-height:20px;text-align:center}
+  .chip .last{color:var(--terra);text-decoration:underline;text-decoration-thickness:3px;text-underline-offset:3px}
+  .ghost{position:fixed;z-index:1000;pointer-events:none;box-shadow:0 10px 24px rgba(37,48,66,.3);transform:rotate(-3deg);margin:0}
+
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .count{margin-left:auto;font-size:15px;color:var(--grey);font-weight:600}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .why{margin-top:14px;background:var(--sand-xl);border-left:6px solid var(--sand);border-radius:12px;padding:12px 16px}
+  .why h3{margin:0 0 6px;font-size:18px}
+  .why ul{margin:0;padding-left:20px}
+  .why li{margin:4px 0}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Ознаки подільності</h1>
+  <p>Розклади числа на групи: на що вони діляться</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Відсортуй числа</h2>
+    <p class="how">Кожне число ділиться лише на одне з чисел 2, 3 або 5. Перетягни його в потрібну групу. Можна й так: натисни на число, а потім на групу.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box" id="hint"></div>
+    </details>
+    <div class="bank" id="bank" data-zone="bank"></div>
+    <div class="zones" id="zones"></div>
+    <div class="bar">
+      <button class="btn main" id="check">Перевірити</button>
+      <button class="btn sec hidden" id="retry">Виправити помилки</button>
+      <button class="btn sec" id="restart">Почати спочатку</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="fb" id="fb"></div>
+    <div class="why hidden" id="why"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. Щоб зробити сортування на іншу тему, зміни заголовки вгорі,
+   HINT, GROUPS і ITEMS. У ITEMS g це номер групи (0 або 1).
+   explain(item) пише пояснення до числа, яке поклали не в ту групу.
+   ===================================================================== */
+const HINT = "<b>На 2</b> діляться числа, у яких остання цифра 0, 2, 4, 6 або 8.<br><b>На 5</b> діляться числа, у яких остання цифра 0 або 5.<br><b>На 3</b> діляться числа, у яких сума цифр ділиться на 3. Наприклад, 123: 1 + 2 + 3 = 6, а 6 ділиться на 3.";
+const GROUPS = ["Ділиться на 2","Ділиться на 3","Ділиться на 5"];
+const ITEMS = [
+  {t:"2",g:0},{t:"62",g:0},{t:"16",g:0},{t:"98",g:0},
+  {t:"9",g:1},{t:"33",g:1},{t:"123",g:1},{t:"21",g:1},
+  {t:"55",g:2},{t:"5",g:2},{t:"1265",g:2},{t:"125",g:2}
+];
+const explain = (it, put) => {
+  const last = it.t.slice(-1), sum = [...it.t].reduce((a,d)=>a+ +d,0), sumStr=[...it.t].join(" + ");
+  const why = [
+    `остання цифра ${last} парна, тому ділиться на 2`,
+    it.t.length>1 ? `сума цифр ${sumStr} = ${sum} ділиться на 3, тому й число ділиться на 3` : `${it.t} = 3 · 3, тому ділиться на 3`,
+    `остання цифра ${last}, тому ділиться на 5`
+  ][it.g];
+  const not = put===undefined ? "" : [
+    `, а на 2 не ділиться, бо остання цифра ${last} непарна`,
+    it.t.length>1 ? `, а на 3 не ділиться: ${sumStr} = ${sum}, і ${sum} на 3 не ділиться` : `, а на 3 не ділиться`,
+    `, а на 5 не ділиться, бо остання цифра не 0 і не 5`
+  ][put];
+  return `${it.t}: ${why}${not}.`;
+};
+const markup = t => t;
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+const bank = $("bank");
+let firstScore = null;
+$("hint").innerHTML = HINT;
+$("zones").innerHTML = GROUPS.map((g,i)=>`<div class="zone z${i}" data-zone="${i}"><h3>${g}</h3><div class="in"></div></div>`).join("");
+
+function setup(){
+  firstScore = null;
+  bank.innerHTML = "";
+  document.querySelectorAll(".zone .in").forEach(z=>z.innerHTML="");
+  shuffle(ITEMS.map((it,i)=>i)).forEach(i=>{
+    const c = document.createElement("div");
+    c.className="chip"; c.dataset.i=i; c.textContent=ITEMS[i].t;
+    bank.appendChild(c);
+  });
+  $("fb").textContent=""; $("fb").className="fb";
+  $("why").classList.add("hidden");
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  count();
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function count(){ $("count").textContent = `Залишилося розкласти: ${bank.children.length}`; }
+
+function place(chip, zone){
+  if(!zone || chip.classList.contains("ok")) return;
+  const target = zone.dataset.zone==="bank" ? bank : zone.querySelector(".in");
+  if(chip.parentElement===target) return;
+  chip.classList.remove("bad"); chip.textContent = ITEMS[chip.dataset.i].t;
+  target.appendChild(chip);
+  $("fb").textContent=""; count();
+}
+
+/* Перетягування й натискання */
+let drag=null, sel=null;
+const clearSel = ()=>{ if(sel){ sel.classList.remove("selected"); sel=null; } };
+const clearHover = ()=>document.querySelectorAll(".hover").forEach(x=>x.classList.remove("hover"));
+const zoneAt = (x,y)=>{ const u=document.elementFromPoint(x,y); return u && u.closest("[data-zone]"); };
+document.addEventListener("pointerdown", e=>{
+  const chip=e.target.closest(".chip"); if(!chip || chip.classList.contains("ok")) return;
+  drag={chip,x:e.clientX,y:e.clientY,ghost:null};
+});
+document.addEventListener("pointermove", e=>{
+  if(!drag) return;
+  if(!drag.ghost){
+    if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6) return;
+    const r=drag.chip.getBoundingClientRect(), g=drag.chip.cloneNode(true);
+    g.classList.add("ghost"); g.classList.remove("selected"); g.style.width=r.width+"px";
+    document.body.appendChild(g); drag.ghost=g; drag.ox=drag.x-r.left; drag.oy=drag.y-r.top;
+    drag.chip.classList.add("placeholder"); clearSel();
+  }
+  drag.ghost.style.left=(e.clientX-drag.ox)+"px"; drag.ghost.style.top=(e.clientY-drag.oy)+"px";
+  clearHover(); const z=zoneAt(e.clientX,e.clientY); if(z) z.classList.add("hover");
+  e.preventDefault();
+},{passive:false});
+document.addEventListener("pointerup", e=>{
+  if(!drag) return; const d=drag; drag=null;
+  if(d.ghost){ d.ghost.remove(); d.chip.classList.remove("placeholder"); clearHover(); place(d.chip, zoneAt(e.clientX,e.clientY)); }
+  else { if(sel===d.chip) clearSel(); else { clearSel(); sel=d.chip; sel.classList.add("selected"); } }
+});
+document.addEventListener("pointercancel", ()=>{ if(drag&&drag.ghost){drag.ghost.remove(); drag.chip.classList.remove("placeholder");} drag=null; clearHover(); });
+document.addEventListener("click", e=>{
+  if(!sel || e.target.closest(".chip")) return;
+  const z=e.target.closest("[data-zone]"); if(z){ place(sel,z); clearSel(); }
+});
+
+/* Перевірка */
+$("check").onclick = ()=>{
+  if(bank.children.length){ $("fb").className="fb meh"; $("fb").textContent="Спочатку розклади всі числа."; return; }
+  let g=0; const wrong=[];
+  document.querySelectorAll(".zone").forEach(z=>{
+    z.querySelectorAll(".chip").forEach(c=>{
+      const it=ITEMS[c.dataset.i], ok = it.g===+z.dataset.zone;
+      c.classList.toggle("ok",ok); c.classList.toggle("bad",!ok);
+      c.innerHTML = markup(it.t);
+      if(ok) g++; else wrong.push([it,+z.dataset.zone]);
+    });
+  });
+  if(firstScore===null) firstScore=g;
+  const why=$("why");
+  if(wrong.length){
+    why.innerHTML = `<h3>Де помилка</h3><ul>${wrong.map(([it,z])=>`<li>${explain(it,z)}</li>`).join("")}</ul>`;
+    why.classList.remove("hidden");
+    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${ITEMS.length}. Червоні числа лежать не в своїй групі.`;
+    $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
+  } else {
+    why.classList.add("hidden");
+    $("fb").className="fb good";
+    $("fb").innerHTML = `<span class="score">${firstScore} з ${ITEMS.length}</span>` + (firstScore===ITEMS.length ? "Бездоганно! Усе розкладено з першої спроби." : "Готово! Усі числа на своїх місцях. У рахунок пішла перша спроба.");
+    $("check").classList.add("hidden"); $("retry").classList.add("hidden");
+  }
+};
+$("retry").onclick = ()=>{
+  document.querySelectorAll(".chip.bad").forEach(c=>{ c.classList.remove("bad"); c.textContent=ITEMS[c.dataset.i].t; bank.appendChild(c); });
+  $("fb").textContent=""; $("fb").className="fb"; $("why").classList.add("hidden");
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden"); count();
+};
+$("restart").onclick = setup;
+setup();
+</script>
+</body>
+</html>
