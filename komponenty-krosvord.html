@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Компоненти арифметичних дій: кросворд</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+
+  .hint .box table{border-collapse:collapse;margin-top:4px}
+  .hint .box td{padding:2px 10px 2px 0;font-size:16px}
+  .layout{display:grid;grid-template-columns:minmax(0,520px) minmax(260px,1fr);gap:26px;align-items:start}
+  @media (max-width:820px){.layout{grid-template-columns:1fr}}
+  .curclue{background:var(--navy);color:#fff;border-radius:14px;padding:10px 16px;margin-bottom:14px;font-weight:600;min-height:48px;font-size:17px}
+  .curclue b{display:inline-block;background:var(--terra);border-radius:20px;padding:0 10px;margin-right:8px}
+  .board{--cs:40px;display:grid;gap:3px;justify-content:center;margin:0 auto}
+  @media (max-width:520px){.board{--cs:calc((100vw - 96px)/12);gap:2px}.cell .num{font-size:8px}.cell input{font-size:calc(var(--cs)*.6)}.panel{padding:18px 14px}}
+  .cell{width:var(--cs);height:var(--cs);position:relative}
+  .cell.on{background:#fff;border:2px solid var(--navy);border-radius:6px}
+  .cell .num{position:absolute;left:2px;top:0;font-size:10px;font-weight:700;color:var(--terra);line-height:1.2;pointer-events:none}
+  .cell input{width:100%;height:100%;border:none;background:transparent;text-align:center;font:inherit;font-weight:700;font-size:calc(var(--cs)*.5);text-transform:uppercase;color:var(--navy);padding:0;caret-color:transparent;outline:none;border-radius:4px}
+  .cell.word{background:var(--sel)}
+  .cell.cur{box-shadow:0 0 0 3px var(--terra)}
+  .cell.fixed input{color:var(--grey)}
+  .cell.ok{background:var(--ok-bg);border-color:var(--ok)}
+  .cell.ok input{color:var(--ok)}
+  .cell.bad{background:var(--bad-bg);border-color:var(--bad)}
+  .clues h3{margin:0 0 6px;font-size:18px;color:var(--terra)}
+  .clues ol{list-style:none;margin:0 0 16px;padding:0}
+  .clues li{padding:8px 12px;border-radius:12px;margin-bottom:6px;cursor:pointer;border:2px solid transparent;font-size:16px;line-height:1.45;background:var(--sand-xl)}
+  .clues li:hover{border-color:var(--sand)}
+  .clues li.cur{border-color:var(--navy);background:#fff}
+  .clues li .n{font-weight:700;color:var(--terra);margin-right:6px}
+  .clues li.ok{background:var(--ok-bg);color:var(--ok)}
+  .clues li.ok::after{content:" ✓";font-weight:700}
+  .clues li.bad{background:var(--bad-bg)}
+  .clues li .ex{display:none;margin-top:6px;font-size:14px;color:var(--navy);background:#fff;border-radius:8px;padding:6px 10px}
+  .clues li.bad .ex{display:block}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Компоненти арифметичних дій</h1>
+  <p>Кросворд: як знайти невідомий компонент</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Розв'яжи кросворд</h2>
+    <p class="how">Натисни на питання або на клітинку і впиши відповідь. Курсор сам переходить до наступної літери. Апостроф уже вписано.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box">
+        Як називаються числа в діях:
+        <table>
+          <tr><td><b>Додавання</b></td><td>доданок + доданок = сума</td></tr>
+          <tr><td><b>Віднімання</b></td><td>зменшуване − від'ємник = різниця</td></tr>
+          <tr><td><b>Множення</b></td><td>множник · множник = добуток</td></tr>
+          <tr><td><b>Ділення</b></td><td>ділене : дільник = частка</td></tr>
+        </table>
+      </div>
+    </details>
+    <div class="layout">
+      <div>
+        <div class="curclue" id="curclue"></div>
+        <div class="board" id="board"></div>
+      </div>
+      <div class="clues">
+        <h3>По горизонталі</h3><ol id="across"></ol>
+        <h3>По вертикалі</h3><ol id="down"></ol>
+      </div>
+    </div>
+    <div class="bar">
+      <button class="btn main" id="check">Перевірити</button>
+      <button class="btn sec hidden" id="retry">Виправити помилки</button>
+      <button class="btn sec" id="restart">Почати спочатку</button>
+    </div>
+    <div class="fb" id="fb"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. r і c це рядок і стовпчик першої літери (рахуємо від 0),
+   dir: "across" (по горизонталі) або "down" (по вертикалі).
+   ans: правильні відповіді (можна кілька форм слова). Літери, що стоять
+   на перетинах, мають збігатися. ʼ (апостроф) вписується автоматично.
+   ===================================================================== */
+const ROWS = 15, COLS = 12;
+const WORDS = [
+  {n:1, dir:"down",   r:2, c:5, ans:["ВІДʼЄМНИК"],          clue:"Щоб знайти невідоме зменшуване, треба до різниці додати …", e:"Зменшуване = різниця + від'ємник. Наприклад, x − 3 = 5, тоді x = 5 + 3 = 8."},
+  {n:2, dir:"across", r:4, c:3, ans:["ДОДАНОК"],            clue:"Щоб знайти невідомий доданок, треба від суми відняти відомий …", e:"Доданок = сума − відомий доданок. Наприклад, x + 4 = 10, тоді x = 10 − 4 = 6."},
+  {n:3, dir:"across", r:7, c:5, ans:["МНОЖНИК"],            clue:"Щоб знайти невідомий множник, треба добуток поділити на відомий …", e:"Множник = добуток : відомий множник. Наприклад, x · 3 = 12, тоді x = 12 : 3 = 4."},
+  {n:4, dir:"across", r:9, c:0, ans:["ДІЛЬНИК"],            clue:"Щоб знайти невідоме ділене, треба частку помножити на …", e:"Ділене = частка · дільник. Наприклад, x : 2 = 7, тоді x = 7 · 2 = 14."},
+  {n:5, dir:"down",   r:0, c:9, ans:["ЧАСТКУ","ЧАСТКА"],    clue:"Щоб знайти невідомий дільник, треба ділене поділити на …", e:"Дільник = ділене : частка. Наприклад, 20 : x = 4, тоді x = 20 : 4 = 5."},
+  {n:6, dir:"down",   r:8, c:1, ans:["РІЗНИЦЮ","РІЗНИЦЯ"],  clue:"Щоб знайти невідомий від'ємник, треба від зменшуваного відняти …", e:"Від'ємник = зменшуване − різниця. Наприклад, 9 − x = 6, тоді x = 9 − 6 = 3."}
+];
+const APOS = "ʼ";
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+const cells = {};   // "r,c" -> {el,input,words:[wi],fixed}
+let cur = 0, pos = 0, firstScore = null, wordState = [];
+const key = (r,c) => r+","+c;
+const cellsOf = w => [...w.ans[0]].map((ch,i)=> w.dir==="across" ? key(w.r, w.c+i) : key(w.r+i, w.c));
+
+function build(){
+  const board = $("board");
+  board.style.gridTemplateColumns = `repeat(${COLS}, var(--cs))`;
+  board.innerHTML = "";
+  const map = {};
+  WORDS.forEach((w,wi)=> cellsOf(w).forEach((k,i)=>{ (map[k]=map[k]||{words:[],ch:w.ans[0][i]}).words.push(wi); }));
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const k=key(r,c), d=document.createElement("div");
+    d.className="cell"; board.appendChild(d);
+    if(!map[k]) continue;
+    d.classList.add("on");
+    const num = WORDS.find(w=>w.r===r&&w.c===c);
+    if(num) d.insertAdjacentHTML("beforeend",`<span class="num">${num.n}</span>`);
+    const inp=document.createElement("input");
+    inp.setAttribute("maxlength","2"); inp.setAttribute("autocomplete","off"); inp.setAttribute("autocapitalize","characters"); inp.setAttribute("spellcheck","false");
+    d.appendChild(inp);
+    const fixed = map[k].ch===APOS;
+    if(fixed){ inp.value=APOS; d.classList.add("fixed"); }
+    cells[k]={el:d,input:inp,words:map[k].words,fixed,locked:fixed,ch:map[k].ch};
+    inp.addEventListener("focus",()=>onFocus(k));
+    inp.addEventListener("mousedown",e=>{ if(document.activeElement===inp && cells[k].words.length>1){ e.preventDefault(); switchWord(k);} });
+    inp.addEventListener("input",()=>onInput(k));
+    inp.addEventListener("keydown",e=>onKey(k,e));
+  }
+  ["across","down"].forEach(dir=>{
+    $(dir).innerHTML = "";
+    WORDS.forEach((w,wi)=>{ if(w.dir!==dir) return;
+      const li=document.createElement("li"); li.dataset.wi=wi;
+      li.innerHTML=`<span class="n">${w.n}.</span>${w.clue}<div class="ex">${w.e}</div>`;
+      li.onclick=()=>selectWord(wi,0,true);
+      $(dir).appendChild(li);
+    });
+  });
+}
+function setup(){
+  build(); firstScore=null; wordState=WORDS.map(()=>null);
+  $("fb").textContent=""; $("fb").className="fb";
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  selectWord(0,0,false);
+}
+function highlight(){
+  Object.values(cells).forEach(c=>c.el.classList.remove("word","cur"));
+  const ks=cellsOf(WORDS[cur]);
+  ks.forEach(k=>cells[k].el.classList.add("word"));
+  if(ks[pos]) cells[ks[pos]].el.classList.add("cur");
+  document.querySelectorAll(".clues li").forEach(li=>li.classList.toggle("cur", +li.dataset.wi===cur));
+  const w=WORDS[cur];
+  $("curclue").innerHTML=`<b>${w.n} ${w.dir==="across"?"→":"↓"}</b>${w.clue}`;
+}
+function selectWord(wi, p, focus){
+  cur=wi; const ks=cellsOf(WORDS[wi]);
+  pos = p;
+  highlight();
+  if(focus) cells[ks[pos]].input.focus({preventScroll:true});
+}
+function onFocus(k){
+  const c=cells[k];
+  if(!c.words.includes(cur)) cur=c.words[0];
+  pos=cellsOf(WORDS[cur]).indexOf(k);
+  highlight();
+}
+function switchWord(k){
+  const c=cells[k]; const i=c.words.indexOf(cur);
+  cur=c.words[(i+1)%c.words.length]; pos=cellsOf(WORDS[cur]).indexOf(k); highlight();
+}
+function move(step){
+  const ks=cellsOf(WORDS[cur]); let p=pos+step;
+  if(p>=0 && p<ks.length){ pos=p; cells[ks[p]].input.focus({preventScroll:true}); highlight(); }
+}
+function onInput(k){
+  const c=cells[k];
+  let v=c.input.value.replace(/[^А-ЯҐЄІЇа-яґєії]/g,"").toUpperCase().replace(c.ch,"");
+  if(c.locked){
+    /* заповнена клітинка: повертаємо її літеру і йдемо далі;
+       якщо це апостроф, набрану літеру ставимо в наступну клітинку */
+    c.input.value=c.ch;
+    const typed=v.slice(-1);
+    move(1);
+    if(c.fixed && typed){ const nk=cellsOf(WORDS[cur])[pos]; if(nk!==k && !cells[nk].locked){ cells[nk].input.value=typed; move(1); } }
+    return;
+  }
+  v=(c.input.value.replace(/[^А-ЯҐЄІЇа-яґєії]/g,"").toUpperCase()).slice(-1); c.input.value=v;
+  c.el.classList.remove("bad");
+  $("fb").textContent="";
+  if(v) move(1);
+}
+function onKey(k,e){
+  const c=cells[k];
+  if(e.key==="Backspace"){
+    if(!c.locked && c.input.value){ c.input.value=""; e.preventDefault(); return; }
+    e.preventDefault(); move(-1);
+    const nk=cellsOf(WORDS[cur])[pos]; if(!cells[nk].locked) cells[nk].input.value="";
+  } else if(e.key==="ArrowRight"||e.key==="ArrowDown"){ e.preventDefault(); move(1); }
+  else if(e.key==="ArrowLeft"||e.key==="ArrowUp"){ e.preventDefault(); move(-1); }
+  else if(e.key==="Enter"){ e.preventDefault(); selectWord((cur+1)%WORDS.length,0,true); }
+}
+
+/* Перевірка */
+$("check").onclick=()=>{
+  const empty = Object.values(cells).some(c=>!c.input.value);
+  if(empty){ $("fb").className="fb meh"; $("fb").textContent="Заповни всі клітинки, а потім перевір."; return; }
+  let g=0;
+  WORDS.forEach((w,wi)=>{
+    const ks=cellsOf(w), word=ks.map(k=>cells[k].input.value).join("");
+    const ok=w.ans.includes(word); wordState[wi]=ok; if(ok) g++;
+    const li=document.querySelector(`.clues li[data-wi="${wi}"]`);
+    li.classList.toggle("ok",ok); li.classList.toggle("bad",!ok);
+  });
+  Object.entries(cells).forEach(([k,c])=>{
+    const okHere=c.words.some(wi=>wordState[wi]);
+    const badHere=c.words.some(wi=>!wordState[wi]);
+    c.el.classList.toggle("ok", okHere && !badHere || (okHere && c.words.length>1 && c.words.every(wi=>wordState[wi])));
+    if(okHere){ c.locked=true; c.el.classList.add("ok"); c.el.classList.remove("bad"); }
+    else c.el.classList.toggle("bad", badHere);
+  });
+  if(firstScore===null) firstScore=g;
+  if(g===WORDS.length){
+    $("fb").className="fb good";
+    $("fb").innerHTML=`<span class="score">${firstScore} з ${WORDS.length}</span>`+(firstScore===WORDS.length?"Бездоганно! Кросворд розв'язано з першої спроби.":"Готово! Кросворд розв'язано. У рахунок пішла перша спроба.");
+    $("check").classList.add("hidden"); $("retry").classList.add("hidden");
+  } else {
+    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${WORDS.length} слів. Під червоними питаннями є підказка-правило.`;
+    $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
+  }
+};
+$("retry").onclick=()=>{
+  Object.values(cells).forEach(c=>{ if(!c.locked){ c.input.value=""; c.el.classList.remove("bad"); } });
+  document.querySelectorAll(".clues li.bad").forEach(li=>li.classList.remove("bad"));
+  $("fb").textContent=""; $("fb").className="fb";
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  const wi=wordState.findIndex(s=>!s); if(wi>=0) selectWord(wi,0,true);
+};
+$("restart").onclick=setup;
+setup();
+</script>
+</body>
+</html>

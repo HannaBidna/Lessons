@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Порівняння іменованих чисел: маса</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+
+  .hint .box{line-height:2.1}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px;align-items:start}
+  .cmp{border:2px solid var(--line);border-radius:16px;background:var(--sand-xl);padding:12px 10px 10px;position:relative;text-align:center}
+  .row{display:flex;align-items:center;justify-content:center;gap:10px;font-size:19px;white-space:nowrap;font-weight:700;min-height:66px}
+  .slot{width:48px;height:48px;border-radius:12px;border:2px dashed var(--terra);background:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:var(--terra)}
+  .slot.filled{border-style:solid;border-color:var(--navy);color:var(--navy)}
+  .signs{display:flex;gap:8px;justify-content:center;margin-top:8px}
+  .sg{width:44px;height:38px;border-radius:19px;border:2px solid var(--sand);background:#fff;font-size:20px;font-weight:700;line-height:1}
+  .sg:hover{border-color:var(--terra)}
+  .sg.on{background:var(--navy);border-color:var(--navy);color:#fff}
+  .cmp.ok{border-color:var(--ok);background:var(--ok-bg)}
+  .cmp.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .cmp.ok .slot{border-color:var(--ok);color:var(--ok)}
+  .cmp.bad .slot{border-color:var(--bad);color:var(--bad)}
+  .cmp.ok .signs{display:none}
+  .cmp.ok::after,.cmp.bad::after{position:absolute;right:8px;top:6px;font-size:13px;color:#fff;border-radius:50%;width:20px;height:20px;line-height:20px}
+  .cmp.ok::after{content:"✓";background:var(--ok)}
+  .cmp.bad::after{content:"✗";background:var(--bad)}
+  .cmp .ex{display:none;margin-top:8px;font-size:14px;line-height:1.9;text-align:left;background:#fff;border-radius:10px;padding:6px 10px}
+  .cmp.bad .ex{display:block}
+  .cmp.ok.show .ex{display:block}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .count{margin-left:auto;font-size:15px;color:var(--grey);font-weight:600}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Порівняння іменованих чисел</h1>
+  <p>Маса: тонни, центнери, кілограми. Постав знак &gt;, &lt; або =</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Порівняй маси</h2>
+    <p class="how">Переведи обидві маси в однакові одиниці, порівняй і натисни на правильний знак. Відповідей може бути три: більше, менше або дорівнює.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box" id="hint"></div>
+    </details>
+    <div class="grid" id="grid"></div>
+    <div class="bar">
+      <button class="btn main" id="check">Перевірити</button>
+      <button class="btn sec hidden" id="retry">Виправити помилки</button>
+      <button class="btn sec" id="restart">Почати спочатку</button>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="fb" id="fb"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. a і b це дві величини, s це правильний знак (">", "<" або "="),
+   e це пояснення, яке з'явиться після неправильної відповіді.
+   ===================================================================== */
+const F = (a,b) => `<span class="fr"><span>${a}</span><span>${b}</span></span>`;
+const HINT = `<b>1 т = 10 ц = 1000 кг</b>, &nbsp; <b>1 ц = 100 кг</b>.<br>
+  Щоб порівняти маси, переведи обидві в кілограми. Наприклад, 4 т 2 ц = 4000 кг + 200 кг = 4200 кг.<br>
+  Уважно з нулями: 3 ц 5 кг = 305 кг, а не 350 кг.`;
+const ITEMS = [
+  {a:"56 ц",       b:"5 ц 50 кг",  s:">", e:"56 ц = 5600 кг, а 5 ц 50 кг = 550 кг. 5600 &gt; 550."},
+  {a:"55 ц",       b:"550 кг",     s:">", e:"55 ц = 55 · 100 = 5500 кг. 5500 &gt; 550."},
+  {a:"2 т 6 ц",    b:"2620 кг",    s:"<", e:"2 т 6 ц = 2000 + 600 = 2600 кг. 2600 &lt; 2620."},
+  {a:"5 т 300 кг", b:"5300 кг",    s:"=", e:"5 т 300 кг = 5000 + 300 = 5300 кг. Маси однакові."},
+  {a:"37 ц",       b:"3 т 6 ц",    s:">", e:"37 ц = 3700 кг, а 3 т 6 ц = 3000 + 600 = 3600 кг. 3700 &gt; 3600."},
+  {a:"7 т 5 ц",    b:"76 ц",       s:"<", e:"7 т 5 ц = 70 ц + 5 ц = 75 ц. 75 ц &lt; 76 ц."},
+  {a:"870 кг",     b:"8 ц 7 кг",   s:">", e:"8 ц 7 кг = 800 + 7 = 807 кг. 870 &gt; 807. Не плутай 807 і 870!"},
+  {a:"3 т 20 кг",  b:"3 ц 20 кг",  s:">", e:"3 т 20 кг = 3020 кг, а 3 ц 20 кг = 320 кг. Тонна в 10 разів більша за центнер."}
+];
+const SIGNS = [">","<","="];
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+let ans = {}, firstScore = null, cards = [];
+$("hint").innerHTML = HINT;
+
+function setup(){
+  ans = {}; firstScore = null;
+  const grid = $("grid"); grid.innerHTML = "";
+  cards = [];
+  shuffle(ITEMS.map((_,i)=>i)).forEach(i=>{
+    const it = ITEMS[i], c = document.createElement("div");
+    c.className = "cmp"; c.dataset.i = i;
+    c.innerHTML = `<div class="row"><span>${it.a}</span><span class="slot"></span><span>${it.b}</span></div>
+      <div class="signs">${SIGNS.map(s=>`<button class="sg" data-s="${s}">${s}</button>`).join("")}</div>
+      <div class="ex">${it.e}</div>`;
+    c.querySelectorAll(".sg").forEach(b=>b.onclick=()=>choose(c,b.dataset.s));
+    grid.appendChild(c); cards[i]=c;
+  });
+  $("fb").textContent=""; $("fb").className="fb";
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden");
+  count();
+}
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function choose(c, s){
+  if(c.classList.contains("ok")) return;
+  const i=+c.dataset.i; ans[i]=s;
+  c.classList.remove("bad");
+  c.querySelector(".slot").textContent=s; c.querySelector(".slot").classList.add("filled");
+  c.querySelectorAll(".sg").forEach(b=>b.classList.toggle("on", b.dataset.s===s));
+  $("fb").textContent=""; count();
+}
+function count(){ $("count").textContent = `Залишилося: ${ITEMS.length-Object.keys(ans).length}`; }
+
+$("check").onclick = ()=>{
+  if(Object.keys(ans).length<ITEMS.length){ $("fb").className="fb meh"; $("fb").textContent="Постав знак у кожній картці."; return; }
+  let g=0;
+  ITEMS.forEach((it,i)=>{ const ok=ans[i]===it.s; cards[i].classList.toggle("ok",ok); cards[i].classList.toggle("bad",!ok); if(ok) g++; });
+  if(firstScore===null) firstScore=g;
+  if(g===ITEMS.length){
+    $("fb").className="fb good";
+    $("fb").innerHTML=`<span class="score">${firstScore} з ${ITEMS.length}</span>`+(firstScore===ITEMS.length?"Бездоганно! Усі знаки правильні з першої спроби.":"Готово! Усі знаки правильні. У рахунок пішла перша спроба.");
+    $("check").classList.add("hidden"); $("retry").classList.add("hidden");
+  } else {
+    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${ITEMS.length}. У червоних картках знак неправильний, під ними є пояснення.`;
+    $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
+  }
+};
+$("retry").onclick = ()=>{
+  ITEMS.forEach((_,i)=>{ const c=cards[i]; if(c.classList.contains("bad")){ c.classList.remove("bad"); delete ans[i]; c.querySelector(".slot").textContent=""; c.querySelector(".slot").classList.remove("filled"); c.querySelectorAll(".sg").forEach(b=>b.classList.remove("on")); } });
+  $("fb").textContent=""; $("fb").className="fb";
+  $("retry").classList.add("hidden"); $("check").classList.remove("hidden"); count();
+};
+$("restart").onclick = setup;
+setup();
+</script>
+</body>
+</html>

@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Таблиця множення на 7: мемо</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+
+  .stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+  .stat{background:var(--sand-l);border-radius:20px;padding:4px 14px;font-weight:600;font-size:15px}
+  .stat b{color:var(--terra)}
+  .memo{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:470px;margin:0 auto}
+  @media (max-width:480px){.memo{gap:9px}}
+  .mc{aspect-ratio:1/1;perspective:700px;cursor:pointer;-webkit-tap-highlight-color:transparent}
+  .mc .in{position:relative;width:100%;height:100%;transition:transform .45s;transform-style:preserve-3d}
+  .mc.open .in,.mc.done .in{transform:rotateY(180deg)}
+  .mc .face{position:absolute;inset:0;border-radius:16px;display:flex;align-items:center;justify-content:center;backface-visibility:hidden;-webkit-backface-visibility:hidden}
+  .mc .back{background:var(--navy);box-shadow:0 4px 0 #161e2b;overflow:hidden}
+  .mc .back::before{content:"";position:absolute;width:70%;height:70%;border-radius:50%;background:var(--terra);right:-22%;top:-22%;opacity:.9}
+  .mc .back::after{content:"";position:absolute;width:45%;height:45%;border-radius:50%;background:var(--sand);left:-10%;bottom:-12%;opacity:.85}
+  .mc .back span{position:relative;z-index:1;color:#fff;font-weight:700;font-size:clamp(22px,6vw,34px)}
+  .mc:hover .back{filter:brightness(1.12)}
+  .mc .front{background:#fff;border:3px solid var(--navy);transform:rotateY(180deg);font-weight:700;font-size:clamp(20px,5.4vw,32px);color:var(--navy)}
+  .mc.expr .front{background:var(--sand-xl)}
+  .mc.done{cursor:default}
+  .mc.done .front{border-color:var(--ok);background:var(--ok-bg);color:var(--ok)}
+  .mc.miss .front{border-color:var(--bad);background:var(--bad-bg)}
+  .mc.done .front::after{content:"✓";position:absolute;right:8px;top:4px;font-size:15px}
+  .win{display:none;margin-top:18px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:14px 18px}
+  .win.show{display:block}
+  .win h3{margin:0 0 6px;font-size:20px}
+  .table7{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px 14px;margin:10px 0 4px;font-weight:600}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1 id="title"></h1>
+  <p>Гра «Мемо»: знайди пари вираз і відповідь</p>
+</header>
+<main>
+  <section class="panel">
+    <h2>Знайди всі пари</h2>
+    <p class="how">Відкривай по дві картки. Якщо вираз і відповідь збігаються, картки залишаться відкритими. Якщо ні, вони перевернуться назад, а ти запам'ятай, де що лежить.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box" id="hint"></div>
+    </details>
+    <div class="stats"><span class="stat">Ходів: <b id="turns">0</b></span><span class="stat">Знайдено пар: <b id="found">0</b> з <span id="total"></span></span></div>
+    <div class="memo" id="memo"></div>
+    <div class="win" id="win"></div>
+    <div class="bar"><button class="btn sec" id="restart">Почати спочатку</button></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. Кожна пара: a це вираз, b це відповідь.
+   Найкраще 6 або 8 пар (сітка 4 × 3 або 4 × 4).
+   ===================================================================== */
+const TITLE = "Таблиця множення на 7";
+const HINT = "Кожен наступний добуток на 7 більший за попередній: 7, 14, 21, 28… Якщо забув, скільки буде 7 · 6, візьми 7 · 5 = 35 і додай ще 7.<br>Від перестановки множників добуток не змінюється: 3 · 7 = 7 · 3.";
+const PAIRS = [
+  {a:"7 · 2", b:"14"}, {a:"3 · 7", b:"21"}, {a:"4 · 7", b:"28"}, {a:"7 · 5", b:"35"},
+  {a:"6 · 7", b:"42"}, {a:"7 · 7", b:"49"}, {a:"7 · 8", b:"56"}, {a:"7 · 9", b:"63"}
+];
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+$("title").textContent = TITLE; document.title = TITLE + ": мемо";
+$("hint").innerHTML = HINT; $("total").textContent = PAIRS.length;
+let open = [], busy = false, turns = 0, found = 0;
+
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; }
+function setup(){
+  open=[]; busy=false; turns=0; found=0;
+  $("turns").textContent=0; $("found").textContent=0; $("win").classList.remove("show");
+  const memo=$("memo"); memo.innerHTML="";
+  shuffle(PAIRS.flatMap((p,i)=>[{t:p.a,pair:i,expr:true},{t:p.b,pair:i,expr:false}])).forEach(c=>{
+    const d=document.createElement("div");
+    d.className="mc"+(c.expr?" expr":""); d.dataset.pair=c.pair;
+    d.innerHTML=`<div class="in"><div class="face back"><span>?</span></div><div class="face front">${c.t}</div></div>`;
+    d.onclick=()=>flip(d);
+    memo.appendChild(d);
+  });
+}
+function flip(d){
+  if(busy || d.classList.contains("open") || d.classList.contains("done")) return;
+  d.classList.add("open"); open.push(d);
+  if(open.length<2) return;
+  turns++; $("turns").textContent=turns;
+  const [x,y]=open; open=[];
+  if(x.dataset.pair===y.dataset.pair && x.classList.contains("expr")!==y.classList.contains("expr")){
+    setTimeout(()=>{ [x,y].forEach(c=>{ c.classList.remove("open"); c.classList.add("done"); }); found++; $("found").textContent=found; if(found===PAIRS.length) win(); }, 350);
+  } else {
+    busy=true;
+    setTimeout(()=>{ x.classList.add("miss"); y.classList.add("miss"); }, 350);
+    setTimeout(()=>{ [x,y].forEach(c=>c.classList.remove("open","miss")); busy=false; }, 1300);
+  }
+}
+function win(){
+  const best = PAIRS.length;
+  const msg = turns<=best+2 ? "Неймовірна пам'ять!" : turns<=best*2 ? "Чудово! Ти знайшов (-ла) усі пари." : "Усі пари знайдено! Зіграй ще раз і спробуй впоратися за менше ходів.";
+  $("win").innerHTML=`<h3><span class="score">${turns} ${turns%10===1&&turns%100!==11?"хід":(turns%10>=2&&turns%10<=4&&(turns%100<10||turns%100>=20)?"ходи":"ходів")}</span>${msg}</h3>
+    <div>Повтори ще раз:</div>
+    <div class="table7">${PAIRS.map(p=>`<span>${p.a} = ${p.b}</span>`).join("")}</div>`;
+  $("win").classList.add("show");
+}
+$("restart").onclick=setup;
+setup();
+</script>
+</body>
+</html>
