@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Скільки кубиків у кожному стовпчику?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+
+  .nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
+  .dot{width:38px;height:38px;border-radius:50%;border:2px solid var(--sand);background:#fff;font-weight:700;font-size:15px}
+  .dot.cur{background:var(--navy);border-color:var(--navy);color:#fff}
+  .dot.ok{background:var(--ok-bg);border-color:var(--ok);color:var(--ok)}
+  .dot.ex{font-size:12px;width:auto;padding:0 12px;border-radius:19px}
+  .stage{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center}
+  @media (max-width:700px){.stage{grid-template-columns:1fr}}
+  .view{background:var(--sand-xl);border:2px solid var(--line);border-radius:18px;padding:12px;display:flex;justify-content:center;align-items:center;min-height:300px}
+  .view svg{width:100%;max-width:420px;height:auto;display:block}
+  .side{display:flex;flex-direction:column;align-items:center;gap:12px}
+  .plan{display:grid;gap:0}
+  .plan .c{width:58px;height:58px}
+  .plan .c input{width:58px;height:58px;border:2px solid var(--navy);margin:-1px 0 0 -1px;text-align:center;font:inherit;font-size:26px;font-weight:700;color:var(--navy);background:#fff;outline:none;border-radius:0}
+  .plan .c input:focus{background:#DCEBF5;border-color:#3B7EA1;position:relative;z-index:2}
+  .plan .c input.ok{background:var(--ok-bg);color:var(--ok)}
+  .plan .c input.bad{background:var(--bad-bg);color:var(--bad)}
+  .plan .c input[readonly]{background:var(--sand-l)}
+  .lbl{font-size:14px;color:var(--grey);font-weight:600;text-align:center}
+  .rot{border:2px solid var(--navy);background:#fff;border-radius:25px;padding:8px 18px;font-size:15px;font-weight:700}
+  .rot:hover{background:var(--sand-l)}
+  .tag{display:inline-block;background:var(--terra);color:#fff;border-radius:20px;padding:2px 12px;font-size:14px;font-weight:700;margin-left:8px;vertical-align:middle}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+  .summary table{border-collapse:collapse;margin:10px 0}
+  .summary td{padding:6px 14px 6px 0;border-bottom:1px solid var(--line)}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Скільки кубиків у кожному стовпчику?</h1>
+  <p>Подивись на фігуру і заповни план</p>
+</header>
+<main>
+  <section class="panel">
+    <p class="how">План показує фігуру згори. Кожна клітинка плану це один стовпчик. Впиши в клітинку, скільки в ньому кубиків. Натисни на клітинку, і цей стовпчик підсвітиться на малюнку синім.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box">Верхній рядок плану це задній ряд фігури, нижній рядок це передній ряд.<br>
+        Рахуй кубики в стовпчику знизу вгору. Не забувай про кубики, які стоять позаду і видно лише їхній верх.<br>
+        Якщо якийсь стовпчик погано видно, натисни «Повернути фігуру»: план повернеться разом з нею, а вписані числа не зникнуть.</div>
+    </details>
+    <div class="nav" id="nav"></div>
+    <h2 id="ttl"></h2>
+    <div class="stage">
+      <div class="view" id="view"></div>
+      <div class="side">
+        <div class="lbl">План (вигляд згори)</div>
+        <div class="plan" id="plan"></div>
+        <div class="lbl">↓ передня сторона</div>
+        <button class="rot" id="rot">↻ Повернути фігуру</button>
+      </div>
+    </div>
+    <div class="bar">
+      <button class="btn main" id="check">Перевірити</button>
+      <button class="btn sec hidden" id="retry">Виправити помилки</button>
+      <button class="btn main hidden" id="next">Далі →</button>
+    </div>
+    <div class="fb" id="fb"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. Кожна фігура це план: висота кожного стовпчика.
+   Верхній рядок це задній ряд, нижній це передній. 0 означає, що стовпчика немає.
+   Щоб жоден стовпчик не ховався, задні стовпчики мають бути не нижчими за передні.
+   Перша фігура (example: true) показується як розібраний приклад.
+   ===================================================================== */
+const FIGS = [
+  {example:true, h:[[1,1,3],[2,0,1],[1,0,1]]},
+  {h:[[0,3,0],[1,2,1],[0,1,0]]},
+  {h:[[3,2,2],[2,1,0],[1,1,0]]},
+  {h:[[0,3,2],[1,2,1],[0,1,1]]},
+  {h:[[4,1,2],[3,0,2],[2,0,1]]},
+  {h:[[2,2,2],[1,1,1]]},
+  {h:[[3,2,2],[3,1,1],[1,1,0]]},
+  {h:[[1,4,1],[1,2,1],[0,1,0]]},
+  {h:[[3,1,3],[2,1,2],[1,1,1]]},
+  {h:[[3,3,0],[2,2,1],[1,1,1]]},
+  {h:[[4,0,2],[3,0,1],[1,1,1]]},
+  {h:[[1,2,4],[1,1,3],[1,1,1]]}
+];
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+const S=34, OX=S*.5, OY=S*.5;
+const COL = {top:"#F6DDCF", front:"#E9AE95", right:"#C98670", hTop:"#CFE4F2", hFront:"#7FB2D6", hRight:"#4F8CB3"};
+let fi=0, rotK=0, focusCell=null;
+const st = FIGS.map(f=>({vals:f.h.map(row=>row.map(()=>"")), first:null, done:!!f.example}));
+
+/* поворот: повертає матрицю на 90° за годинниковою стрілкою */
+const rot90 = A => A[0].map((_,i)=>A.map(row=>row[i]).reverse());
+function oriented(){ // повернута матриця висот і матриця оригінальних координат
+  let H=FIGS[fi].h, P=H.map((row,r)=>row.map((_,c)=>[r,c]));
+  for(let k=0;k<rotK;k++){ H=rot90(H); P=rot90(P); }
+  return {H,P};
+}
+function drawView(){
+  const {H,P}=oriented(), R=H.length, C=H[0].length;
+  const maxH=Math.max(...H.flat());
+  const W=C*S+R*OX+4, HH=maxH*S+R*OY+4, base=HH-2;
+  let s=`<svg viewBox="-2 -2 ${W+2} ${HH+2}" xmlns="http://www.w3.org/2000/svg">`;
+  for(let r=0;r<R;r++) for(let c=0;c<C;c++){
+    const h=H[r][c], d=R-1-r, [orr,occ]=P[r][c];
+    const hi = focusCell && focusCell[0]===orr && focusCell[1]===occ;
+    for(let z=0;z<h;z++){
+      const x0=c*S+d*OX, y0=base-z*S-d*OY;
+      const t=hi?COL.hTop:COL.top, f=hi?COL.hFront:COL.front, rt=hi?COL.hRight:COL.right;
+      const st='stroke="#253042" stroke-width="1.4" stroke-linejoin="round"';
+      s+=`<polygon points="${x0+S},${y0} ${x0+S+OX},${y0-OY} ${x0+S+OX},${y0-S-OY} ${x0+S},${y0-S}" fill="${rt}" ${st}/>`;
+      s+=`<polygon points="${x0},${y0-S} ${x0+OX},${y0-S-OY} ${x0+S+OX},${y0-S-OY} ${x0+S},${y0-S}" fill="${t}" ${st}/>`;
+      s+=`<rect x="${x0}" y="${y0-S}" width="${S}" height="${S}" fill="${f}" ${st}/>`;
+    }
+  }
+  $("view").innerHTML=s+"</svg>";
+}
+function drawPlan(){
+  const {H,P}=oriented(), R=H.length, C=H[0].length, F=FIGS[fi], S2=st[fi];
+  const plan=$("plan"); plan.style.gridTemplateColumns=`repeat(${C},58px)`; plan.innerHTML="";
+  for(let r=0;r<R;r++) for(let c=0;c<C;c++){
+    const d=document.createElement("div"); d.className="c"; plan.appendChild(d);
+    if(!H[r][c]) continue;
+    const [orr,occ]=P[r][c];
+    const inp=document.createElement("input");
+    inp.setAttribute("inputmode","numeric"); inp.setAttribute("maxlength","1"); inp.setAttribute("autocomplete","off");
+    inp.dataset.r=orr; inp.dataset.c=occ;
+    if(F.example){ inp.value=F.h[orr][occ]; inp.readOnly=true; }
+    else {
+      inp.value=S2.vals[orr][occ];
+      if(S2.marks && S2.marks[orr+","+occ]) inp.classList.add(S2.marks[orr+","+occ]);
+      if(S2.marks && S2.marks[orr+","+occ]==="ok") inp.readOnly=true;
+    }
+    inp.addEventListener("focus",()=>{ focusCell=[orr,occ]; drawView(); });
+    inp.addEventListener("blur",()=>{ setTimeout(()=>{ if(!plan.contains(document.activeElement)){ focusCell=null; drawView(); } },0); });
+    inp.addEventListener("input",()=>{
+      inp.value=inp.value.replace(/[^0-9]/g,"").slice(-1);
+      S2.vals[orr][occ]=inp.value; inp.classList.remove("bad");
+      if(S2.marks) delete S2.marks[orr+","+occ];
+      $("fb").textContent="";
+      if(inp.value){ const all=[...plan.querySelectorAll("input:not([readonly])")]; const i=all.indexOf(inp); if(all[i+1]) all[i+1].focus(); }
+    });
+    d.appendChild(inp);
+  }
+}
+function drawNav(){
+  $("nav").innerHTML=FIGS.map((f,i)=>`<button class="dot${f.example?" ex":""}${i===fi?" cur":""}${!f.example&&st[i].done?" ok":""}" data-i="${i}">${f.example?"Приклад":i}</button>`).join("");
+  $("nav").querySelectorAll(".dot").forEach(b=>b.onclick=()=>go(+b.dataset.i));
+}
+function go(i){
+  fi=i; rotK=0; focusCell=null;
+  const F=FIGS[i], S2=st[i];
+  $("ttl").innerHTML = F.example ? `Приклад<span class="tag">розібрано</span>` : `Фігура ${i} з ${FIGS.length-1}`;
+  $("fb").className="fb"; $("fb").innerHTML = F.example ? "Подивись, як заповнено план. Натискай на клітинки: підсвітиться стовпчик, і можна перерахувати його кубики. Потім переходь до фігури 1." : "";
+  $("check").classList.toggle("hidden", F.example || S2.done);
+  $("retry").classList.add("hidden");
+  $("next").classList.toggle("hidden", !(F.example || S2.done) || i===FIGS.length-1);
+  if(S2.done && !F.example) showResult(true);
+  drawNav(); drawView(); drawPlan();
+  if(i===FIGS.length-1 && S2.done) summary();
+}
+function showResult(silent){
+  const S2=st[fi], n=FIGS[fi].h.flat().filter(Boolean).length;
+  $("fb").className="fb good";
+  $("fb").innerHTML=`<span class="score">${S2.first} з ${n}</span>`+(S2.first===n?"Усе правильно з першої спроби!":"Готово! У рахунок пішла перша спроба.");
+}
+$("check").onclick=()=>{
+  const F=FIGS[fi], S2=st[fi];
+  const cells=[]; F.h.forEach((row,r)=>row.forEach((h,c)=>{ if(h) cells.push([r,c]); }));
+  if(cells.some(([r,c])=>S2.vals[r][c]==="")){ $("fb").className="fb meh"; $("fb").textContent="Заповни всі клітинки плану."; return; }
+  S2.marks={}; let g=0;
+  cells.forEach(([r,c])=>{ const ok=+S2.vals[r][c]===F.h[r][c]; S2.marks[r+","+c]=ok?"ok":"bad"; if(ok) g++; });
+  if(S2.first===null) S2.first=g;
+  drawPlan();
+  if(g===cells.length){
+    S2.done=true; showResult(); drawNav();
+    $("check").classList.add("hidden"); $("retry").classList.add("hidden");
+    if(fi<FIGS.length-1) $("next").classList.remove("hidden"); else summary();
+  } else {
+    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${cells.length}. Натисни на червону клітинку: стовпчик підсвітиться, і його можна перерахувати. Якщо стовпчик сховано, поверни фігуру.`;
+    $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
+  }
+};
+$("retry").onclick=()=>{
+  const S2=st[fi];
+  Object.entries(S2.marks).forEach(([k,v])=>{ if(v==="bad"){ const [r,c]=k.split(",").map(Number); S2.vals[r][c]=""; delete S2.marks[k]; } });
+  $("fb").textContent=""; $("retry").classList.add("hidden"); $("check").classList.remove("hidden"); drawPlan();
+  const first=$("plan").querySelector("input:not([readonly])"); if(first) first.focus();
+};
+$("next").onclick=()=>go(fi+1);
+$("rot").onclick=()=>{ rotK=(rotK+1)%4; drawView(); drawPlan(); };
+function summary(){
+  const rows=FIGS.map((f,i)=>f.example?"":`<tr><td>Фігура ${i}</td><td><b>${st[i].first===null?"—":st[i].first+" з "+f.h.flat().filter(Boolean).length}</b></td></tr>`).join("");
+  const got=st.reduce((a,s,i)=>a+(FIGS[i].example?0:(s.first||0)),0), tot=FIGS.reduce((a,f)=>a+(f.example?0:f.h.flat().filter(Boolean).length),0);
+  $("fb").className="fb good summary";
+  $("fb").innerHTML=`<span class="score">${got} з ${tot}</span>Усі фігури пройдено! Рахуємо стовпчики з першої спроби.<table>${rows}</table><button class="btn sec" onclick="location.reload()">Почати спочатку</button>`;
+}
+go(0);
+</script>
+</body>
+</html>
