@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Види чотирикутників</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+  .tab{border:2px solid transparent;font-size:15px;font-weight:600;padding:7px 18px;border-radius:25px;background:var(--sand-l);color:var(--navy)}
+  .tab:hover{border-color:var(--sand)}
+  .tab.cur{background:var(--navy);color:#fff}
+  .tab.done:not(.cur){background:var(--ok-bg);color:var(--ok)}
+  .tab.done::before{content:"✓ "}
+  .task{display:none}
+  .task.cur{display:block}
+  .bank{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;min-height:120px;padding:14px;border-radius:16px;background:var(--sand-l);border:2px solid var(--line)}
+  .bank.hover{background:#EFE2D3}
+  .bank:empty::after{content:"Усі чотирикутники розкладено 👍";color:var(--grey);font-size:16px;align-self:center}
+  .zones{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:16px}
+  @media (max-width:700px){.zones{grid-template-columns:1fr 1fr}}
+  @media (max-width:420px){.zones{grid-template-columns:1fr}}
+  .zone{border-radius:18px;border:3px dashed var(--zc);background:var(--zbg);min-height:160px;padding:0 10px 12px;transition:background .12s}
+  .zone.hover{border-style:solid;background:var(--zhv)}
+  .zone h3{margin:0 -10px 10px;padding:9px 10px;border-radius:14px 14px 0 0;background:var(--zc);color:#fff;text-align:center;font-size:18px;font-weight:700}
+  .zone .in{display:flex;flex-wrap:wrap;gap:8px;justify-content:center}
+  .z0{--zc:#253042;--zbg:#EEF1F5;--zhv:#DDE3EC}
+  .z1{--zc:#AF5940;--zbg:#FBEFEA;--zhv:#F5DCD2}
+  .z2{--zc:#797B6E;--zbg:#F1F1EC;--zhv:#E2E3DA}
+  .z3{--zc:#3B7EA1;--zbg:#EAF2F7;--zhv:#D6E6F0}
+  .z4{--zc:#B8862A;--zbg:#FAF3E4;--zhv:#F2E5C8}
+  .z5{--zc:#7A4E8C;--zbg:#F3EDF6;--zhv:#E6DAEC}
+  .chip{touch-action:none;user-select:none;-webkit-user-select:none;background:#fff;border:2px solid var(--line);border-radius:14px;padding:4px;cursor:grab;box-shadow:0 3px 0 var(--sand);position:relative;line-height:0}
+  .chip svg{width:104px;height:104px;display:block}
+  @media (max-width:480px){.chip svg{width:84px;height:84px}}
+  .chip:hover{border-color:var(--terra)}
+  .chip.selected{background:var(--sel);outline:3px solid #E8B93A}
+  .chip.placeholder{opacity:.3}
+  .chip.ok{border-color:var(--ok);background:var(--ok-bg);box-shadow:none;cursor:default}
+  .chip.bad{border-color:var(--bad);background:var(--bad-bg)}
+  .chip.ok::after,.chip.bad::after{position:absolute;right:-7px;top:-9px;font-size:13px;line-height:20px;color:#fff;border-radius:50%;width:20px;height:20px;text-align:center}
+  .chip.ok::after{content:"✓";background:var(--ok)}
+  .chip.bad::after{content:"✗";background:var(--bad)}
+  .chip .no{position:absolute;left:6px;top:4px;font-size:12px;line-height:1;font-weight:700;color:var(--grey)}
+  .ghost{position:fixed;z-index:1000;pointer-events:none;box-shadow:0 10px 24px rgba(37,48,66,.3);transform:rotate(-3deg);margin:0}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:18px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.main{background:var(--terra);color:#fff}
+  .btn.main:hover{background:var(--terra-d)}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .btn.sec:hover{background:var(--sand-l)}
+  .hidden{display:none !important}
+  .count{margin-left:auto;font-size:15px;color:var(--grey);font-weight:600}
+  .fb{margin-top:14px;font-weight:700;min-height:1.6em}
+  .fb.good{color:var(--ok)} .fb.meh{color:var(--bad)}
+  .why{margin-top:14px;background:var(--sand-xl);border-left:6px solid var(--sand);border-radius:12px;padding:12px 16px}
+  .why h3{margin:0 0 8px;font-size:18px}
+  .why .it{display:flex;gap:12px;align-items:center;margin:8px 0}
+  .why .it svg{width:56px;height:56px;flex:0 0 56px;background:#fff;border-radius:10px}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:8px}
+  .legend span{display:flex;align-items:center;gap:6px;font-size:15px}
+  .legend svg{width:44px;height:30px}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Види чотирикутників</h1>
+  <p>Геометрія, 8 клас: визнач вид чотирикутника за позначками</p>
+</header>
+<main>
+  <section class="panel">
+    <div class="tabs" id="tabs"></div>
+    <div id="tasks"></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. Кожен чотирикутник задано вершинами pts (по порядку обходу),
+   поворотом rot і розміром size. Сторона i йде від вершини i до вершини i+1.
+   Позначки задаються вручну:
+     par: [{s:[0,2], n:1}] сторони 0 і 2 паралельні (n стрілочок);
+     eq:  [{s:[1,3], n:1}] сторони 1 і 3 рівні (n рисок);
+     right: [0] прямий кут при вершині 0.
+   cat: номер правильної групи, e: пояснення до помилки.
+   ===================================================================== */
+const TASKS = [
+  {
+    tab: "1. Вид чотирикутника",
+    title: "Визнач вид чотирикутника",
+    how: "Визначай вид тільки за позначками, а не на око! Стрілочки показують паралельні сторони, риски показують рівні сторони, квадратик позначає прямий кут. Перетягни кожну фігуру в потрібну групу або натисни на фігуру, а потім на групу.",
+    hint: `<b>Паралелограм:</b> дві пари паралельних сторін (або протилежні сторони попарно рівні).<br>
+      <b>Прямокутник:</b> паралелограм, у якого є прямий кут. Або чотирикутник з чотирма прямими кутами.<br>
+      <b>Ромб:</b> усі чотири сторони рівні.<br>
+      <b>Квадрат:</b> усі сторони рівні і є прямий кут.<br>
+      <b>Трапеція:</b> лише одна пара паралельних сторін.<br>
+      <b>Довільний чотирикутник:</b> жодна з цих ознак не позначена.<br>
+      Квадрат є водночас прямокутником і ромбом, але в цій вправі клади кожну фігуру в найточнішу групу.`,
+    groups: ["Довільний","Паралелограм","Прямокутник","Ромб","Квадрат","Трапеція"],
+    items: [
+      {pts:[[0,0],[4,.4],[3.4,2.6],[.6,2]], rot:10, size:.9, cat:0,
+       e:"Жодної ознаки не позначено: немає ні паралельних, ні рівних сторін, ні прямих кутів. Це довільний чотирикутник."},
+      {pts:[[0,0],[2.2,-1.3],[4.6,0],[2.2,1.3]], rot:80, size:.85, eq:[{s:[0,3],n:1},{s:[1,2],n:2}], cat:0,
+       e:"Рівні тут сусідні сторони, а не протилежні, і паралельних сторін не позначено. Тому це не паралелограм і не трапеція, а довільний чотирикутник."},
+      {pts:[[0,0],[4,0],[5,2.2],[1,2.2]], rot:0, size:1, par:[{s:[0,2],n:1},{s:[1,3],n:2}], cat:1,
+       e:"Позначено дві пари паралельних сторін, а рівних сторін і прямих кутів немає. Це паралелограм."},
+      {pts:[[0,0],[3,0],[2,2.5],[-1,2.5]], rot:30, size:.9, eq:[{s:[0,2],n:1},{s:[1,3],n:2}], cat:1,
+       e:"Протилежні сторони попарно рівні (одна пара з однією рискою, друга з двома). Це ознака паралелограма."},
+      {pts:[[0,0],[4,0],[4,2],[0,2]], rot:0, size:.95, par:[{s:[0,2],n:1},{s:[1,3],n:2}], right:[0], cat:2,
+       e:"Дві пари паралельних сторін означають паралелограм, а паралелограм із прямим кутом це прямокутник."},
+      {pts:[[0,0],[3.2,0],[3.2,2.1],[0,2.1]], rot:115, size:.85, right:[0,1,2,3], cat:2,
+       e:"Усі чотири кути прямі, тому це прямокутник. Рівність усіх сторін не позначена, тож це не квадрат."},
+      {pts:[[0,0],[3,0],[4.5,2.598],[1.5,2.598]], rot:0, size:.95, eq:[{s:[0,1,2,3],n:1}], cat:3,
+       e:"Усі чотири сторони позначені однаковими рисками, прямого кута немає. Це ромб."},
+      {pts:[[0,0],[3,0],[3,3],[0,3]], rot:20, size:.8, eq:[{s:[0,1,2,3],n:1}], cat:3,
+       e:"Фігура схожа на квадрат, але позначено лише, що всі сторони рівні. Прямого кута не позначено, тому за даними це ромб. Визначай за позначками, а не на око!"},
+      {pts:[[0,0],[3,0],[3,3],[0,3]], rot:0, size:.75, eq:[{s:[0,1,2,3],n:1}], right:[0], cat:4,
+       e:"Усі сторони рівні і є прямий кут. Це квадрат."},
+      {pts:[[0,0],[3,0],[3,3],[0,3]], rot:45, size:.85, eq:[{s:[0,1,2,3],n:1}], right:[2], cat:4,
+       e:"Фігура стоїть «ромбиком», але позначено прямий кут і рівність усіх сторін. Тому це квадрат."},
+      {pts:[[0,0],[5,0],[3.6,2.2],[1,2.2]], rot:0, size:1, par:[{s:[0,2],n:1}], cat:5,
+       e:"Позначено лише одну пару паралельних сторін. Це трапеція."},
+      {pts:[[0,0],[4.4,0],[5,2.2],[1,2.2]], rot:160, size:.95, par:[{s:[0,2],n:1}], cat:5,
+       e:"Фігура схожа на паралелограм, але паралельною позначено лише одну пару сторін. Тому це трапеція."}
+    ]
+  },
+  {
+    tab: "2. Види трапецій",
+    title: "Визнач вид трапеції",
+    how: "Стрілочками позначено основи трапеції (паралельні сторони). Подивись на бічні сторони: чи позначено, що вони рівні? чи є прямий кут?",
+    hint: `<b>Рівнобічна трапеція:</b> бічні сторони рівні (позначені однаковими рисками).<br>
+      <b>Прямокутна трапеція:</b> одна бічна сторона перпендикулярна до основ, тобто є прямі кути.<br>
+      <b>Звичайна трапеція:</b> бічні сторони не рівні і прямих кутів немає.`,
+    groups: ["Рівнобічна","Прямокутна","Звичайна"],
+    items: [
+      {pts:[[0,0],[5,0],[4,2],[1,2]], rot:0, size:1, par:[{s:[0,2],n:1}], eq:[{s:[1,3],n:1}], cat:0,
+       e:"Бічні сторони позначені однаковими рисками, отже вони рівні. Це рівнобічна трапеція."},
+      {pts:[[0,0],[4.6,0],[3.5,2.4],[1.1,2.4]], rot:200, size:.85, par:[{s:[0,2],n:1}], eq:[{s:[1,3],n:1}], cat:0,
+       e:"Бічні сторони рівні (однакові риски), тому трапеція рівнобічна, навіть якщо вона стоїть «догори ногами»."},
+      {pts:[[0,0],[3,0],[2.4,3],[.6,3]], rot:90, size:.9, par:[{s:[0,2],n:1}], eq:[{s:[1,3],n:1}], cat:0,
+       e:"Основи вертикальні, бо трапецію повернуто, але бічні сторони позначені як рівні. Це рівнобічна трапеція."},
+      {pts:[[0,0],[4.5,0],[3,2.2],[0,2.2]], rot:0, size:1, par:[{s:[0,2],n:1}], right:[0,3], cat:1,
+       e:"Одна бічна сторона утворює з основами прямі кути. Це прямокутна трапеція."},
+      {pts:[[0,0],[4,0],[2.6,2.4],[0,2.4]], rot:135, size:.85, par:[{s:[0,2],n:1}], right:[0,3], cat:1,
+       e:"Позначено прямі кути при бічній стороні, тому трапеція прямокутна."},
+      {pts:[[0,0],[5,0],[5,2],[1.6,2]], rot:250, size:.9, par:[{s:[0,2],n:1}], right:[1,2], cat:1,
+       e:"Права бічна сторона перпендикулярна до основ (прямі кути). Це прямокутна трапеція."},
+      {pts:[[0,0],[5,0],[3.8,2],[.6,2]], rot:0, size:1, par:[{s:[0,2],n:1}], cat:2,
+       e:"Позначено лише основи. Рівності бічних сторін і прямих кутів немає, тому це звичайна трапеція."},
+      {pts:[[0,0],[4,0],[5.2,2.1],[2,2.1]], rot:30, size:.9, par:[{s:[0,2],n:1}], cat:2,
+       e:"Обидві бічні сторони нахилені в один бік, рівності й прямих кутів не позначено. Це звичайна трапеція."},
+      {pts:[[0,0],[5,0],[4.2,2.4],[-.6,2.4]], rot:300, size:.95, par:[{s:[0,2],n:1}], cat:2,
+       e:"Позначено тільки паралельні основи, інших ознак немає. Це звичайна трапеція."}
+    ]
+  }
+];
+TASKS.forEach(T=>{ T.classify=t=>t.cat; T.explain=t=>t.e; });
+
+/* ======================= МАЛЮВАННЯ ЧОТИРИКУТНИКА ======================= */
+const R = d => d*Math.PI/180;
+function triSVG(t, opts={}){
+  const VB=120, rot=R(t.rot||0);
+  let P=t.pts.map(([x,y])=>[x,-y]).map(([x,y])=>[x*Math.cos(rot)-y*Math.sin(rot), x*Math.sin(rot)+y*Math.cos(rot)]);
+  const xs=P.map(p=>p[0]), ys=P.map(p=>p[1]);
+  const w=Math.max(...xs)-Math.min(...xs), h=Math.max(...ys)-Math.min(...ys);
+  const k=(VB-30)*(t.size||1)/Math.max(w,h);
+  const ox=(VB-w*k)/2-Math.min(...xs)*k, oy=(VB-h*k)/2-Math.min(...ys)*k;
+  P=P.map(([x,y])=>[x*k+ox, y*k+oy]);
+  const n=P.length, side=i=>[P[i],P[(i+1)%n]];
+  const dir=i=>{ const [a,b]=side(i), L=Math.hypot(b[0]-a[0],b[1]-a[1]); return [(b[0]-a[0])/L,(b[1]-a[1])/L]; };
+  const mid=i=>{ const [a,b]=side(i); return [(a[0]+b[0])/2,(a[1]+b[1])/2]; };
+  let s=`<svg viewBox="0 0 ${VB} ${VB}" xmlns="http://www.w3.org/2000/svg">`;
+  s+=`<polygon points="${P.map(p=>p.join(",")).join(" ")}" fill="#F4EBE1" stroke="#253042" stroke-width="2" stroke-linejoin="round"/>`;
+  // паралельність: стрілочки в одному напрямку
+  (t.par||[]).forEach(g=>{
+    const base=dir(g.s[0]);
+    g.s.forEach(si=>{
+      let u=dir(si); if(u[0]*base[0]+u[1]*base[1]<0) u=[-u[0],-u[1]];
+      const m=mid(si), nr=[-u[1],u[0]];
+      for(let q=0;q<g.n;q++){
+        const off=(q-(g.n-1)/2)*6, tip=[m[0]+u[0]*(off+3), m[1]+u[1]*(off+3)];
+        s+=`<polyline points="${tip[0]-u[0]*6+nr[0]*4},${tip[1]-u[1]*6+nr[1]*4} ${tip[0]},${tip[1]} ${tip[0]-u[0]*6-nr[0]*4},${tip[1]-u[1]*6-nr[1]*4}" fill="none" stroke="#3B7EA1" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>`;
+      }
+    });
+  });
+  // рівні сторони: риски
+  (t.eq||[]).forEach(g=>{
+    g.s.forEach(si=>{
+      const u=dir(si), m=mid(si), nr=[-u[1],u[0]];
+      for(let q=0;q<g.n;q++){
+        const off=(q-(g.n-1)/2)*4.5, c=[m[0]+u[0]*off, m[1]+u[1]*off];
+        s+=`<line x1="${c[0]-nr[0]*6}" y1="${c[1]-nr[1]*6}" x2="${c[0]+nr[0]*6}" y2="${c[1]+nr[1]*6}" stroke="#AF5940" stroke-width="2.4" stroke-linecap="round"/>`;
+      }
+    });
+  });
+  // прямі кути
+  (t.right||[]).forEach(vi=>{
+    const V=P[vi], U=P[(vi+1)%n], W=P[(vi+n-1)%n];
+    const du=Math.hypot(U[0]-V[0],U[1]-V[1]), dw=Math.hypot(W[0]-V[0],W[1]-V[1]);
+    const u=[(U[0]-V[0])/du,(U[1]-V[1])/du], w2=[(W[0]-V[0])/dw,(W[1]-V[1])/dw], q=9;
+    s+=`<path d="M${V[0]+u[0]*q},${V[1]+u[1]*q} L${V[0]+(u[0]+w2[0])*q},${V[1]+(u[1]+w2[1])*q} L${V[0]+w2[0]*q},${V[1]+w2[1]*q}" fill="none" stroke="#253042" stroke-width="1.6"/>`;
+  });
+  return s+"</svg>";
+}
+
+/* ============================ ЛОГІКА ============================ */
+const $ = id => document.getElementById(id);
+const shuffle = a => { for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} return a; };
+const state = TASKS.map(()=>({first:null}));
+let curTask = 0;
+
+function renderTabs(){
+  $("tabs").innerHTML="";
+  TASKS.forEach((T,k)=>{
+    const b=document.createElement("button");
+    b.className="tab"+(k===curTask?" cur":"")+(state[k].first!==null?" done":"");
+    b.innerHTML=T.tab+(state[k].first!==null?` <b>${state[k].first}/${T.items.length}</b>`:"");
+    b.onclick=()=>{ curTask=k; renderTabs(); document.querySelectorAll(".task").forEach((d,j)=>d.classList.toggle("cur",j===k)); };
+    $("tabs").appendChild(b);
+  });
+}
+function buildTask(k){
+  const T=TASKS[k], d=document.createElement("div");
+  d.className="task"+(k===0?" cur":""); d.dataset.scope=k;
+  d.innerHTML=`<h2>${T.title}</h2><p class="how">${T.how}</p>
+    <details class="hint"><summary>💡 Підказка</summary><div class="box">${T.hint}</div></details>
+    <div class="bank" data-zone="bank"></div>
+    <div class="zones">${T.groups.map((g,i)=>`<div class="zone z${i}" data-zone="${i}"><h3>${g}</h3><div class="in"></div></div>`).join("")}</div>
+    <div class="bar"><button class="btn main chk">Перевірити</button><button class="btn sec hidden rty">Виправити помилки</button><button class="btn sec rst">Почати спочатку</button><span class="count"></span></div>
+    <div class="fb"></div><div class="why hidden"></div>`;
+  $("tasks").appendChild(d);
+  const q=sel=>d.querySelector(sel);
+  const fill=()=>{
+    state[k].first=null;
+    q(".bank").innerHTML=""; d.querySelectorAll(".zone .in").forEach(z=>z.innerHTML="");
+    shuffle(T.items.map((_,i)=>i)).forEach(i=>{
+      const c=document.createElement("div"); c.className="chip"; c.dataset.i=i; c.innerHTML=triSVG(T.items[i],{marks:T.marks});
+      q(".bank").appendChild(c);
+    });
+    q(".fb").textContent=""; q(".fb").className="fb"; q(".why").classList.add("hidden");
+    q(".rty").classList.add("hidden"); q(".chk").classList.remove("hidden"); count(); renderTabs();
+  };
+  const count=()=>{ q(".count").textContent=`Залишилося: ${q(".bank").children.length}`; };
+  d.addEventListener("placed",count);
+  q(".chk").onclick=()=>{
+    if(q(".bank").children.length){ q(".fb").className="fb meh"; q(".fb").textContent="Спочатку розклади всі чотирикутники."; return; }
+    let g=0; const wrong=[];
+    d.querySelectorAll(".zone").forEach(z=>z.querySelectorAll(".chip").forEach(c=>{
+      const it=T.items[c.dataset.i], ok=T.classify(it)===+z.dataset.zone;
+      c.classList.toggle("ok",ok); c.classList.toggle("bad",!ok); if(ok) g++; else wrong.push(it);
+    }));
+    if(state[k].first===null) state[k].first=g;
+    renderTabs();
+    if(wrong.length){
+      q(".why").innerHTML=`<h3>Де помилка</h3>`+wrong.map(it=>`<div class="it">${triSVG(it,{small:true,marks:T.marks})}<div>${T.explain(it)}</div></div>`).join("");
+      q(".why").classList.remove("hidden");
+      q(".fb").className="fb meh"; q(".fb").textContent=`Правильно ${g} з ${T.items.length}. Червоні чотирикутники лежать не в своїй групі.`;
+      q(".chk").classList.add("hidden"); q(".rty").classList.remove("hidden");
+    } else {
+      q(".why").classList.add("hidden");
+      const f=state[k].first, n=T.items.length;
+      q(".fb").className="fb good";
+      q(".fb").innerHTML=`<span class="score">${f} з ${n}</span>`+(f===n?"Бездоганно! Усе розкладено з першої спроби.":"Готово! Усі чотирикутники на своїх місцях. У рахунок пішла перша спроба.")+(k<TASKS.length-1?` <button class="btn main nxt" style="margin-left:8px">Далі →</button>`:"");
+      const nx=q(".nxt"); if(nx) nx.onclick=()=>{ curTask=k+1; renderTabs(); document.querySelectorAll(".task").forEach((dd,j)=>dd.classList.toggle("cur",j===curTask)); window.scrollTo({top:0,behavior:"smooth"}); };
+      q(".chk").classList.add("hidden"); q(".rty").classList.add("hidden");
+    }
+  };
+  q(".rty").onclick=()=>{
+    d.querySelectorAll(".chip.bad").forEach(c=>{ c.classList.remove("bad"); q(".bank").appendChild(c); });
+    q(".fb").textContent=""; q(".fb").className="fb"; q(".why").classList.add("hidden");
+    q(".rty").classList.add("hidden"); q(".chk").classList.remove("hidden"); count();
+  };
+  q(".rst").onclick=fill;
+  fill();
+}
+TASKS.forEach((_,k)=>buildTask(k));
+renderTabs();
+
+/* ======================= ПЕРЕТЯГУВАННЯ ======================= */
+let drag=null, sel=null;
+const clearSel=()=>{ if(sel){ sel.classList.remove("selected"); sel=null; } };
+const clearHover=()=>document.querySelectorAll(".hover").forEach(x=>x.classList.remove("hover"));
+const scopeOf=n=>n.closest("[data-scope]");
+const zoneAt=(x,y)=>{ const u=document.elementFromPoint(x,y); return u&&u.closest("[data-zone]"); };
+function place(chip, zone){
+  if(!zone || chip.classList.contains("ok") || scopeOf(zone)!==scopeOf(chip)) return;
+  const target = zone.dataset.zone==="bank" ? zone : zone.querySelector(".in");
+  if(chip.parentElement===target) return;
+  chip.classList.remove("bad"); target.appendChild(chip);
+  const sc=scopeOf(chip); sc.querySelector(".fb").textContent=""; sc.dispatchEvent(new Event("placed"));
+}
+document.addEventListener("pointerdown",e=>{ const c=e.target.closest(".chip"); if(!c||c.classList.contains("ok")) return; drag={c,x:e.clientX,y:e.clientY,ghost:null}; });
+document.addEventListener("pointermove",e=>{
+  if(!drag) return;
+  if(!drag.ghost){
+    if(Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<6) return;
+    const r=drag.c.getBoundingClientRect(), g=drag.c.cloneNode(true);
+    g.classList.add("ghost"); g.classList.remove("selected"); g.style.width=r.width+"px";
+    document.body.appendChild(g); drag.ghost=g; drag.ox=drag.x-r.left; drag.oy=drag.y-r.top;
+    drag.c.classList.add("placeholder"); clearSel();
+  }
+  drag.ghost.style.left=(e.clientX-drag.ox)+"px"; drag.ghost.style.top=(e.clientY-drag.oy)+"px";
+  clearHover(); const z=zoneAt(e.clientX,e.clientY); if(z&&scopeOf(z)===scopeOf(drag.c)) z.classList.add("hover");
+  e.preventDefault();
+},{passive:false});
+document.addEventListener("pointerup",e=>{
+  if(!drag) return; const d=drag; drag=null;
+  if(d.ghost){ d.ghost.remove(); d.c.classList.remove("placeholder"); clearHover(); place(d.c, zoneAt(e.clientX,e.clientY)); }
+  else { if(sel===d.c) clearSel(); else { clearSel(); sel=d.c; sel.classList.add("selected"); } }
+});
+document.addEventListener("pointercancel",()=>{ if(drag&&drag.ghost){drag.ghost.remove(); drag.c.classList.remove("placeholder");} drag=null; clearHover(); });
+document.addEventListener("click",e=>{ if(!sel||e.target.closest(".chip")) return; const z=e.target.closest("[data-zone]"); if(z){ place(sel,z); clearSel(); } });
+</script>
+</body>
+</html>
