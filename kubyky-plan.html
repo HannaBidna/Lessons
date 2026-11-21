@@ -33,6 +33,10 @@
   .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
 
 
+  .tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+  .tab{border:2px solid transparent;font-size:15px;font-weight:600;padding:7px 18px;border-radius:25px;background:var(--sand-l);color:var(--navy)}
+  .tab:hover{border-color:var(--sand)}
+  .tab.cur{background:var(--navy);color:#fff}
   .nav{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px}
   .dot{width:38px;height:38px;border-radius:50%;border:2px solid var(--sand);background:#fff;font-weight:700;font-size:15px}
   .dot.cur{background:var(--navy);border-color:var(--navy);color:#fff}
@@ -76,13 +80,14 @@
 </header>
 <main>
   <section class="panel">
-    <p class="how">План показує фігуру згори. Кожна клітинка плану це один стовпчик. Впиши в клітинку, скільки в ньому кубиків. Натисни на клітинку, і цей стовпчик підсвітиться на малюнку синім.</p>
+    <p class="how" id="how"></p>
     <details class="hint">
       <summary>💡 Підказка</summary>
       <div class="box">Верхній рядок плану це задній ряд фігури, нижній рядок це передній ряд.<br>
         Рахуй кубики в стовпчику знизу вгору. Не забувай про кубики, які стоять позаду і видно лише їхній верх.<br>
         Якщо якийсь стовпчик погано видно, натисни «Повернути фігуру»: план повернеться разом з нею, а вписані числа не зникнуть.</div>
     </details>
+    <div class="tabs" id="tabs"></div>
     <div class="nav" id="nav"></div>
     <h2 id="ttl"></h2>
     <div class="stage">
@@ -106,64 +111,100 @@
 <script>
 /* =====================================================================
    ДАНІ. Кожна фігура це план: висота кожного стовпчика.
-   Верхній рядок це задній ряд, нижній це передній. 0 означає, що стовпчика немає.
-   Щоб жоден стовпчик не ховався, задні стовпчики мають бути не нижчими за передні.
-   Перша фігура (example: true) показується як розібраний приклад.
+   Верхній рядок це задній ряд, нижній це передній.
+   0 означає, що стовпчика немає.
+   style: "oblique" (фронтальна проєкція, рожеві кубики) або "iso" (ізометрія, кольорові кубики).
+   zeros: true означає, що в плані показано всі клітинки і порожні треба позначити нулем.
+   Перша фігура набору (example: true) показується як розібраний приклад.
    ===================================================================== */
-const FIGS = [
-  {example:true, h:[[1,1,3],[2,0,1],[1,0,1]]},
-  {h:[[0,3,0],[1,2,1],[0,1,0]]},
-  {h:[[3,2,2],[2,1,0],[1,1,0]]},
-  {h:[[0,3,2],[1,2,1],[0,1,1]]},
-  {h:[[4,1,2],[3,0,2],[2,0,1]]},
-  {h:[[2,2,2],[1,1,1]]},
-  {h:[[3,2,2],[3,1,1],[1,1,0]]},
-  {h:[[1,4,1],[1,2,1],[0,1,0]]},
-  {h:[[3,1,3],[2,1,2],[1,1,1]]},
-  {h:[[3,3,0],[2,2,1],[1,1,1]]},
-  {h:[[4,0,2],[3,0,1],[1,1,1]]},
-  {h:[[1,2,4],[1,1,3],[1,1,1]]}
+const SETS = [
+  { tab:"1. Рожеві фігури", style:"oblique", zeros:false,
+    how:"План показує фігуру згори. Кожна клітинка плану це один стовпчик. Впиши в клітинку, скільки в ньому кубиків. Натисни на клітинку, і цей стовпчик виділиться на малюнку.",
+    figs:[
+      {example:true, h:[[1,1,3],[2,0,1],[1,0,1]]},
+      {h:[[0,3,0],[1,2,1],[0,1,0]]},
+      {h:[[3,2,2],[2,1,0],[1,1,0]]},
+      {h:[[0,3,2],[1,2,1],[0,1,1]]},
+      {h:[[4,1,2],[3,0,2],[2,0,1]]},
+      {h:[[2,2,2],[1,1,1]]},
+      {h:[[3,2,2],[3,1,1],[1,1,0]]},
+      {h:[[1,4,1],[1,2,1],[0,1,0]]},
+      {h:[[3,1,3],[2,1,2],[1,1,1]]},
+      {h:[[3,3,0],[2,2,1],[1,1,1]]},
+      {h:[[4,0,2],[3,0,1],[1,1,1]]},
+      {h:[[1,2,4],[1,1,3],[1,1,1]]}
+    ]},
+  { tab:"2. Кольорові фігури", style:"iso", zeros:true,
+    how:"Тут фігуру видно з кута. План має 2 ряди по 3 клітинки. Впиши, скільки кубиків у кожному стовпчику. Якщо на якомусь місці кубиків немає, впиши 0.",
+    figs:[
+      {example:true, h:[[2,1,2],[1,1,1]]},
+      {h:[[3,1,2],[1,1,1]]},
+      {h:[[1,2,3],[1,1,0]]},
+      {h:[[2,2,1],[2,1,1]]},
+      {h:[[3,0,2],[1,1,1]]},
+      {h:[[4,2,1],[2,1,1]]},
+      {h:[[2,3,2],[1,2,1]]},
+      {h:[[1,1,4],[0,1,1]]},
+      {h:[[3,2,0],[3,1,1]]}
+    ]}
 ];
 
 /* ===================================================================== */
 const $ = id => document.getElementById(id);
-const S=34, OX=S*.5, OY=S*.5;
-const COL = {top:"#F6DDCF", front:"#E9AE95", right:"#C98670", hTop:"#CFE4F2", hFront:"#7FB2D6", hRight:"#4F8CB3"};
-let fi=0, rotK=0, focusCell=null;
-const st = FIGS.map(f=>({vals:f.h.map(row=>row.map(()=>"")), first:null, done:!!f.example}));
+const S=34;
+const PINK = {top:"#F6DDCF", front:"#E9AE95", right:"#C98670"};
+const HL = {top:"#CFE4F2", front:"#7FB2D6", right:"#4F8CB3"};
+const PAL = [ // верх, перед, бік
+  ["#7CC4F5","#4FA8E8","#2F86C9"], ["#F6A3CF","#EE72B4","#C9518F"], ["#FFD36E","#F7B733","#D9951A"],
+  ["#8BE06A","#5CC63A","#3FA226"], ["#C9A0F5","#A66BEA","#8248C9"]
+];
+let si=0, fi=0, rotK=0, focusCell=null;
+const ST = SETS.map(set=>set.figs.map(f=>({vals:f.h.map(row=>row.map(()=>"")), first:null, done:!!f.example})));
+const SET=()=>SETS[si], FIGS=()=>SETS[si].figs, st=()=>ST[si];
+const isCell=(h)=> SET().zeros ? true : h>0;
 
-/* поворот: повертає матрицю на 90° за годинниковою стрілкою */
 const rot90 = A => A[0].map((_,i)=>A.map(row=>row[i]).reverse());
-function oriented(){ // повернута матриця висот і матриця оригінальних координат
-  let H=FIGS[fi].h, P=H.map((row,r)=>row.map((_,c)=>[r,c]));
+function oriented(){
+  let H=FIGS()[fi].h, P=H.map((row,r)=>row.map((_,c)=>[r,c]));
   for(let k=0;k<rotK;k++){ H=rot90(H); P=rot90(P); }
   return {H,P};
 }
+function colorOf(r,c,z){ const n=(r*7+c*13+z*5+fi*3+si)%PAL.length; return PAL[n]; }
+const STROKE='stroke="#253042" stroke-width="1.3" stroke-linejoin="round"';
 function drawView(){
-  const {H,P}=oriented(), R=H.length, C=H[0].length;
-  const maxH=Math.max(...H.flat());
-  const W=C*S+R*OX+4, HH=maxH*S+R*OY+4, base=HH-2;
-  let s=`<svg viewBox="-2 -2 ${W+2} ${HH+2}" xmlns="http://www.w3.org/2000/svg">`;
+  const {H,P}=oriented(), R=H.length, C=H[0].length, maxH=Math.max(1,...H.flat());
+  let parts=[], outl=[], minx=1e9,maxx=-1e9,miny=1e9,maxy=-1e9;
+  const poly=(pts,fill,op)=>{ pts.forEach(([x,y])=>{minx=Math.min(minx,x);maxx=Math.max(maxx,x);miny=Math.min(miny,y);maxy=Math.max(maxy,y);});
+    parts.push(`<polygon points="${pts.map(p=>p.join(",")).join(" ")}" fill="${fill}" ${STROKE}${op<1?` opacity="${op}"`:""}/>`); };
+  const iso = SET().style==="iso";
+  const a=S*Math.cos(Math.PI/6), b=S*Math.sin(Math.PI/6);
+  const pt = iso ? (c,d,z)=>[c*a+d*a, c*b-d*b-z*S] : (c,d,z)=>[c*S+d*S*.5, -z*S-d*S*.5];
   for(let r=0;r<R;r++) for(let c=0;c<C;c++){
     const h=H[r][c], d=R-1-r, [orr,occ]=P[r][c];
     const hi = focusCell && focusCell[0]===orr && focusCell[1]===occ;
+    const op = 1;
     for(let z=0;z<h;z++){
-      const x0=c*S+d*OX, y0=base-z*S-d*OY;
-      const t=hi?COL.hTop:COL.top, f=hi?COL.hFront:COL.front, rt=hi?COL.hRight:COL.right;
-      const st='stroke="#253042" stroke-width="1.4" stroke-linejoin="round"';
-      s+=`<polygon points="${x0+S},${y0} ${x0+S+OX},${y0-OY} ${x0+S+OX},${y0-S-OY} ${x0+S},${y0-S}" fill="${rt}" ${st}/>`;
-      s+=`<polygon points="${x0},${y0-S} ${x0+OX},${y0-S-OY} ${x0+S+OX},${y0-S-OY} ${x0+S},${y0-S}" fill="${t}" ${st}/>`;
-      s+=`<rect x="${x0}" y="${y0-S}" width="${S}" height="${S}" fill="${f}" ${st}/>`;
+      let col = iso ? colorOf(orr,occ,z) : [PINK.top,PINK.front,PINK.right];
+      if(hi && !iso) col=[HL.top,HL.front,HL.right];
+      // бокова грань (кінець стовпчика по осі c)
+      poly([pt(c+1,d,z),pt(c+1,d+1,z),pt(c+1,d+1,z+1),pt(c+1,d,z+1)], col[2], op);
+      // верх
+      poly([pt(c,d,z+1),pt(c+1,d,z+1),pt(c+1,d+1,z+1),pt(c,d+1,z+1)], col[0], op);
+      // передня грань
+      poly([pt(c,d,z),pt(c+1,d,z),pt(c+1,d,z+1),pt(c,d,z+1)], col[1], op);
+      if(hi && iso) outl.push(`<polygon points="${[pt(c,d,z),pt(c+1,d,z),pt(c+1,d,z+1),pt(c+1,d+1,z+1),pt(c,d+1,z+1),pt(c,d,z+1)].map(p=>p.join(",")).join(" ")}" fill="rgba(255,255,255,.25)" stroke="#AF5940" stroke-width="4" stroke-linejoin="round"/>`);
     }
   }
-  $("view").innerHTML=s+"</svg>";
+  if(!parts.length){ minx=0;maxx=10;miny=0;maxy=10; }
+  const pad=6;
+  $("view").innerHTML=`<svg viewBox="${minx-pad} ${miny-pad} ${maxx-minx+2*pad} ${maxy-miny+2*pad}" xmlns="http://www.w3.org/2000/svg">${parts.join("")}${outl.join("")}</svg>`;
 }
 function drawPlan(){
-  const {H,P}=oriented(), R=H.length, C=H[0].length, F=FIGS[fi], S2=st[fi];
+  const {H,P}=oriented(), R=H.length, C=H[0].length, F=FIGS()[fi], S2=st()[fi];
   const plan=$("plan"); plan.style.gridTemplateColumns=`repeat(${C},58px)`; plan.innerHTML="";
   for(let r=0;r<R;r++) for(let c=0;c<C;c++){
     const d=document.createElement("div"); d.className="c"; plan.appendChild(d);
-    if(!H[r][c]) continue;
+    if(!isCell(H[r][c])) continue;
     const [orr,occ]=P[r][c];
     const inp=document.createElement("input");
     inp.setAttribute("inputmode","numeric"); inp.setAttribute("maxlength","1"); inp.setAttribute("autocomplete","off");
@@ -171,8 +212,8 @@ function drawPlan(){
     if(F.example){ inp.value=F.h[orr][occ]; inp.readOnly=true; }
     else {
       inp.value=S2.vals[orr][occ];
-      if(S2.marks && S2.marks[orr+","+occ]) inp.classList.add(S2.marks[orr+","+occ]);
-      if(S2.marks && S2.marks[orr+","+occ]==="ok") inp.readOnly=true;
+      const m=S2.marks && S2.marks[orr+","+occ];
+      if(m){ inp.classList.add(m); if(m==="ok") inp.readOnly=true; }
     }
     inp.addEventListener("focus",()=>{ focusCell=[orr,occ]; drawView(); });
     inp.addEventListener("blur",()=>{ setTimeout(()=>{ if(!plan.contains(document.activeElement)){ focusCell=null; drawView(); } },0); });
@@ -186,31 +227,36 @@ function drawPlan(){
     d.appendChild(inp);
   }
 }
+function drawTabs(){
+  $("tabs").innerHTML=SETS.map((s,i)=>`<button class="tab${i===si?" cur":""}" data-i="${i}">${s.tab}</button>`).join("");
+  $("tabs").querySelectorAll(".tab").forEach(b=>b.onclick=()=>{ si=+b.dataset.i; go(0); });
+  $("how").textContent=SET().how;
+}
 function drawNav(){
-  $("nav").innerHTML=FIGS.map((f,i)=>`<button class="dot${f.example?" ex":""}${i===fi?" cur":""}${!f.example&&st[i].done?" ok":""}" data-i="${i}">${f.example?"Приклад":i}</button>`).join("");
+  $("nav").innerHTML=FIGS().map((f,i)=>`<button class="dot${f.example?" ex":""}${i===fi?" cur":""}${!f.example&&st()[i].done?" ok":""}" data-i="${i}">${f.example?"Приклад":i}</button>`).join("");
   $("nav").querySelectorAll(".dot").forEach(b=>b.onclick=()=>go(+b.dataset.i));
 }
+const cellsOf=F=>{ const out=[]; F.h.forEach((row,r)=>row.forEach((h,c)=>{ if(isCell(h)) out.push([r,c]); })); return out; };
 function go(i){
   fi=i; rotK=0; focusCell=null;
-  const F=FIGS[i], S2=st[i];
-  $("ttl").innerHTML = F.example ? `Приклад<span class="tag">розібрано</span>` : `Фігура ${i} з ${FIGS.length-1}`;
-  $("fb").className="fb"; $("fb").innerHTML = F.example ? "Подивись, як заповнено план. Натискай на клітинки: підсвітиться стовпчик, і можна перерахувати його кубики. Потім переходь до фігури 1." : "";
+  const F=FIGS()[i], S2=st()[i], N=FIGS().length;
+  $("ttl").innerHTML = F.example ? `Приклад<span class="tag">розібрано</span>` : `Фігура ${i} з ${N-1}`;
+  $("fb").className="fb"; $("fb").innerHTML = F.example ? "Подивись, як заповнено план. Натискай на клітинки: стовпчик виділиться, і можна перерахувати його кубики. Потім переходь до фігури 1." : "";
   $("check").classList.toggle("hidden", F.example || S2.done);
   $("retry").classList.add("hidden");
-  $("next").classList.toggle("hidden", !(F.example || S2.done) || i===FIGS.length-1);
-  if(S2.done && !F.example) showResult(true);
-  drawNav(); drawView(); drawPlan();
-  if(i===FIGS.length-1 && S2.done) summary();
+  $("next").classList.toggle("hidden", !(F.example || S2.done) || i===N-1);
+  drawTabs(); drawNav(); drawView(); drawPlan();
+  if(S2.done && !F.example) showResult();
+  if(i===N-1 && S2.done) summary();
 }
-function showResult(silent){
-  const S2=st[fi], n=FIGS[fi].h.flat().filter(Boolean).length;
+function showResult(){
+  const S2=st()[fi], n=cellsOf(FIGS()[fi]).length;
   $("fb").className="fb good";
   $("fb").innerHTML=`<span class="score">${S2.first} з ${n}</span>`+(S2.first===n?"Усе правильно з першої спроби!":"Готово! У рахунок пішла перша спроба.");
 }
 $("check").onclick=()=>{
-  const F=FIGS[fi], S2=st[fi];
-  const cells=[]; F.h.forEach((row,r)=>row.forEach((h,c)=>{ if(h) cells.push([r,c]); }));
-  if(cells.some(([r,c])=>S2.vals[r][c]==="")){ $("fb").className="fb meh"; $("fb").textContent="Заповни всі клітинки плану."; return; }
+  const F=FIGS()[fi], S2=st()[fi], cells=cellsOf(F);
+  if(cells.some(([r,c])=>S2.vals[r][c]==="")){ $("fb").className="fb meh"; $("fb").textContent=SET().zeros?"Заповни всі клітинки плану. Якщо кубиків немає, впиши 0.":"Заповни всі клітинки плану."; return; }
   S2.marks={}; let g=0;
   cells.forEach(([r,c])=>{ const ok=+S2.vals[r][c]===F.h[r][c]; S2.marks[r+","+c]=ok?"ok":"bad"; if(ok) g++; });
   if(S2.first===null) S2.first=g;
@@ -218,14 +264,14 @@ $("check").onclick=()=>{
   if(g===cells.length){
     S2.done=true; showResult(); drawNav();
     $("check").classList.add("hidden"); $("retry").classList.add("hidden");
-    if(fi<FIGS.length-1) $("next").classList.remove("hidden"); else summary();
+    if(fi<FIGS().length-1) $("next").classList.remove("hidden"); else summary();
   } else {
-    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${cells.length}. Натисни на червону клітинку: стовпчик підсвітиться, і його можна перерахувати. Якщо стовпчик сховано, поверни фігуру.`;
+    $("fb").className="fb meh"; $("fb").textContent=`Правильно ${g} з ${cells.length}. Натисни на червону клітинку: стовпчик виділиться, і його можна перерахувати. Якщо стовпчик сховано, поверни фігуру.`;
     $("check").classList.add("hidden"); $("retry").classList.remove("hidden");
   }
 };
 $("retry").onclick=()=>{
-  const S2=st[fi];
+  const S2=st()[fi];
   Object.entries(S2.marks).forEach(([k,v])=>{ if(v==="bad"){ const [r,c]=k.split(",").map(Number); S2.vals[r][c]=""; delete S2.marks[k]; } });
   $("fb").textContent=""; $("retry").classList.add("hidden"); $("check").classList.remove("hidden"); drawPlan();
   const first=$("plan").querySelector("input:not([readonly])"); if(first) first.focus();
@@ -233,10 +279,12 @@ $("retry").onclick=()=>{
 $("next").onclick=()=>go(fi+1);
 $("rot").onclick=()=>{ rotK=(rotK+1)%4; drawView(); drawPlan(); };
 function summary(){
-  const rows=FIGS.map((f,i)=>f.example?"":`<tr><td>Фігура ${i}</td><td><b>${st[i].first===null?"—":st[i].first+" з "+f.h.flat().filter(Boolean).length}</b></td></tr>`).join("");
-  const got=st.reduce((a,s,i)=>a+(FIGS[i].example?0:(s.first||0)),0), tot=FIGS.reduce((a,f)=>a+(f.example?0:f.h.flat().filter(Boolean).length),0);
+  const rows=FIGS().map((f,i)=>f.example?"":`<tr><td>Фігура ${i}</td><td><b>${st()[i].first===null?"—":st()[i].first+" з "+cellsOf(f).length}</b></td></tr>`).join("");
+  const got=st().reduce((a,s,i)=>a+(FIGS()[i].example?0:(s.first||0)),0), tot=FIGS().reduce((a,f)=>a+(f.example?0:cellsOf(f).length),0);
+  const nextSet = si<SETS.length-1 ? `<button class="btn main" id="nextset" style="margin-left:8px">${SETS[si+1].tab} →</button>` : "";
   $("fb").className="fb good summary";
-  $("fb").innerHTML=`<span class="score">${got} з ${tot}</span>Усі фігури пройдено! Рахуємо стовпчики з першої спроби.<table>${rows}</table><button class="btn sec" onclick="location.reload()">Почати спочатку</button>`;
+  $("fb").innerHTML=`<span class="score">${got} з ${tot}</span>Усі фігури пройдено! Рахуємо стовпчики з першої спроби.<table>${rows}</table>${nextSet}`;
+  const ns=$("nextset"); if(ns) ns.onclick=()=>{ si++; go(0); window.scrollTo({top:0,behavior:"smooth"}); };
 }
 go(0);
 </script>
