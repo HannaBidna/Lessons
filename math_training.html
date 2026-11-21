@@ -29,7 +29,8 @@
                   url('./bg_videos.jpg') no-repeat center center / cover;
       background-attachment: fixed;
     }
-    .container { width: 100%; max-width: 600px; }
+    /* Розширили контейнер під 2 колонки */
+    .container { width: 100%; max-width: 1040px; }
     .back-link {
       display: inline-flex;
       align-items: center;
@@ -50,12 +51,26 @@
     .page-title { font-size: 30px; font-weight: 800; margin-bottom: 6px; color: #fff; }
     .page-desc { color: var(--text-sub); font-size: 15px; margin-bottom: 28px; }
 
+    /* Сітка на 2 колонки */
+    .classes-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* На телефонах і вузьких екранах — знову 1 колонка */
+    @media (max-width: 768px) {
+      .classes-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
     .class-block {
       background: rgba(24, 28, 22, 0.72);
       border: 1px solid var(--border-color);
       border-radius: 18px;
       padding: 18px;
-      margin-bottom: 18px;
       backdrop-filter: blur(10px);
     }
     .class-header {
@@ -95,139 +110,143 @@
     <h1 class="page-title">🏋️ Тренування</h1>
     <p class="page-desc">Оберіть свій клас та тренувальну вправу:</p>
 
-    <!-- МОЛОДША ШКОЛА -->
-    <div class="class-block">
-      <div class="class-header">Молодша школа</div>
-      <div class="sub-grid">
-        <a href="memo-mnozhennia-7.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 1:</strong> Таблиця множення на 7</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="memo-mnozhennia-8.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 2:</strong> Таблиця множення на 8</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="memo-mnozhennia-9.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 3:</strong> Таблиця множення на 9</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="komponenty-krosvord.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 4:</strong> Компоненти арифметичних дій</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="porivniannia-masy.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 5:</strong> Порівняння іменованих величин 1</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="porivniannia-dovzhyny.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 6:</strong> Порівняння іменованих величин 2</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="perymetr-priamokutnyka.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 3:</strong> Периметр прямокутника</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="ploshcha-priamokutnyka.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 4:</strong> Площа прямокутника</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="parni-neparni.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 5:</strong> Парні та непарні </span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="vlastyvosti-mnozhennia.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 6:</strong> Властивості множення </span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-
-    <!-- 5 КЛАС -->
-    <div class="class-block">
-      <div class="class-header">5 клас</div>
-      <div class="sub-grid">
-        <a href="chytayu-uvazhno.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 1:</strong> Читаємо умову задачі</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="parni-neparni.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 2:</strong> Парні та непарні </span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="vlastyvosti-mnozhennia.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 3:</strong> Властивості множення </span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="perymetr-priamokutnyka.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 4:</strong> Периметр прямокутника </span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="ploshcha-priamokutnyka.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 5:</strong> Площа прямокутника </span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="mnozhennia-dilennia-10-100-1000.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 6:</strong> Множення/ділення на 10, 100, 1000... </span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
+    <div class="classes-grid">
+      <!-- МОЛОДША ШКОЛА -->
+      <div class="class-block">
+        <div class="class-header">Молодша школа</div>
+        <div class="sub-grid">
+          <a href="memo-mnozhennia-7.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 1:</strong> Таблиця множення на 7</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="memo-mnozhennia-8.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 2:</strong> Таблиця множення на 8</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="memo-mnozhennia-9.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 3:</strong> Таблиця множення на 9</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="komponenty-krosvord.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 4:</strong> Компоненти арифметичних дій</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="porivniannia-masy.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 5:</strong> Порівняння іменованих величин 1</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="porivniannia-dovzhyny.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 6:</strong> Порівняння іменованих величин 2</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="perymetr-priamokutnyka.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 7:</strong> Периметр прямокутника</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="ploshcha-priamokutnyka.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 8:</strong> Площа прямокутника</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="parni-neparni.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 9:</strong> Парні та непарні</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="vlastyvosti-mnozhennia.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 10:</strong> Властивості множення</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <!-- 6 КЛАС -->
-    <div class="class-block">
-      <div class="class-header">6 клас</div>
-      <div class="sub-grid">
-        <a href="chytayu-uvazhno.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 1:</strong> Читаємо умову задачі</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="oznaki-podilnosti.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 2:</strong>Ознаки подільності чисел</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="porivniannia-drobiv.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 3:</strong> Порівняння звичайний дробів</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="koordynatnyi-promin.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 4:</strong> Координатний промінь</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="drib-vid-chysla.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 5:</strong> Знаходження дробу від числа</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="chyslo-za-vidsotkom.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 6:</strong> Знаходження числа за відсотком</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
-        <a href="vidsotky-vid-chysla.html" class="sub-card">
-          <span class="sub-title"><strong>Вправа 7:</strong> Знаходження відсотків від числа</span>
-          <span class="card-arrow">&rarr;</span>
-        </a>
+      <!-- 5 КЛАС -->
+      <div class="class-block">
+        <div class="class-header">5 клас</div>
+        <div class="sub-grid">
+          <a href="chytayu-uvazhno.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 1:</strong> Читаємо умову задачі</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="parni-neparni.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 2:</strong> Парні та непарні</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="vlastyvosti-mnozhennia.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 3:</strong> Властивості множення</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="perymetr-priamokutnyka.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 4:</strong> Периметр прямокутника</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="ploshcha-priamokutnyka.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 5:</strong> Площа прямокутника</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="mnozhennia-dilennia-10-100-1000.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 6:</strong> Множення/ділення на 10, 100, 1000...</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <!-- 7 КЛАС -->
-    <div class="class-block">
-      <div class="class-header">7 клас</div>
-      <div class="sub-grid">
-        <div class="class-header">Алгебра</div>
-        <div class="class-header">Геометрія</div>
+      <!-- 6 КЛАС -->
+      <div class="class-block">
+        <div class="class-header">6 клас</div>
+        <div class="sub-grid">
+          <a href="chytayu-uvazhno.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 1:</strong> Читаємо умову задачі</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="oznaki-podilnosti.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 2:</strong> Ознаки подільності чисел</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="porivniannia-drobiv.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 3:</strong> Порівняння звичайних дробів</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="koordynatnyi-promin.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 4:</strong> Координатний промінь</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="drib-vid-chysla.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 5:</strong> Знаходження дробу від числа</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="chyslo-za-vidsotkom.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 6:</strong> Знаходження числа за відсотком</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+          <a href="vidsotky-vid-chysla.html" class="sub-card">
+            <span class="sub-title"><strong>Вправа 7:</strong> Знаходження відсотків від числа</span>
+            <span class="card-arrow">&rarr;</span>
+          </a>
+        </div>
       </div>
-    </div>
 
-    <!-- 8 КЛАС -->
-    <div class="class-block">
-      <div class="class-header">8 клас</div>
-      <div class="sub-grid">
-        <div class="empty-text">Вправи готуються...</div>
+      <!-- 7 КЛАС -->
+      <div class="class-block">
+        <div class="class-header">7 клас</div>
+        <div class="sub-grid">
+          <div class="class-header">Алгебра</div>
+          <div class="class-header">Геометрія</div>
+        </div>
       </div>
-    </div>
 
-    <!-- 9 КЛАС -->
-    <div class="class-block">
-      <div class="class-header">9 клас</div>
-      <div class="sub-grid">
-        <div class="empty-text">Вправи готуються...</div>
+      <!-- 8 КЛАС -->
+      <div class="class-block">
+        <div class="class-header">8 клас</div>
+        <div class="sub-grid">
+          <div class="empty-text">Вправи готуються...</div>
+        </div>
+      </div>
+
+      <!-- 9 КЛАС -->
+      <div class="class-block">
+        <div class="class-header">9 клас</div>
+        <div class="sub-grid">
+          <div class="empty-text">Вправи готуються...</div>
+        </div>
       </div>
     </div>
   </div>
