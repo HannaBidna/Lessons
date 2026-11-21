@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Лабіринт: спільний знаменник</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --navy:#253042; --sand:#DBC3A9; --sand-l:#F4EBE1; --sand-xl:#FAF5EF;
+    --terra:#AF5940; --terra-d:#93462F; --grey:#797B6E; --line:#E6D9CA;
+    --ok:#2E8B57; --ok-bg:#E3F4E8; --bad:#C8423B; --bad-bg:#FCE6E3; --sel:#FFE8A8;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--sand-l);color:var(--navy);font-family:Montserrat,"Gotham Book",Arial,sans-serif;font-size:18px;line-height:1.6}
+  button{font:inherit;color:inherit;cursor:pointer}
+  .top{background:var(--navy);color:#fff;padding:22px 24px 26px;position:relative;overflow:hidden}
+  .top::after{content:"";position:absolute;right:-40px;top:-60px;width:220px;height:220px;border-radius:50%;background:var(--terra);opacity:.9}
+  .top::before{content:"";position:absolute;right:130px;bottom:-70px;width:120px;height:120px;border-radius:50%;background:var(--sand);opacity:.85}
+  .top>*{position:relative;z-index:1;max-width:1000px;margin-left:auto;margin-right:auto}
+  .top .brand{font-size:14px;font-weight:600;letter-spacing:.06em;color:var(--sand)}
+  .top h1{margin:4px auto 0;font-size:32px;line-height:1.2;font-weight:700}
+  .top p{margin:6px auto 0;color:#E6E6E6;font-size:16px}
+  main{max-width:1000px;margin:0 auto;padding:26px 18px 60px}
+  .panel{background:#fff;border-radius:20px;padding:22px 24px;box-shadow:0 4px 18px rgba(37,48,66,.08)}
+  .panel h2{margin:0 0 4px;font-size:22px;font-weight:700}
+  .how{margin:0 0 12px;color:#4A5468;font-size:17px}
+  .hint{margin:0 0 16px}
+  .hint summary{cursor:pointer;font-weight:600;color:var(--terra);font-size:16px;list-style:none;display:inline-block;padding:4px 14px;border:2px solid var(--sand);border-radius:25px}
+  .hint summary::-webkit-details-marker{display:none}
+  .hint .box{margin-top:10px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:10px 16px;font-size:17px}
+
+
+  .now{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--navy);color:#fff;border-radius:16px;padding:12px 18px;margin-bottom:14px}
+  .now .q{font-weight:600;font-size:17px}
+  .now .pair{font-size:26px;font-weight:700;display:flex;align-items:center;gap:10px}
+  .fr{display:inline-flex;flex-direction:column;align-items:center;vertical-align:middle;line-height:1.1}
+  .fr>span:first-child{border-bottom:2px solid currentColor;padding:0 4px}
+  .opts{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
+  .opt{min-width:64px;border:2px solid var(--sand);background:#fff;border-radius:25px;padding:8px 18px;font-size:20px;font-weight:700}
+  .opt:hover{border-color:var(--terra)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-bg);color:var(--bad)}
+  .msg{min-height:1.6em;font-weight:600;margin-bottom:10px}
+  .msg.good{color:var(--ok)} .msg.meh{color:var(--bad)}
+  .board{width:100%;background:var(--sand-xl);border:2px solid var(--line);border-radius:18px}
+  .board svg{display:block;width:100%;height:auto}
+  .stat{display:inline-block;background:var(--sand-l);border-radius:20px;padding:4px 14px;font-weight:600;font-size:15px;margin-right:8px}
+  .stat b{color:var(--terra)}
+  .bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+  .btn{border:2px solid transparent;border-radius:25px;padding:11px 26px;font-size:17px;font-weight:700}
+  .btn.sec{background:#fff;border-color:var(--navy);color:var(--navy)}
+  .win{display:none;margin-top:16px;background:var(--sand-xl);border-left:6px solid var(--terra);border-radius:12px;padding:14px 18px}
+  .win.show{display:block}
+  .win h3{margin:0 0 8px;font-size:20px}
+  .win ol{margin:6px 0 0;padding-left:22px;line-height:2.2}
+  .score{display:inline-block;font-size:22px;font-weight:700;color:#fff;background:var(--terra);border-radius:25px;padding:3px 18px;margin-right:8px}
+  svg .badge{cursor:pointer}
+  svg .badge:hover circle{fill:#AF5940}
+  svg .badge:hover text{fill:#fff}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">nadia.school</div>
+  <h1>Лабіринт: спільний знаменник</h1>
+  <p>Пройди від старту до фінішу, обираючи найменший спільний знаменник</p>
+</header>
+<main>
+  <section class="panel">
+    <p class="how">На кожній клітинці два дроби. Знайди їхній <b>найменший спільний знаменник</b> і йди по стрілці з цим числом. Натисни на число на стрілці або на кнопку внизу.</p>
+    <details class="hint">
+      <summary>💡 Підказка</summary>
+      <div class="box">Найменший спільний знаменник це найменше число, яке ділиться на обидва знаменники (НСК знаменників).<br>
+        Спершу перевір, чи більший знаменник ділиться на менший: для 1/7 і 1/14 це 14.<br>
+        Якщо ні, перебирай числа, кратні більшому: для 3/4 і 1/3 це 4, 8, <b>12</b> (12 ділиться на 3).<br>
+        Знаменник 1 (наприклад, 5/1) не заважає: спільним буде інший знаменник.</div>
+    </details>
+    <div class="now" id="now"></div>
+    <div class="opts" id="opts"></div>
+    <div class="msg" id="msg"></div>
+    <div><span class="stat">Кроків: <b id="steps">0</b></span><span class="stat">Помилок: <b id="errs">0</b></span></div>
+    <div class="board" id="board"></div>
+    <div class="win" id="win"></div>
+    <div class="bar"><button class="btn sec" id="restart">Почати спочатку</button></div>
+  </section>
+</main>
+
+<script>
+/* =====================================================================
+   ДАНІ. Клітинки задано як "рядок,стовпчик": дві дроби [чисельник, знаменник].
+   ARROWS: зі клітинки куди можна піти: [рядок, стовпчик, число на стрілці].
+   Правильна стрілка та, на якій найменший спільний знаменник.
+   ===================================================================== */
+const ROWS = 4, COLS = 4, START = "0,0", FINISH = "3,3";
+const CELLS = {
+  "0,0":[[4,5],[1,15]],  "0,1":[[3,5],[2,2]],  "0,2":[[5,1],[5,8]],   "0,3":[[7,9],[5,12]],
+  "1,0":[[7,4],[1,2]],   "1,1":[[4,6],[2,4]],  "1,2":[[1,7],[1,14]],  "1,3":[[11,15],[2,10]],
+  "2,0":[[3,4],[1,3]],   "2,1":[[5,3],[3,2]],  "2,2":[[8,11],[3,1]],  "2,3":[[1,4],[2,16]],
+  "3,0":[[6,15],[4,30]], "3,1":[[7,10],[4,40]],"3,2":[[4,3],[4,9]]
+};
+const ARROWS = {
+  "0,0":[[0,1,10],[1,0,15],[1,1,20]],
+  "0,1":[[1,1,5],[1,2,10]],
+  "0,2":[[0,1,8],[0,3,12],[1,2,16],[1,3,5]],
+  "0,3":[[1,3,36],[1,2,18]],
+  "1,0":[[1,1,8],[2,0,4],[2,1,2]],
+  "1,1":[[0,2,12],[2,1,3],[2,2,2]],
+  "1,2":[[1,1,1],[2,2,7],[2,1,14]],
+  "1,3":[[1,2,15],[2,3,20],[2,2,30]],
+  "2,0":[[2,1,4],[3,0,6],[1,1,12]],
+  "2,1":[[2,2,3],[3,1,12],[3,0,6],[3,2,4]],
+  "2,2":[[2,3,11],[3,3,3]],
+  "2,3":[[3,3,16],[3,2,8]],
+  "3,0":[[3,1,30]],
+  "3,1":[[3,2,20],[2,2,40]],
+  "3,2":[[2,2,5],[3,3,9]]
+};
+
+/* ===================================================================== */
+const $ = id => document.getElementById(id);
+const gcd=(a,b)=>b?gcd(b,a%b):a, lcm=(a,b)=>a/gcd(a,b)*b;
+const F=(n,d)=>`<span class="fr"><span>${n}</span><span>${d}</span></span>`;
+const CW=150, CH=96, SX=210, SY=160, PADX=40, PADY=50;
+const VW=PADX*2+SX*(COLS-1)+CW, VH=PADY+SY*(ROWS-1)+CH+30;
+const cx=(r,c)=>PADX+c*SX+CW/2, cy=(r,c)=>PADY+r*SY+CH/2;
+let cur, path, errs, wrongTried;
+
+function setup(){ cur=START; path=[START]; errs=0; wrongTried=new Set(); $("win").classList.remove("show"); $("msg").textContent=""; render(); }
+function need(k){ const [[,a],[,b]]=CELLS[k]; return lcm(a,b); }
+
+function svgFrac(x,y,n,d,size){
+  return `<text x="${x}" y="${y-6}" font-size="${size}" text-anchor="middle" font-weight="700" fill="#253042">${n}</text>
+    <line x1="${x-size*0.55}" y1="${y}" x2="${x+size*0.55}" y2="${y}" stroke="#253042" stroke-width="2"/>
+    <text x="${x}" y="${y+size*0.9}" font-size="${size}" text-anchor="middle" font-weight="700" fill="#253042">${d}</text>`;
+}
+function edgePoint(r,c,dx,dy,pad){
+  const L=Math.hypot(dx,dy), ux=dx/L, uy=dy/L;
+  const t=Math.min((CW/2)/Math.abs(ux||1e-9),(CH/2)/Math.abs(uy||1e-9));
+  return [cx(r,c)+ux*(t+pad), cy(r,c)+uy*(t+pad)];
+}
+function arrowSVG(r1,c1,r2,c2,num,opts){
+  const dx=cx(r2,c2)-cx(r1,c1), dy=cy(r2,c2)-cy(r1,c1);
+  const [x1,y1]=edgePoint(r1,c1,dx,dy,4), [x2,y2]=edgePoint(r2,c2,-dx,-dy,8);
+  const col=opts.done?"#AF5940":opts.wrong?"#C8423B":"#3B7EA1";
+  let s=`<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${col}" stroke-width="${opts.done?5:4}" stroke-linecap="round" marker-end="url(#${opts.done?"hd":opts.wrong?"hw":"h"})" opacity="${opts.done?.55:1}"/>`;
+  const mx=(x1+x2)/2, my=(y1+y2)/2;
+  if(opts.badge){
+    s+=`<g class="badge" data-to="${r2},${c2}" data-n="${num}"><circle cx="${mx}" cy="${my}" r="21" fill="${opts.wrong?"#FCE6E3":"#fff"}" stroke="${col}" stroke-width="3"/>
+      <text x="${mx}" y="${my+7}" font-size="20" font-weight="700" text-anchor="middle" fill="${opts.wrong?"#C8423B":"#253042"}">${num}</text></g>`;
+  } else if(opts.done){
+    const L=Math.hypot(x2-x1,y2-y1), nx=-(y2-y1)/L, ny=(x2-x1)/L, sg=(nx<0||(nx===0&&ny<0))?-1:1;
+    s+=`<text x="${mx+nx*sg*14}" y="${my+ny*sg*14+5}" font-size="15" font-weight="700" text-anchor="middle" fill="#93462F">${num}</text>`;
+  }
+  return s;
+}
+function render(){
+  // поточна клітинка
+  if(cur!==FINISH){
+    const [[n1,d1],[n2,d2]]=CELLS[cur];
+    $("now").innerHTML=`<span class="q">Знайди найменший спільний знаменник:</span><span class="pair">${F(n1,d1)} <span style="font-size:18px">і</span> ${F(n2,d2)}</span>`;
+    $("opts").innerHTML=ARROWS[cur].map(([r,c,n])=>`<button class="opt${wrongTried.has(cur+":"+n)?" wrong":""}" data-to="${r},${c}" data-n="${n}">${n}</button>`).join("");
+    $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(b.dataset.to,+b.dataset.n));
+  } else { $("now").innerHTML=`<span class="q">🏁 Фініш! Ти пройшов (-ла) лабіринт.</span>`; $("opts").innerHTML=""; }
+  $("steps").textContent=path.length-1; $("errs").textContent=errs;
+  // дошка
+  let s=`<svg viewBox="0 0 ${VW} ${VH}" xmlns="http://www.w3.org/2000/svg" font-family="Montserrat,Arial">
+    <defs>${[["h","#3B7EA1"],["hd","#AF5940"],["hw","#C8423B"]].map(([id,c])=>`<marker id="${id}" viewBox="0 0 10 10" refX="7" refY="5" markerWidth="4" markerHeight="4" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="${c}"/></marker>`).join("")}</defs>`;
+  // пройдений шлях
+  for(let i=1;i<path.length;i++){
+    const [r1,c1]=path[i-1].split(",").map(Number), [r2,c2]=path[i].split(",").map(Number);
+    s+=arrowSVG(r1,c1,r2,c2,need(path[i-1]),{done:true});
+  }
+  // клітинки
+  for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++){
+    const k=r+","+c, x=PADX+c*SX, y=PADY+r*SY, isCur=k===cur, visited=path.includes(k);
+    if(k===FINISH){
+      s+=`<rect x="${x}" y="${y}" width="${CW}" height="${CH}" rx="16" fill="${cur===FINISH?"#E3F4E8":"#FFE8A8"}" stroke="#253042" stroke-width="${cur===FINISH?4:2.5}"/>
+        <text x="${x+CW/2}" y="${y+CH/2+9}" font-size="26" font-weight="700" text-anchor="middle" fill="#253042">Фініш 🏁</text>`;
+      continue;
+    }
+    const [[n1,d1],[n2,d2]]=CELLS[k];
+    s+=`<rect x="${x}" y="${y}" width="${CW}" height="${CH}" rx="14" fill="${isCur?"#FFE8A8":visited?"#FBEFEA":"#fff"}" stroke="${isCur?"#AF5940":"#253042"}" stroke-width="${isCur?4:2}"/>`;
+    s+=svgFrac(x+CW*0.27,y+CH/2,n1,d1,24)+`<text x="${x+CW/2}" y="${y+CH/2+7}" font-size="18" text-anchor="middle" fill="#253042">і</text>`+svgFrac(x+CW*0.73,y+CH/2,n2,d2,24);
+    if(k===START) s+=`<text x="${x}" y="${y-12}" font-size="20" font-weight="700" fill="#AF5940">Старт</text>`;
+    if(isCur) s+=`<text x="${x+CW-4}" y="${y-6}" font-size="30" text-anchor="middle">🏄</text>`;
+  }
+  // стрілки з поточної клітинки
+  if(cur!==FINISH) ARROWS[cur].forEach(([r,c,n])=>{
+    const [r0,c0]=cur.split(",").map(Number);
+    s+=arrowSVG(r0,c0,r,c,n,{badge:true,wrong:wrongTried.has(cur+":"+n)});
+  });
+  s+="</svg>";
+  $("board").innerHTML=s;
+  $("board").querySelectorAll(".badge").forEach(g=>g.addEventListener("click",()=>choose(g.dataset.to,+g.dataset.n)));
+}
+function choose(to,n){
+  if(cur===FINISH) return;
+  const [[,a],[,b]]=CELLS[cur], L=lcm(a,b);
+  if(n===L){
+    $("msg").className="msg good"; $("msg").textContent=`Так! Найменший спільний знаменник ${a} і ${b} дорівнює ${L}.`;
+    cur=to; path.push(to);
+    if(cur===FINISH) finish();
+  } else {
+    if(!wrongTried.has(cur+":"+n)){ errs++; wrongTried.add(cur+":"+n); }
+    $("msg").className="msg meh";
+    if(n%a===0 && n%b===0) $("msg").textContent=`${n} ділиться і на ${a}, і на ${b}, тобто це спільний знаменник. Але чи найменший? Пошукай менше число.`;
+    else if(n%a!==0 && n%b!==0) $("msg").textContent=`${n} не ділиться ні на ${a}, ні на ${b}. Спробуй ще раз.`;
+    else $("msg").textContent=`${n} не ділиться на ${n%a!==0?a:b}, тому не може бути спільним знаменником. Спробуй ще раз.`;
+  }
+  render();
+}
+function finish(){
+  const steps=path.length-1;
+  const msg = errs===0 ? "Бездоганно! Жодної помилки." : errs<=3 ? "Чудово! Лабіринт пройдено." : "Лабіринт пройдено! Пройди його ще раз, щоб помилок стало менше.";
+  $("win").innerHTML=`<h3><span class="score">${errs} ${errs===1?"помилка":errs>=2&&errs<=4?"помилки":"помилок"}</span>${msg}</h3>
+    Твій шлях:<ol>${path.slice(0,-1).map(k=>{ const [[n1,d1],[n2,d2]]=CELLS[k]; return `<li>${F(n1,d1)} і ${F(n2,d2)}: спільний знаменник <b>${lcm(d1,d2)}</b></li>`; }).join("")}</ol>`;
+  $("win").classList.add("show");
+}
+$("restart").onclick=setup;
+setup();
+</script>
+</body>
+</html>
